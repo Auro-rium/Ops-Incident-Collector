@@ -1,0 +1,88 @@
+# Replace these sample paths with your actual service, log, runbook, deploy,
+# incident, or API documentation folders. Avoid pointing at your home directory
+# or repo root unless you intend to inspect everything under it.
+api:
+  base_url: "http://127.0.0.1:8001"
+  token_env: "INCIDENTOPS_TOKEN"
+  timeout_seconds: 30
+  verify_tls: true
+  auth_required: true
+
+project:
+  id: "proj_123"
+
+collector:
+  id: "local-dev-collector"
+  name: "local-dev-machine"
+  mode: "local"
+
+state:
+  sqlite_path: ".opsincident-collector/state.sqlite"
+
+sync:
+  batch_size: 50
+  max_file_size_mb: 10
+  incremental: true
+  dry_run: false
+  compression: false
+  retry_count: 3
+  retry_backoff_seconds: 5
+
+security:
+  redact_secrets: true
+  require_confirmation_for_upload: true
+  allow_paths:
+    - "./sample-data"
+    - "./logs"
+    - "./docs"
+  deny_patterns:
+    - ".env"
+    - ".env.*"
+    - "*.pem"
+    - "*.key"
+    - "id_rsa"
+    - "id_ed25519"
+    - "*.p12"
+    - "*.pfx"
+    - ".git/**"
+    - "node_modules/**"
+    - ".venv/**"
+    - "venv/**"
+    - "__pycache__/**"
+    - "dist/**"
+    - "build/**"
+    - "target/**"
+    - "*.sqlite"
+    - "*.db"
+    - "*.zip"
+    - "*.tar"
+    - "*.gz"
+    - "*.pdf"
+
+mcp:
+  enabled: true
+  transport: "stdio"
+  readonly_default: true
+  require_approval_for_sync: true
+
+sources:
+  - name: "service-code"
+    type: "filesystem"
+    path: "./sample-data"
+    include:
+      - "**/*.md"
+      - "**/*.txt"
+      - "**/*.log"
+      - "**/*.json"
+      - "**/*.yaml"
+      - "**/*.yml"
+      - "**/*.py"
+      - "**/*.patch"
+      - "**/*.diff"
+      - "**/*.sql"
+      - "**/*.toml"
+      - "**/*.ini"
+    exclude:
+      - "**/.git/**"
+      - "**/node_modules/**"
+      - "**/.venv/**"

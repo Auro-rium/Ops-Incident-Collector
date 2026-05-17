@@ -1,0 +1,138 @@
+from __future__ import annotations
+
+from typing import Any
+
+import httpx
+
+from opsincident_collector.adapters.core_contracts import CoreCapabilities, SourceRegistrationResult
+from opsincident_collector.adapters.fallback_modes import resolve_endpoint
+from opsincident_collector.core.protocol import CORE_API_VERSION, SCHEMA_VERSION, collector_version
+
+
+class MissingBatchEndpointError(RuntimeError):
+    pass
+
+
+def is_retryable_api_error(exc: Exception) -> bool:
+    if isinstance(exc, MissingBatchEndpointError):
+        return False
+    if isinstance(exc, httpx.RequestError):
+        return True
+    if isinstance(exc, httpx.HTTPStatusError):
+        status_code = exc.response.status_code
+        return status_code in {408, 409, 425, 429} or status_code >= 500
+    return False
+
+
+class CoreClient:
+    def __init__(self, base_url: str, token: str | None = None, timeout_seconds: int = 30, verify_tls: bool = True):
+        headers = {"Authorization": f"Bearer {token}"} if token else {}
+        self.client = httpx.Client(
+            base_url=base_url.rstrip("/"),
+            timeout=timeout_seconds,
+            verify=verify_tls,
+            headers=headers,
+        )
+
+    def close(self) -> None:
+        self.client.close()
+
+    def health(self) -> dict[str, Any]:
+        response = self.client.get("/health")
+        response.raise_for_status()
+        return response.json()
+
+    def capabilities(self) -> CoreCapabilities | None:
+        response = self.client.get("/v1/capabilities")
+        if response.status_code == 404:
+            return None
+        response.raise_for_status()
+        return CoreCapabilities.model_validate(response.json())
+
+    def register_source(self, project_id: str, payload: dict[str, Any], capabilities: CoreCapabilities | None = None) -> SourceRegistrationResult:
+        endpoint = resolve_endpoint(capabilities.endpoints if capabilities else None, "register_source")
+        response = self.client.post(endpoint.format(project_id=project_id), json=payload)
+        response.raise_for_status()
+        data = response.json()
+        return SourceRegistrationResult(source_id=data.get("source_id") or data.get("id") or payload["name"], raw=data)
+
+    def create_sync(self, source_id: str, payload: dict[str, Any], capabilities: CoreCapabilities | None = None) -> dict[str, Any]:
+        endpoint = resolve_endpoint(capabilities.endpoints if capabilities else None, "create_sync")
+        response = self.client.post(endpoint.format(source_id=source_id), json=payload)
+        if response.status_code == 404:
+            return {"sync_id": payload["sync_id"]}
+        response.raise_for_status()
+        return response.json()
+
+    def update_sync(self, source_id: str, sync_id: str, payload: dict[str, Any], capabilities: CoreCapabilities | None = None) -> dict[str, Any]:
+        endpoint = resolve_endpoint(capabilities.endpoints if capabilities else None, "update_sync")
+        response = self.client.patch(endpoint.format(source_id=source_id, sync_id=sync_id), json=payload)
+        if response.status_code == 404:
+            return {"sync_id": sync_id, "status": payload.get("status")}
+        response.raise_for_status()
+        return response.json()
+
+    @staticmethod
+    def versioned_batch_payload(documents: list[dict[str, Any]]) -> dict[str, Any]:
+        return {
+            "collector_version": collector_version(),
+            "schema_version": SCHEMA_VERSION,
+            "core_api_version": CORE_API_VERSION,
+            "documents": documents,
+        }
+
+    def batch_upload_documents(
+        self,
+        project_id: str,
+        source_id: str,
+        documents: list[dict[str, Any]],
+        capabilities: CoreCapabilities | None = None,
+    ) -> dict[str, Any]:
+        capability_endpoints = capabilities.endpoints if capabilities else None
+        batch_endpoint = resolve_endpoint(capability_endpoints, "batch_upload")
+        payload = self.versioned_batch_payload(documents)
+        response = self.client.post(
+            batch_endpoint.format(project_id=project_id, source_id=source_id),
+            json=payload,
+        )
+        if response.status_code == 404:
+            fallback = resolve_endpoint(capability_endpoints, "fallback_ingest")
+            fallback_payload = payload | {"source_id": source_id}
+            fallback_response = self.client.post(
+                fallback.format(project_id=project_id),
+                json=fallback_payload,
+            )
+            if fallback_response.status_code == 404:
+                raise MissingBatchEndpointError(
+                    "IncidentOps Core does not expose a document batch ingestion endpoint. "
+                    "Use --export jsonl or update Core."
+                )
+            fallback_response.raise_for_status()
+            return fallback_response.json()
+        response.raise_for_status()
+        return response.json()
+
+    def search(self, payload: dict[str, Any]) -> dict[str, Any]:
+        response = self.client.post("/v1/search", json=payload)
+        response.raise_for_status()
+        return response.json()
+
+    def investigate(self, payload: dict[str, Any]) -> dict[str, Any]:
+        response = self.client.post("/v1/investigate", json=payload)
+        response.raise_for_status()
+        return response.json()
+
+    def create_run(self, payload: dict[str, Any]) -> dict[str, Any]:
+        response = self.client.post("/v1/runs", json=payload)
+        response.raise_for_status()
+        return response.json()
+
+    def get_run_status(self, run_id: str) -> dict[str, Any]:
+        response = self.client.get(f"/v1/runs/{run_id}")
+        response.raise_for_status()
+        return response.json()
+
+    def get_run_events(self, run_id: str) -> dict[str, Any]:
+        response = self.client.get(f"/v1/runs/{run_id}/events")
+        response.raise_for_status()
+        return response.json()

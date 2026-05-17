@@ -1,0 +1,3 @@
+2026-05-05T10:00:00Z INFO service=orders request_id=req-1 Starting request
+2026-05-05T10:00:02Z ERROR service=orders Bearer abc123xyz timeout while calling upstream
+password=unsafe-demo-secret

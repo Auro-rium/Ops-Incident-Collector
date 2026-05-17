@@ -1,0 +1,40 @@
+# Core-sync example. Set INCIDENTOPS_TOKEN in the environment; do not put raw
+# API tokens in this YAML unless you are only testing locally.
+api:
+  base_url: "http://127.0.0.1:8001"
+  token_env: "INCIDENTOPS_TOKEN"
+  auth_required: true
+
+project:
+  id: "proj_123"
+
+collector:
+  mode: "core-sync"
+
+state:
+  sqlite_path: ".opsincident-collector/state.sqlite"
+
+sync:
+  batch_size: 50
+  max_file_size_mb: 10
+  retry_count: 3
+  retry_backoff_seconds: 5
+
+security:
+  redact_secrets: true
+  require_confirmation_for_upload: true
+  allow_paths:
+    - "./sample-data"
+    - "./logs"
+    - "./docs"
+
+sources:
+  - name: "service-code"
+    type: "filesystem"
+    path: "./sample-data"
+  - name: "service-logs"
+    type: "logs_folder"
+    path: "./logs"
+  - name: "runbooks"
+    type: "runbooks"
+    path: "./docs/runbooks"

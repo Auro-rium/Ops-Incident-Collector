@@ -1,0 +1,25 @@
+# Local-only example. Replace sample paths with explicit folders you want to inspect.
+collector:
+  mode: "local"
+
+state:
+  sqlite_path: ".opsincident-collector/state.sqlite"
+
+sync:
+  batch_size: 50
+  max_file_size_mb: 10
+  retry_count: 3
+  retry_backoff_seconds: 5
+
+security:
+  redact_secrets: true
+  require_confirmation_for_upload: true
+  allow_paths:
+    - "./sample-data"
+    - "./logs"
+    - "./docs"
+
+sources:
+  - name: "local-service"
+    type: "filesystem"
+    path: "./sample-data"

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "opsincident-collector": {
+      "command": "opsincident-collector",
+      "args": ["mcp", "serve", "--config", "collector.yaml"]
+    }
+  }
+}

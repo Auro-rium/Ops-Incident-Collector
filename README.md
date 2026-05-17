@@ -1,0 +1,99 @@
+# OpsIncident-Collector is a self-hosted collector, MCP server, and local orchestration runtime that discovers, redacts, normalizes, and syncs backend engineering data into IncidentOps Core for incident investigation.
+
+Bring your logs, code, runbooks, deploy history, incidents, and API docs. OpsIncident-Collector turns them into investigation-ready evidence.
+
+## Status
+
+The repository now includes a hardened deterministic v1 foundation:
+
+- local inspect and validation
+- secret redaction and normalization
+- JSONL and SQLite export
+- SQLite checkpoints for incremental sync
+- IncidentOps Core API adapter with capability/fallback behavior
+- explicit collector/schema/Core API protocol versioning at export boundaries
+- token-env based Core auth without printing token values
+- failed upload queue with retry/backoff metadata
+- permissioned MCP tool layer and FastMCP server wiring
+- deterministic local agent workflow
+- polling watch mode
+
+## CLI
+
+```bash
+opsincident-collector init
+opsincident-collector doctor
+opsincident-collector validate --config collector.yaml
+opsincident-collector inspect --path ./some-folder
+opsincident-collector sync --path ./some-folder --export jsonl --output out.jsonl
+opsincident-collector sync --path ./some-folder --export api --project-id proj_123 --yes
+opsincident-collector watch --path ./some-folder --export jsonl --output out.jsonl
+opsincident-collector mcp serve --config collector.yaml
+opsincident-collector agent investigate --project-id proj_123 --query "Why did orders slow after deploy?"
+```
+
+## Local-only mode
+
+The current implementation is useful without IncidentOps Core:
+
+- inspect allowlisted paths
+- classify likely source types
+- detect unsupported, oversized, denied, empty, and binary files
+- detect likely secrets without printing secret values
+- redact secrets before JSONL and SQLite export
+- skip unchanged files through SQLite checkpoints
+
+`NormalizedDocument` remains the canonical collector document. JSONL exports wrap it in a small protocol envelope:
+
+- `collector_version`
+- `schema_version: incidentops.normalized_document.v1`
+- `core_api_version: v1`
+- `document`
+
+## Core-sync mode
+
+- probes `GET /v1/capabilities` when available
+- registers sources and uploads normalized documents
+- sends `collector_version`, `schema_version`, and `core_api_version` in batch upload payloads
+- uses `Authorization: Bearer <token>` from `INCIDENTOPS_TOKEN` or `api.token_env`
+- fails API sync clearly when auth is required but no token is present
+- queues transient failed document uploads in SQLite and retries due items on later syncs
+- falls back to default endpoint contracts when capabilities are absent
+- fails clearly if Core does not expose a batch ingestion path
+
+Set tokens with environment variables instead of YAML:
+
+```bash
+export INCIDENTOPS_TOKEN=...
+opsincident-collector sync --path ./service --export api --project-id proj_123 --yes
+```
+
+## MCP and agent mode
+
+- MCP tools expose inspect, validation, redaction preview, sync, search, investigate, run status, and report export
+- permission policy blocks non-allowlisted sensitive reads and requires approval for data export
+- the deterministic local agent inspects configured evidence, identifies missing coverage, optionally syncs, and calls Core investigate when reachable
+- watch mode refuses unconfirmed API sync before entering the polling loop; use `--yes` or `--dry-run`
+
+## Security model
+
+- path access is constrained by allowlist and deny patterns
+- dangerous files are skipped by default
+- inspect does not upload data
+- logs never print raw secret values
+
+## Docker
+
+Base image:
+
+```bash
+docker build -t opsincident-collector:base .
+```
+
+MCP-capable image:
+
+```bash
+docker build --build-arg INSTALL_TARGET=".[mcp]" -t opsincident-collector:mcp .
+```
+
+See [docs/security-model.md](docs/security-model.md) and [docs/config-reference.md](docs/config-reference.md).
