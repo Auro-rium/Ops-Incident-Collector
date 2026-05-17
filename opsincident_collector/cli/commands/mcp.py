@@ -5,23 +5,32 @@ from pathlib import Path
 
 import typer
 
-from opsincident_collector.mcp_server.resources import get_resource_map
-from opsincident_collector.mcp_server.server import create_fastmcp_server
+from opsincident_collector.config.loader import load_settings_optional
+from opsincident_collector.mcp_server.server import create_fastmcp_server, describe_mcp_surface
 
-mcp_app = typer.Typer(help="MCP commands.")
+mcp_app = typer.Typer(
+    help=(
+        "MCP commands. Exposes permissioned Collector tools, Core API bridge tools, "
+        "safe resources, and disk-loaded XML prompts over stdio."
+    )
+)
 
 
 @mcp_app.command("serve")
 def serve(
-    config: Path | None = typer.Option(None, "--config"),
-    transport: str = typer.Option("stdio", "--transport"),
-    dump_schema: bool = typer.Option(False, "--dump-schema"),
+    config: Path | None = typer.Option(None, "--config", help="Collector YAML config path."),
+    transport: str = typer.Option("stdio", "--transport", help="MCP transport. Phase 3 supports stdio."),
+    dump_schema: bool = typer.Option(False, "--dump-schema", help="Print tools/resources/prompts and exit."),
 ) -> None:
     if dump_schema:
-        typer.echo(json.dumps(get_resource_map(config), indent=2, default=str))
+        typer.echo(json.dumps(describe_mcp_surface(config), indent=2, default=str))
         return
     if transport != "stdio":
-        typer.echo("Only stdio transport is implemented in v1.")
+        typer.echo("Only stdio transport is implemented in Phase 3.")
+        raise typer.Exit(code=1)
+    settings = load_settings_optional(config)
+    if not settings.mcp.enabled:
+        typer.echo("MCP is disabled by config: mcp.enabled=false")
         raise typer.Exit(code=1)
     try:
         server = create_fastmcp_server(config)

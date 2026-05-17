@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-PROMPTS = {
-    "incidentops_investigate_latency": "Investigate latency using only evidence, cite sources, mention missing data, and avoid overstating confidence.",
-    "incidentops_investigate_error_rate": "Investigate rising error rate using only evidence, cite sources, and call out missing data.",
-    "incidentops_deploy_regression": "Check for deploy regressions and only conclude if evidence is strong.",
-    "incidentops_missing_data_review": "Review available evidence and explicitly identify missing data before further conclusions.",
-    "incidentops_generate_postmortem": "Generate a draft postmortem using only cited evidence and include unknowns.",
-    "incidentops_prepare_source_sync": "Prepare a safe sync recommendation and ask approval before upload or external writes.",
-}
+from opsincident_collector.mcp_server.prompt_loader import load_all_prompts
+
+
+def get_prompt_map() -> dict[str, str]:
+    return {name: asset.raw_xml for name, asset in load_all_prompts().items()}
+
+
+PROMPTS = get_prompt_map()

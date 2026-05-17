@@ -147,6 +147,11 @@ class CoreClient:
         response.raise_for_status()
         return response.json()
 
+    def list_sources(self, project_id: str) -> dict[str, Any]:
+        response = self.client.get(f"/v1/projects/{project_id}/sources")
+        response.raise_for_status()
+        return response.json()
+
     def investigate(self, payload: dict[str, Any]) -> dict[str, Any]:
         response = self.client.post("/v1/investigate", json=payload)
         response.raise_for_status()

@@ -31,6 +31,9 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 include = ["opsincident_collector*"]
 
+[tool.setuptools.package-data]
+opsincident_collector = ["prompts/*.xml"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 

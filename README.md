@@ -85,10 +85,34 @@ opsincident-collector sync --path ./service --export api --project-id proj_123 -
 
 ## MCP and agent mode
 
-- MCP tools expose inspect, validation, redaction preview, sync, search, investigate, run status, and report export
-- permission policy blocks non-allowlisted sensitive reads and requires approval for data export
+- MCP tools call the real Collector pipeline or IncidentOps Core API adapter; they are not decorative wrappers
+- XML prompt assets are loaded from `opsincident_collector/prompts/` and exposed to clients without local LLM calls
+- permission policy blocks non-allowlisted sensitive reads, denylisted files, and unapproved data export
 - the deterministic local agent inspects configured evidence, identifies missing coverage, optionally syncs, and calls Core investigate when reachable
 - watch mode refuses unconfirmed API sync before entering the polling loop; use `--yes` or `--dry-run`
+
+Phase 3 MCP tools:
+
+- `inspect_folder`, `validate_source_config`, `preview_redaction`, `sync_source`
+- `get_source_coverage`, `get_rag_readiness`, `generate_eval_seed`, `validate_core_contract`
+- `search_evidence`, `investigate_incident`, `create_workflow_run`, `get_run_status`, `get_run_events`, `export_report`
+
+MCP resources expose redacted local config, last sync/inspection, local RAG readiness, failed-upload queue summaries, project sources, project coverage, and Core capabilities. Failed upload resources do not expose stored payload JSON.
+
+```bash
+opsincident-collector mcp serve --config collector.yaml
+opsincident-collector mcp serve --config collector.yaml --dump-schema
+```
+
+Typical MCP client flow:
+
+1. `inspect_folder`
+2. `get_rag_readiness`
+3. `sync_source` with `dry_run=true`
+4. `sync_source` with explicit approval
+5. `investigate_incident`
+
+Core remains the investigation brain; Collector MCP tools do not invent root cause.
 
 ## RAG readiness and eval seeds
 

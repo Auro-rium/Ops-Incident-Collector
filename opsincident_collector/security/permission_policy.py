@@ -19,13 +19,16 @@ TOOL_PERMISSIONS = {
     "inspect_folder": PermissionLevel.READ_ONLY,
     "validate_source_config": PermissionLevel.READ_ONLY,
     "get_source_coverage": PermissionLevel.READ_ONLY,
+    "get_rag_readiness": PermissionLevel.READ_ONLY,
     "search_evidence": PermissionLevel.READ_ONLY,
     "investigate_incident": PermissionLevel.READ_ONLY,
     "get_run_status": PermissionLevel.READ_ONLY,
     "get_run_events": PermissionLevel.READ_ONLY,
+    "validate_core_contract": PermissionLevel.READ_ONLY,
     "preview_redaction": PermissionLevel.LOCAL_SENSITIVE_READ,
     "sync_source": PermissionLevel.DATA_EXPORT,
     "create_workflow_run": PermissionLevel.DATA_EXPORT,
+    "generate_eval_seed": PermissionLevel.READ_ONLY,
     "export_report": PermissionLevel.READ_ONLY,
 }
 
@@ -34,6 +37,10 @@ TOOL_PERMISSIONS = {
 class PermissionDecision:
     allowed: bool
     reason: str
+
+
+def permission_level_for_tool(tool_name: str) -> PermissionLevel:
+    return TOOL_PERMISSIONS.get(tool_name, PermissionLevel.READ_ONLY)
 
 
 def check_tool_permission(
