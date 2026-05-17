@@ -9,6 +9,7 @@ from opsincident_collector.adapters.core_client import (
     MissingBatchEndpointError,
     is_retryable_api_error,
 )
+from opsincident_collector.core.core_payload import to_core_document_payload
 from opsincident_collector.core.models import NormalizedDocument, SyncSummary
 from opsincident_collector.processors.batcher import batch_items
 
@@ -44,7 +45,7 @@ class IncidentOpsAPIExporter:
             self.batch_size = min(self.batch_size, capabilities.limits["max_batch_size"])
         source = self.client.register_source(
             project_id=self.project_id,
-            payload={"name": self.source_name, "type": self.source_type},
+            payload={"name": self.source_name, "source_type": self.source_type, "type": self.source_type},
             capabilities=capabilities,
         )
         summary.source_id = source.source_id
@@ -61,12 +62,13 @@ class IncidentOpsAPIExporter:
         uploaded_bytes += self._retry_due_uploads(summary, capabilities)
 
         for batch in batch_items(documents, self.batch_size):
-            payload = [document.model_dump(mode="json") for document in batch]
+            payload = [to_core_document_payload(document) for document in batch]
             try:
                 self.client.batch_upload_documents(
                     project_id=self.project_id,
                     source_id=source.source_id,
                     documents=payload,
+                    sync_id=remote_sync_id,
                     capabilities=capabilities,
                 )
                 uploaded_bytes += sum(document.size_bytes for document in batch)
@@ -110,7 +112,7 @@ class IncidentOpsAPIExporter:
                 source_name=self.source_name,
                 path=document.path,
                 document_external_id=document.external_id,
-                payload_json=json.dumps(document.model_dump(mode="json")),
+                payload_json=json.dumps(to_core_document_payload(document)),
                 reason="retryable_upload_error" if retryable else "non_retryable_upload_error",
                 last_error=str(exc),
                 retry_count=0 if retryable else self.retry_count,
@@ -129,6 +131,7 @@ class IncidentOpsAPIExporter:
                     project_id=self.project_id,
                     source_id=summary.source_id or self.source_name,
                     documents=[payload],
+                    sync_id=summary.sync_id,
                     capabilities=capabilities,
                 )
             except Exception as exc:
@@ -152,8 +155,8 @@ class IncidentOpsAPIExporter:
             self.store.upsert_file_record(
                 source_name=self.source_name,
                 path=payload.get("path") or row["path"],
-                relative_path=payload.get("relative_path") or row["path"],
-                checksum=payload.get("checksum") or "",
+                relative_path=payload.get("relative_path") or payload.get("path") or row["path"],
+                checksum=payload.get("checksum") or payload.get("content_hash") or "",
                 size_bytes=int(payload.get("size_bytes") or 0),
                 modified_at=payload.get("modified_at"),
                 last_status="synced",

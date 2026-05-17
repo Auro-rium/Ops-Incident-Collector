@@ -51,7 +51,14 @@ class CoreClient:
 
     def register_source(self, project_id: str, payload: dict[str, Any], capabilities: CoreCapabilities | None = None) -> SourceRegistrationResult:
         endpoint = resolve_endpoint(capabilities.endpoints if capabilities else None, "register_source")
-        response = self.client.post(endpoint.format(project_id=project_id), json=payload)
+        source_payload = {
+            "name": payload["name"],
+            "source_type": payload.get("source_type") or payload.get("type") or "filesystem",
+            "type": payload.get("type") or payload.get("source_type") or "filesystem",
+            "sync_mode": payload.get("sync_mode", "manual"),
+            "config": payload.get("config", {}),
+        }
+        response = self.client.post(endpoint.format(project_id=project_id), json=source_payload)
         response.raise_for_status()
         data = response.json()
         return SourceRegistrationResult(source_id=data.get("source_id") or data.get("id") or payload["name"], raw=data)
@@ -60,42 +67,65 @@ class CoreClient:
         endpoint = resolve_endpoint(capabilities.endpoints if capabilities else None, "create_sync")
         response = self.client.post(endpoint.format(source_id=source_id), json=payload)
         if response.status_code == 404:
-            return {"sync_id": payload["sync_id"]}
+            legacy_response = self.client.post(f"/v1/sources/{source_id}/syncs", json=payload)
+            if legacy_response.status_code == 404:
+                return {"sync_id": payload["sync_id"]}
+            legacy_response.raise_for_status()
+            return legacy_response.json()
         response.raise_for_status()
         return response.json()
 
     def update_sync(self, source_id: str, sync_id: str, payload: dict[str, Any], capabilities: CoreCapabilities | None = None) -> dict[str, Any]:
         endpoint = resolve_endpoint(capabilities.endpoints if capabilities else None, "update_sync")
-        response = self.client.patch(endpoint.format(source_id=source_id, sync_id=sync_id), json=payload)
+        formatted = endpoint.format(source_id=source_id, sync_id=sync_id)
+        if formatted.endswith("/finish"):
+            response = self.client.post(formatted, json=payload)
+        else:
+            response = self.client.patch(formatted, json=payload)
         if response.status_code == 404:
-            return {"sync_id": sync_id, "status": payload.get("status")}
+            legacy_response = self.client.patch(f"/v1/sources/{source_id}/syncs/{sync_id}", json=payload)
+            if legacy_response.status_code == 404:
+                return {"sync_id": sync_id, "status": payload.get("status")}
+            legacy_response.raise_for_status()
+            return legacy_response.json()
         response.raise_for_status()
         return response.json()
 
     @staticmethod
-    def versioned_batch_payload(documents: list[dict[str, Any]]) -> dict[str, Any]:
-        return {
+    def versioned_batch_payload(documents: list[dict[str, Any]], sync_id: str | None = None) -> dict[str, Any]:
+        payload = {
             "collector_version": collector_version(),
             "schema_version": SCHEMA_VERSION,
             "core_api_version": CORE_API_VERSION,
             "documents": documents,
         }
+        if sync_id:
+            payload["sync_id"] = sync_id
+        return payload
 
     def batch_upload_documents(
         self,
         project_id: str,
         source_id: str,
         documents: list[dict[str, Any]],
+        sync_id: str | None = None,
         capabilities: CoreCapabilities | None = None,
     ) -> dict[str, Any]:
         capability_endpoints = capabilities.endpoints if capabilities else None
         batch_endpoint = resolve_endpoint(capability_endpoints, "batch_upload")
-        payload = self.versioned_batch_payload(documents)
+        payload = self.versioned_batch_payload(documents, sync_id=sync_id)
         response = self.client.post(
             batch_endpoint.format(project_id=project_id, source_id=source_id),
             json=payload,
         )
         if response.status_code == 404:
+            legacy_response = self.client.post(
+                f"/v1/projects/{project_id}/sources/{source_id}/documents:batch",
+                json=payload,
+            )
+            if legacy_response.status_code != 404:
+                legacy_response.raise_for_status()
+                return legacy_response.json()
             fallback = resolve_endpoint(capability_endpoints, "fallback_ingest")
             fallback_payload = payload | {"source_id": source_id}
             fallback_response = self.client.post(

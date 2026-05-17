@@ -11,6 +11,13 @@ Important fields:
 - `security.allow_paths`: the only paths the collector may read.
 - `security.deny_patterns`: dangerous and binary files skipped before read/export.
 
+Phase 2 commands use the same allowlist, denylist, redaction, and max-size settings:
+
+- `coverage`
+- `rag-report`
+- `eval-seed`
+- `validate-core-contract`
+
 Environment overrides:
 
 - `INCIDENTOPS_API_URL`

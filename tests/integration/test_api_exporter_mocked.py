@@ -25,13 +25,13 @@ def _mock_core_success() -> respx.Router:
     respx.post("http://core.test/v1/projects/proj_123/sources").mock(
         return_value=Response(200, json={"source_id": "src_123"})
     )
-    respx.post("http://core.test/v1/sources/src_123/syncs").mock(
-        return_value=Response(200, json={"sync_id": "sync_123"})
+    respx.post("http://core.test/v1/sources/src_123/syncs/start").mock(
+        return_value=Response(200, json={"sync_id": "11111111-1111-1111-1111-111111111111"})
     )
-    respx.patch("http://core.test/v1/sources/src_123/syncs/sync_123").mock(
+    respx.post("http://core.test/v1/sources/src_123/syncs/11111111-1111-1111-1111-111111111111/finish").mock(
         return_value=Response(200, json={"status": "completed"})
     )
-    return respx.post("http://core.test/v1/projects/proj_123/sources/src_123/documents:batch")
+    return respx.post("http://core.test/v1/sources/src_123/documents/batch")
 
 
 @respx.mock
@@ -57,6 +57,11 @@ def test_api_exporter_syncs_with_mocked_core(tmp_path: Path, monkeypatch) -> Non
     assert summary.bytes_uploaded > 0
     assert b'"collector_version"' in payload
     assert b'"schema_version":"incidentops.normalized_document.v1"' in payload
+    assert b'"content_hash"' in payload
+    assert b'"checksum"' not in payload
+    assert b'"citation_hints"' in payload
+    assert b'"chunking_hints"' in payload
+    assert b"unsafe-demo-secret" not in payload
     assert upload_route.calls[0].request.headers["authorization"] == "Bearer test-token"
 
 

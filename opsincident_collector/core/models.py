@@ -98,3 +98,60 @@ class NormalizedDocumentEnvelope(BaseModel):
     schema_version: str = SCHEMA_VERSION
     core_api_version: str | None = CORE_API_VERSION
     document: NormalizedDocument
+
+
+class CitationHint(BaseModel):
+    path: str
+    relative_path: str | None = None
+    start_line: int | None = None
+    end_line: int | None = None
+    label: str | None = None
+    reason: str | None = None
+    confidence: float | None = None
+
+
+class ChunkingHint(BaseModel):
+    type: str
+    start_line: int | None = None
+    end_line: int | None = None
+    priority: str = "medium"
+    reason: str | None = None
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+class SourceCoverageReport(BaseModel):
+    has_logs: bool = False
+    has_code: bool = False
+    has_deploys: bool = False
+    has_incidents: bool = False
+    has_runbooks: bool = False
+    has_api_docs: bool = False
+    source_type_counts: dict[str, int] = Field(default_factory=dict)
+    document_count: int = 0
+    warning_count: int = 0
+    warnings: list[str] = Field(default_factory=list)
+    missing_recommended_sources: list[str] = Field(default_factory=list)
+
+
+class RAGReadinessReport(BaseModel):
+    score: float
+    grade: str
+    ready_for_core_sync: bool
+    ready_for_investigation: bool
+    strengths: list[str] = Field(default_factory=list)
+    weaknesses: list[str] = Field(default_factory=list)
+    recommended_next_sources: list[str] = Field(default_factory=list)
+    coverage: SourceCoverageReport
+    estimated_document_count: int
+    estimated_metadata_quality: str
+
+
+class EvalSeedCase(BaseModel):
+    id: str
+    question: str
+    expected_documents: list[str] = Field(default_factory=list)
+    expected_terms: list[str] = Field(default_factory=list)
+    forbidden_terms: list[str] = Field(default_factory=list)
+    source_type: str
+    difficulty: str
+    notes: str | None = None

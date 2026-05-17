@@ -14,6 +14,8 @@ The repository now includes a hardened deterministic v1 foundation:
 - explicit collector/schema/Core API protocol versioning at export boundaries
 - token-env based Core auth without printing token values
 - failed upload queue with retry/backoff metadata
+- Core-compatible RAG metadata, citation hints, and chunking hints
+- source coverage, RAG readiness, eval seed, and Core contract validation commands
 - permissioned MCP tool layer and FastMCP server wiring
 - deterministic local agent workflow
 - polling watch mode
@@ -28,6 +30,10 @@ opsincident-collector inspect --path ./some-folder
 opsincident-collector sync --path ./some-folder --export jsonl --output out.jsonl
 opsincident-collector sync --path ./some-folder --export api --project-id proj_123 --yes
 opsincident-collector watch --path ./some-folder --export jsonl --output out.jsonl
+opsincident-collector coverage --path ./some-folder --format json
+opsincident-collector rag-report --path ./some-folder --format json
+opsincident-collector eval-seed --path ./some-folder --output eval_seed.jsonl
+opsincident-collector validate-core-contract --api-url http://127.0.0.1:8001 --project-id proj_123
 opsincident-collector mcp serve --config collector.yaml
 opsincident-collector agent investigate --project-id proj_123 --query "Why did orders slow after deploy?"
 ```
@@ -50,11 +56,20 @@ The current implementation is useful without IncidentOps Core:
 - `core_api_version: v1`
 - `document`
 
+The collector enriches `document.metadata` with advisory fields for Core:
+
+- `citation_hints`: source path and line-range hints for evidence citation.
+- `chunking_hints`: optional section/window/function hints for Core's indexer.
+- retrieval metadata such as service, environment, endpoints, commits, timestamps, headings, language, and incident fields.
+
+These are hints only. Core still owns canonical chunking, embeddings, indexing, retrieval, reranking, investigation, answers, citations, workflow runs, and eval scoring.
+
 ## Core-sync mode
 
 - probes `GET /v1/capabilities` when available
 - registers sources and uploads normalized documents
 - sends `collector_version`, `schema_version`, and `core_api_version` in batch upload payloads
+- maps Collector `checksum` to Core `content_hash` at API upload time
 - uses `Authorization: Bearer <token>` from `INCIDENTOPS_TOKEN` or `api.token_env`
 - fails API sync clearly when auth is required but no token is present
 - queues transient failed document uploads in SQLite and retries due items on later syncs
@@ -74,6 +89,24 @@ opsincident-collector sync --path ./service --export api --project-id proj_123 -
 - permission policy blocks non-allowlisted sensitive reads and requires approval for data export
 - the deterministic local agent inspects configured evidence, identifies missing coverage, optionally syncs, and calls Core investigate when reachable
 - watch mode refuses unconfirmed API sync before entering the polling loop; use `--yes` or `--dry-run`
+
+## RAG readiness and eval seeds
+
+```bash
+opsincident-collector coverage --path ./service --format json
+opsincident-collector rag-report --path ./service --format json
+opsincident-collector eval-seed --path ./service --output eval_seed.jsonl
+```
+
+`coverage` reports missing recommended source categories. `rag-report` gives a diagnostic score based on logs, code, deploy history, incidents, runbooks, API docs, metadata, and hints. `eval-seed` writes deterministic JSONL cases from local evidence without using an LLM.
+
+Validate Core compatibility without uploading data:
+
+```bash
+opsincident-collector validate-core-contract --api-url http://127.0.0.1:8001 --project-id proj_123
+```
+
+Use `--with-sample` only when you explicitly want to upload one tiny redacted contract-validation document.
 
 ## Security model
 

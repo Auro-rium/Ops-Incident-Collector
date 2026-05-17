@@ -128,13 +128,13 @@ def test_watch_api_with_yes_allowed(tmp_path: Path, monkeypatch) -> None:
     respx.post("http://core.test/v1/projects/proj_123/sources").mock(
         return_value=Response(200, json={"source_id": "src_123"})
     )
-    respx.post("http://core.test/v1/sources/src_123/syncs").mock(
-        return_value=Response(200, json={"sync_id": "sync_123"})
+    respx.post("http://core.test/v1/sources/src_123/syncs/start").mock(
+        return_value=Response(200, json={"sync_id": "11111111-1111-1111-1111-111111111111"})
     )
-    respx.post("http://core.test/v1/projects/proj_123/sources/src_123/documents:batch").mock(
+    respx.post("http://core.test/v1/sources/src_123/documents/batch").mock(
         return_value=Response(200, json={"ok": True})
     )
-    respx.patch("http://core.test/v1/sources/src_123/syncs/sync_123").mock(
+    respx.post("http://core.test/v1/sources/src_123/syncs/11111111-1111-1111-1111-111111111111/finish").mock(
         return_value=Response(200, json={"status": "completed"})
     )
 
