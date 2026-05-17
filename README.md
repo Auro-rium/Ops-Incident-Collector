@@ -35,7 +35,10 @@ opsincident-collector rag-report --path ./some-folder --format json
 opsincident-collector eval-seed --path ./some-folder --output eval_seed.jsonl
 opsincident-collector validate-core-contract --api-url http://127.0.0.1:8001 --project-id proj_123
 opsincident-collector mcp serve --config collector.yaml
-opsincident-collector agent investigate --project-id proj_123 --query "Why did orders slow after deploy?"
+opsincident-collector agent rag-readiness --path ./some-folder --format json
+opsincident-collector agent onboard-source --path ./some-folder --export-target api --project-id proj_123
+opsincident-collector agent sync-quality --path ./some-folder --project-id proj_123
+opsincident-collector agent investigate --path ./some-folder --project-id proj_123 --query "Why did orders slow after deploy?"
 ```
 
 ## Local-only mode
@@ -88,7 +91,7 @@ opsincident-collector sync --path ./service --export api --project-id proj_123 -
 - MCP tools call the real Collector pipeline or IncidentOps Core API adapter; they are not decorative wrappers
 - XML prompt assets are loaded from `opsincident_collector/prompts/` and exposed to clients without local LLM calls
 - permission policy blocks non-allowlisted sensitive reads, denylisted files, and unapproved data export
-- the deterministic local agent inspects configured evidence, identifies missing coverage, optionally syncs, and calls Core investigate when reachable
+- the LangGraph agent runtime orchestrates source onboarding, readiness, sync quality, and Core investigation bridge workflows
 - watch mode refuses unconfirmed API sync before entering the polling loop; use `--yes` or `--dry-run`
 
 Phase 3 MCP tools:
@@ -113,6 +116,35 @@ Typical MCP client flow:
 5. `investigate_incident`
 
 Core remains the investigation brain; Collector MCP tools do not invent root cause.
+
+## LangGraph Agent Runtime
+
+Phase 4 adds LangGraph orchestration for Collector operations only:
+
+- `source_onboarding`: inspect, redaction summary, coverage, readiness, sync planning, approval, sync, post-sync quality.
+- `rag_readiness`: offline readiness and eval seed preview.
+- `sync_quality`: local sync history and failed upload queue review.
+- `investigation_bridge`: readiness checks plus Core `/v1/investigate` call when Core is available.
+
+The graph runtime persists runs, node events, and approval requests in local SQLite. API sync/data
+upload pauses for approval unless `--yes` or `--dry-run` is used. Graph state stores safe summaries
+only and does not persist raw secrets.
+
+```bash
+opsincident-collector agent rag-readiness --path tests/fixtures/basic_project --format json
+opsincident-collector agent onboard-source --path tests/fixtures/basic_project --export-target console --dry-run --format json
+opsincident-collector agent investigate --path tests/fixtures/basic_project --project-id proj_123 --query "Why did latency increase?" --format json
+```
+
+Install agent dependencies with:
+
+```bash
+pip install "opsincident-collector[agent]"
+docker build --build-arg INSTALL_TARGET=".[mcp,agent]" -t opsincident-collector:agent .
+```
+
+LangGraph does not call an LLM here, generate embeddings, use a vector database, or diagnose root
+cause locally. Core remains responsible for RAG and investigation.
 
 ## RAG readiness and eval seeds
 
@@ -154,3 +186,4 @@ docker build --build-arg INSTALL_TARGET=".[mcp]" -t opsincident-collector:mcp .
 ```
 
 See [docs/security-model.md](docs/security-model.md) and [docs/config-reference.md](docs/config-reference.md).
+See [docs/langgraph-agent.md](docs/langgraph-agent.md) for Phase 4 graph details.

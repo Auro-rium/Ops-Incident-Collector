@@ -16,6 +16,16 @@ dependencies = [
 [project.optional-dependencies]
 watch = ["watchdog>=4,<7"]
 mcp = ["mcp>=1.9,<2"]
+agent = [
+    "langgraph>=0.2,<1",
+    "langchain-core>=0.3,<1",
+]
+all = [
+    "mcp>=1.9,<2",
+    "watchdog>=4,<7",
+    "langgraph>=0.2,<1",
+    "langchain-core>=0.3,<1",
+]
 dev = [
     "pytest>=8,<9",
     "respx>=0.21,<1",

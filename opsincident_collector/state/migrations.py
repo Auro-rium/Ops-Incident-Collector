@@ -85,6 +85,41 @@ def run_migrations(conn: sqlite3.Connection) -> None:
             metadata_json TEXT NOT NULL,
             redaction_json TEXT NOT NULL
         );
+
+        CREATE TABLE IF NOT EXISTS graph_runs (
+            run_id TEXT PRIMARY KEY,
+            graph_name TEXT NOT NULL,
+            status TEXT NOT NULL,
+            input_json TEXT NOT NULL,
+            state_json TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL,
+            completed_at TEXT,
+            error TEXT
+        );
+
+        CREATE TABLE IF NOT EXISTS graph_events (
+            id INTEGER PRIMARY KEY,
+            run_id TEXT NOT NULL,
+            graph_name TEXT NOT NULL,
+            node_name TEXT NOT NULL,
+            event_type TEXT NOT NULL,
+            payload_json TEXT NOT NULL,
+            created_at TEXT NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS graph_approvals (
+            approval_id TEXT PRIMARY KEY,
+            run_id TEXT NOT NULL,
+            graph_name TEXT NOT NULL,
+            node_name TEXT NOT NULL,
+            approval_type TEXT NOT NULL,
+            status TEXT NOT NULL,
+            request_json TEXT NOT NULL,
+            response_json TEXT,
+            created_at TEXT NOT NULL,
+            decided_at TEXT
+        );
         """
     )
     _ensure_columns(
