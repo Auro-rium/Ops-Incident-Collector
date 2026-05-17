@@ -1,0 +1,22 @@
+[Unit]
+Description=OpsIncident Collector daemon
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=opsincident
+Group=opsincident
+EnvironmentFile=/etc/opsincident-collector/env
+WorkingDirectory=/var/lib/opsincident-collector
+ExecStart=/usr/local/bin/opsincident-collector daemon run --config /etc/opsincident-collector/collector.yaml
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/var/lib/opsincident-collector /var/log/opsincident-collector
+
+[Install]
+WantedBy=multi-user.target

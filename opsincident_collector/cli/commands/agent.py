@@ -7,14 +7,14 @@ from typing import Any
 
 import typer
 
-warnings.filterwarnings("ignore", message=r".*allowed_objects.*", category=Warning)
-
 from opsincident_collector.langgraph_agent.reports.markdown import graph_report_to_markdown
 from opsincident_collector.langgraph_agent.runner import (
     LangGraphUnavailableError,
     approve_action,
     run_graph,
 )
+
+warnings.filterwarnings("ignore", message=r".*allowed_objects.*", category=Warning)
 
 agent_app = typer.Typer(
     help=(

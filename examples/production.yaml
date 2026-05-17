@@ -1,0 +1,66 @@
+api:
+  base_url: "http://incidentops-core:8001"
+  token_env: "INCIDENTOPS_TOKEN"
+  timeout_seconds: 30
+  verify_tls: true
+  auth_required: true
+
+project:
+  id: "proj_REPLACE_ME"
+
+collector:
+  id: "prod-edge-collector"
+  name: "prod-edge-collector"
+  mode: "daemon"
+
+state:
+  sqlite_path: "/var/lib/opsincident-collector/state.sqlite"
+
+sync:
+  batch_size: 50
+  max_file_size_mb: 10
+  dry_run: false
+  retry_count: 5
+  retry_backoff_seconds: 5
+  retry_due_on_start: true
+
+security:
+  redact_secrets: true
+  require_confirmation_for_upload: true
+  allow_paths:
+    - "/data/service"
+    - "/data/logs"
+  deny_patterns:
+    - ".env"
+    - ".env.*"
+    - "*.pem"
+    - "*.key"
+    - "id_rsa"
+    - "id_ed25519"
+    - ".git/**"
+    - "node_modules/**"
+    - ".venv/**"
+    - "__pycache__/**"
+    - "*.sqlite"
+    - "*.db"
+
+daemon:
+  enabled: true
+  interval_seconds: 300
+  jitter_seconds: 30
+  export_target: "api"
+  health_enabled: true
+  health_host: "0.0.0.0"
+  health_port: 8686
+  metrics_enabled: true
+  metrics_host: "0.0.0.0"
+  metrics_port: 8687
+  allow_unattended_upload: true
+
+sources:
+  - name: "service"
+    type: "filesystem"
+    path: "/data/service"
+  - name: "logs"
+    type: "logs_folder"
+    path: "/data/logs"

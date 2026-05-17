@@ -1,0 +1,39 @@
+collector:
+  id: "edge-daemon"
+  name: "edge-daemon"
+  mode: "daemon"
+
+state:
+  sqlite_path: "/var/lib/opsincident-collector/state.sqlite"
+
+sync:
+  batch_size: 50
+  max_file_size_mb: 10
+  dry_run: false
+  retry_count: 5
+  retry_backoff_seconds: 5
+  retry_due_on_start: true
+
+security:
+  redact_secrets: true
+  require_confirmation_for_upload: true
+  allow_paths:
+    - "/data/basic_project"
+
+daemon:
+  enabled: true
+  interval_seconds: 300
+  jitter_seconds: 30
+  export_target: "console"
+  health_enabled: true
+  health_host: "0.0.0.0"
+  health_port: 8686
+  metrics_enabled: true
+  metrics_host: "0.0.0.0"
+  metrics_port: 8687
+  allow_unattended_upload: false
+
+sources:
+  - name: "basic-project"
+    type: "filesystem"
+    path: "/data/basic_project"

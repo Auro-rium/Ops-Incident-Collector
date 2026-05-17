@@ -273,6 +273,46 @@ class SQLiteStore:
         rows = self.conn.execute("SELECT * FROM failed_uploads ORDER BY id ASC").fetchall()
         return [dict(row) for row in rows]
 
+    def list_failed_upload_summaries(self) -> list[dict[str, Any]]:
+        rows = self.conn.execute(
+            """
+            SELECT id, sync_id, source_name, path, document_external_id, reason,
+                   retry_count, next_retry_at, last_error, created_at, updated_at
+            FROM failed_uploads
+            ORDER BY id ASC
+            """
+        ).fetchall()
+        return [dict(row) for row in rows]
+
+    def failed_upload_queue_status(self, max_retry_count: int) -> dict[str, Any]:
+        rows = self.list_failed_upload_summaries()
+        pending = [row for row in rows if int(row.get("retry_count") or 0) < max_retry_count]
+        exhausted = [row for row in rows if int(row.get("retry_count") or 0) >= max_retry_count]
+        next_retry_values = [row.get("next_retry_at") for row in pending if row.get("next_retry_at")]
+        oldest_values = [row.get("created_at") for row in rows if row.get("created_at")]
+        by_source: dict[str, int] = {}
+        for row in rows:
+            source_name = row.get("source_name") or "<unknown>"
+            by_source[source_name] = by_source.get(source_name, 0) + 1
+        return {
+            "pending_count": len(pending),
+            "exhausted_count": len(exhausted),
+            "total_count": len(rows),
+            "next_retry_at": min(next_retry_values) if next_retry_values else None,
+            "oldest_failed_upload": min(oldest_values) if oldest_values else None,
+            "by_source": dict(sorted(by_source.items())),
+            "items": rows,
+        }
+
+    def clear_failed_uploads_before(self, cutoff_iso: str) -> int:
+        before = self.failed_upload_queue_depth()
+        self.conn.execute(
+            "DELETE FROM failed_uploads WHERE created_at IS NOT NULL AND created_at < ?",
+            (cutoff_iso,),
+        )
+        self.conn.commit()
+        return before - self.failed_upload_queue_depth()
+
     def save_normalized_document(self, document: NormalizedDocument) -> None:
         document_id = document.document_id or document.external_id
         self.conn.execute(

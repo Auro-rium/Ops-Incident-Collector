@@ -18,6 +18,7 @@ The repository now includes a hardened deterministic v1 foundation:
 - source coverage, RAG readiness, eval seed, and Core contract validation commands
 - permissioned MCP tool layer and FastMCP server wiring
 - deterministic local agent workflow
+- daemon mode with health, metrics, structured logs, and retry queue visibility
 - polling watch mode
 
 ## CLI
@@ -39,6 +40,9 @@ opsincident-collector agent rag-readiness --path ./some-folder --format json
 opsincident-collector agent onboard-source --path ./some-folder --export-target api --project-id proj_123
 opsincident-collector agent sync-quality --path ./some-folder --project-id proj_123
 opsincident-collector agent investigate --path ./some-folder --project-id proj_123 --query "Why did orders slow after deploy?"
+opsincident-collector daemon run --config examples/local-daemon.yaml --max-cycles 1
+opsincident-collector queue status --config collector.yaml
+opsincident-collector validate-rag-pipeline --path ./some-folder --format json
 ```
 
 ## Local-only mode
@@ -164,6 +168,41 @@ opsincident-collector validate-core-contract --api-url http://127.0.0.1:8001 --p
 
 Use `--with-sample` only when you explicitly want to upload one tiny redacted contract-validation document.
 
+## Daemon and Operations
+
+Phase 5 adds a real-server daemon for edge deployments:
+
+- periodic sync through the same deterministic pipeline used by `sync`
+- `/health` JSON endpoint with version, sync, Core reachability, state DB, and retry queue status
+- `/metrics` Prometheus text endpoint with sync counters, retry queue depth, uptime, and Core reachability
+- JSON structured daemon events such as `daemon_start`, `sync_cycle_complete`, and `core_unavailable`
+- queue commands for failed upload visibility and retry
+
+```bash
+opsincident-collector daemon run --config examples/local-daemon.yaml --max-cycles 1
+opsincident-collector daemon health --host 127.0.0.1 --port 8686
+opsincident-collector queue status --config examples/local-daemon.yaml --format json
+opsincident-collector queue retry --config examples/production.yaml --format json
+```
+
+API upload in daemon mode is refused unless the config explicitly permits unattended upload with `daemon.allow_unattended_upload: true` or disables upload confirmation. Tokens still come from `INCIDENTOPS_TOKEN` or `api.token_env`; raw tokens do not belong in YAML.
+
+`validate-rag-pipeline` proves the Collector-to-Core path without pretending Core success:
+
+```bash
+opsincident-collector validate-rag-pipeline --path tests/fixtures/basic_project --format json
+opsincident-collector validate-rag-pipeline \
+  --path tests/fixtures/basic_project \
+  --project-id proj_123 \
+  --api-url http://127.0.0.1:8001 \
+  --query "What evidence is available for investigation?" \
+  --search \
+  --investigate \
+  --format json
+```
+
+By default it does not upload, search, or investigate. Add `--sync`, `--search`, or `--investigate` explicitly for those Core operations.
+
 ## Security model
 
 - path access is constrained by allowlist and deny patterns
@@ -185,5 +224,21 @@ MCP-capable image:
 docker build --build-arg INSTALL_TARGET=".[mcp]" -t opsincident-collector:mcp .
 ```
 
+Agent/daemon image:
+
+```bash
+docker build --build-arg INSTALL_TARGET=".[mcp,agent]" -t opsincident-collector:agent .
+docker run --rm \
+  -e INCIDENTOPS_API_URL=http://host.docker.internal:8001 \
+  -e INCIDENTOPS_TOKEN=$INCIDENTOPS_TOKEN \
+  -e INCIDENTOPS_PROJECT_ID=proj_123 \
+  -v "$PWD/examples/daemon.yaml:/etc/opsincident-collector/collector.yaml:ro" \
+  -v "$PWD/tests/fixtures/basic_project:/data/basic_project:ro" \
+  -v "$PWD/.opsincident-collector:/var/lib/opsincident-collector" \
+  opsincident-collector:agent \
+  daemon run --config /etc/opsincident-collector/collector.yaml --max-cycles 1
+```
+
 See [docs/security-model.md](docs/security-model.md) and [docs/config-reference.md](docs/config-reference.md).
 See [docs/langgraph-agent.md](docs/langgraph-agent.md) for Phase 4 graph details.
+See [docs/daemon.md](docs/daemon.md), [docs/operations.md](docs/operations.md), and [docs/validate-rag-pipeline.md](docs/validate-rag-pipeline.md) for Phase 5 deployment details.

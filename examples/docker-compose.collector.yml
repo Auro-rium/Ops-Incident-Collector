@@ -1,0 +1,21 @@
+services:
+  opsincident-collector:
+    image: opsincident-collector:agent
+    command: ["daemon", "run", "--config", "/etc/opsincident-collector/collector.yaml"]
+    environment:
+      INCIDENTOPS_TOKEN: "${INCIDENTOPS_TOKEN:-}"
+      INCIDENTOPS_API_URL: "${INCIDENTOPS_API_URL:-http://host.docker.internal:8001}"
+      INCIDENTOPS_PROJECT_ID: "${INCIDENTOPS_PROJECT_ID:-proj_REPLACE_ME}"
+    volumes:
+      - ./daemon.yaml:/etc/opsincident-collector/collector.yaml:ro
+      - ../tests/fixtures/basic_project:/data/basic_project:ro
+      - ./.opsincident-collector:/var/lib/opsincident-collector
+    ports:
+      - "8686:8686"
+      - "8687:8687"
+    healthcheck:
+      test: ["CMD", "opsincident-collector", "daemon", "health", "--host", "127.0.0.1", "--port", "8686"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s

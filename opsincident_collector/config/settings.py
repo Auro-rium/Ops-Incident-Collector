@@ -100,6 +100,7 @@ class SyncSettings(BaseModel):
     compression: bool = False
     retry_count: int = 3
     retry_backoff_seconds: int = 5
+    retry_due_on_start: bool = True
 
 
 class SecuritySettings(BaseModel):
@@ -124,6 +125,26 @@ class ExportSettings(BaseModel):
     fallback_ingest_endpoint: str | None = None
 
 
+class DaemonSettings(BaseModel):
+    enabled: bool = False
+    interval_seconds: int = 300
+    jitter_seconds: int = 30
+    run_once: bool = False
+    health_enabled: bool = True
+    health_host: str = "127.0.0.1"
+    health_port: int = 8686
+    metrics_enabled: bool = True
+    metrics_host: str = "127.0.0.1"
+    metrics_port: int = 8687
+    max_cycles: int | None = None
+    export_target: str = "console"
+    output_path: Path | None = None
+    allow_unattended_upload: bool = False
+    source_name: str | None = None
+    source_type: str = "filesystem"
+    max_depth: int = 8
+
+
 class AppSettings(BaseSettings):
     model_config = SettingsConfigDict(
         env_prefix="INCIDENTOPS_",
@@ -138,4 +159,5 @@ class AppSettings(BaseSettings):
     security: SecuritySettings = Field(default_factory=SecuritySettings)
     mcp: MCPSettings = Field(default_factory=MCPSettings)
     exporters: ExportSettings = Field(default_factory=ExportSettings)
+    daemon: DaemonSettings = Field(default_factory=DaemonSettings)
     sources: list[SourceConfig] = Field(default_factory=list)

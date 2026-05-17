@@ -1,0 +1,40 @@
+collector:
+  id: "local-daemon"
+  name: "local-daemon"
+  mode: "daemon"
+
+state:
+  sqlite_path: ".opsincident-collector/local-daemon.sqlite"
+
+sync:
+  batch_size: 50
+  max_file_size_mb: 10
+  dry_run: false
+  retry_count: 5
+  retry_backoff_seconds: 5
+  retry_due_on_start: true
+
+security:
+  redact_secrets: true
+  require_confirmation_for_upload: true
+  allow_paths:
+    - "tests/fixtures/basic_project"
+
+daemon:
+  enabled: true
+  interval_seconds: 300
+  jitter_seconds: 0
+  run_once: false
+  export_target: "console"
+  health_enabled: true
+  health_host: "127.0.0.1"
+  health_port: 8686
+  metrics_enabled: true
+  metrics_host: "127.0.0.1"
+  metrics_port: 8687
+  allow_unattended_upload: false
+
+sources:
+  - name: "basic-project"
+    type: "filesystem"
+    path: "tests/fixtures/basic_project"

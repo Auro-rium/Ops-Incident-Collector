@@ -29,6 +29,7 @@ all = [
 dev = [
     "pytest>=8,<9",
     "respx>=0.21,<1",
+    "ruff>=0.6,<1",
 ]
 
 [project.scripts]

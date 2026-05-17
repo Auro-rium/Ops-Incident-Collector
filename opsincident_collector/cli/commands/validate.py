@@ -58,6 +58,14 @@ def validate(
         source_errors.append("sync.retry_count must be >= 0")
     if settings.sync.retry_backoff_seconds < 0:
         source_errors.append("sync.retry_backoff_seconds must be >= 0")
+    if settings.daemon.interval_seconds <= 0:
+        source_errors.append("daemon.interval_seconds must be > 0")
+    if settings.daemon.export_target not in {"api", "jsonl", "sqlite", "console"}:
+        source_errors.append("daemon.export_target must be api, jsonl, sqlite, or console")
+    if settings.daemon.export_target in {"jsonl", "sqlite"} and not settings.daemon.output_path:
+        source_errors.append("daemon.output_path is required for daemon jsonl/sqlite export")
+    if settings.daemon.export_target == "api" and not settings.daemon.allow_unattended_upload:
+        warnings.append("daemon API export requires daemon.allow_unattended_upload=true at runtime")
 
     result = {
         "valid": not source_errors,
@@ -69,6 +77,9 @@ def validate(
         "token_env": settings.api.token_env,
         "token_present": bool(os.getenv(settings.api.token_env)) if settings.api.token_env else False,
         "max_file_size_mb": settings.sync.max_file_size_mb,
+        "daemon_export_target": settings.daemon.export_target,
+        "daemon_health": f"{settings.daemon.health_host}:{settings.daemon.health_port}",
+        "daemon_metrics": f"{settings.daemon.metrics_host}:{settings.daemon.metrics_port}",
         "warnings": warnings,
         "errors": source_errors,
     }

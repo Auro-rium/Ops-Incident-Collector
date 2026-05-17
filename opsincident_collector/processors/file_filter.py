@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import re
 from pathlib import Path
 
 from opsincident_collector.config.settings import DEFAULT_SUPPORTED_EXTENSIONS
