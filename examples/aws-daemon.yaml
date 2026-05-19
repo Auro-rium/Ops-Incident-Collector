@@ -1,0 +1,99 @@
+# AWS ECS Fargate daemon config for the flagship Collector demo.
+# Runtime values come from Secrets Manager-backed environment variables:
+# INCIDENTOPS_API_URL, INCIDENTOPS_TOKEN, PROJECT_ID, SOURCE_NAME, SOURCE_TYPE,
+# COLLECTOR_ENVIRONMENT, and optionally COLLECTOR_CONFIG.
+
+api:
+  base_url: "https://core.example.internal"
+  token_env: "INCIDENTOPS_TOKEN"
+  timeout_seconds: 30
+  verify_tls: true
+  auth_required: true
+
+project:
+  id: "proj_REPLACE_ME"
+
+collector:
+  id: "aws-fargate-collector"
+  name: "aws-fargate-collector"
+  mode: "daemon"
+  environment: "aws-demo"
+
+state:
+  sqlite_path: "/var/lib/opsincident-collector/state.sqlite"
+
+sync:
+  batch_size: 50
+  max_file_size_mb: 10
+  incremental: true
+  dry_run: false
+  compression: false
+  retry_count: 5
+  retry_backoff_seconds: 5
+  retry_due_on_start: true
+
+security:
+  redact_secrets: true
+  require_confirmation_for_upload: true
+  allow_paths:
+    # Safe image-bundled fixture for demos. Replace with /data/source or another
+    # mounted customer-owned path when deploying near real private data.
+    - "/app/tests/fixtures/basic_project"
+    - "/data/source"
+  deny_patterns:
+    - ".env"
+    - ".env.*"
+    - "*.pem"
+    - "*.key"
+    - "id_rsa"
+    - "id_ed25519"
+    - "*.p12"
+    - "*.pfx"
+    - "*.crt"
+    - "*.cer"
+    - ".git/**"
+    - "node_modules/**"
+    - ".venv/**"
+    - "venv/**"
+    - "__pycache__/**"
+    - "dist/**"
+    - "build/**"
+    - "target/**"
+    - ".next/**"
+    - ".pytest_cache/**"
+    - ".mypy_cache/**"
+    - ".ruff_cache/**"
+    - "*.sqlite"
+    - "*.db"
+    - "*.parquet"
+    - "*.zip"
+    - "*.tar"
+    - "*.gz"
+    - "*.7z"
+    - "*.png"
+    - "*.jpg"
+    - "*.jpeg"
+    - "*.mp4"
+    - "*.mov"
+    - "*.pdf"
+
+daemon:
+  enabled: true
+  interval_seconds: 300
+  jitter_seconds: 30
+  export_target: "api"
+  health_enabled: true
+  health_host: "0.0.0.0"
+  health_port: 8686
+  metrics_enabled: true
+  metrics_host: "0.0.0.0"
+  metrics_port: 8687
+  allow_unattended_upload: true
+  source_name: "aws-demo-source"
+  source_type: "filesystem"
+  max_depth: 8
+
+sources:
+  - name: "aws-demo-source"
+    type: "filesystem"
+    path: "/app/tests/fixtures/basic_project"

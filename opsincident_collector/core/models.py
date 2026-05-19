@@ -43,6 +43,7 @@ class SyncSummary(BaseModel):
     sync_id: str
     source_name: str | None = None
     source_id: str | None = None
+    collector_id: str | None = None
     project_id: str | None = None
     export_target: str
     files_seen: int = 0

@@ -61,7 +61,11 @@ def validate_core_contract(
     document_batch_upload = bool(features.get("document_batch_upload") or endpoints.get("batch_upload"))
     supported = {
         "source_registry": bool(features.get("source_registry") or endpoints.get("register_source")),
-        "collector_registration": bool(features.get("collector_registration") or endpoints.get("collector_register")),
+        "collector_registration": bool(
+            features.get("collector_registration")
+            or endpoints.get("register_collector")
+            or endpoints.get("collector_register")
+        ),
         "sync_lifecycle": bool(features.get("sync_lifecycle") or features.get("sync_tracking") or endpoints.get("create_sync")),
         "document_batch_upload": document_batch_upload,
         "fallback_ingest": bool(features.get("fallback_ingest") or endpoints.get("fallback_ingest")),
@@ -77,6 +81,16 @@ def validate_core_contract(
 
     if with_sample:
         try:
+            collector = client.register_collector(
+                project_id=project_id,
+                payload={
+                    "name": "collector-contract-validation",
+                    "environment": "contract_validation",
+                    "version": collector_version(),
+                },
+                capabilities=capabilities,
+            )
+            collector_id = collector.get("collector_id") or collector.get("id")
             source = client.register_source(
                 project_id=project_id,
                 payload={"name": "collector-contract-validation", "source_type": "unknown_text"},
@@ -84,7 +98,11 @@ def validate_core_contract(
             )
             sync = client.create_sync(
                 source_id=source.source_id,
-                payload={"sync_id": "contract-validation", "diagnostics": {"mode": "contract_validation"}},
+                payload={
+                    "sync_id": "contract-validation",
+                    "collector_id": collector_id,
+                    "diagnostics": {"mode": "contract_validation"},
+                },
                 capabilities=capabilities,
             )
             sync_id = sync.get("sync_id", "contract-validation")
@@ -93,6 +111,7 @@ def validate_core_contract(
                 project_id=project_id,
                 source_id=source.source_id,
                 sync_id=sync_id,
+                collector_id=collector_id,
                 documents=[
                     {
                         "external_id": "contract-validation/sample.txt",
@@ -155,7 +174,7 @@ def _merge_openapi_contract(report: dict[str, Any], client: CoreClient) -> None:
     discovered_endpoints = {}
     known_paths = {
         "register_source": "/v1/projects/{project_id}/sources",
-        "collector_register": "/v1/projects/{project_id}/collectors/register",
+        "register_collector": "/v1/projects/{project_id}/collectors/register",
         "create_sync": "/v1/sources/{source_id}/syncs/start",
         "batch_upload": "/v1/sources/{source_id}/documents/batch",
         "update_sync": "/v1/sources/{source_id}/syncs/{sync_id}/finish",

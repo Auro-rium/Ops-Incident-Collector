@@ -29,6 +29,19 @@ The image creates `/etc/opsincident-collector`, `/var/lib/opsincident-collector`
 
 See `examples/docker-compose.collector.yml`. It mounts config and state, mounts source data read-only, exposes health and metrics ports, and points to an external Core URL.
 
+## AWS ECS Fargate
+
+AWS deployment assets are in:
+
+- `infra/terraform`
+- `examples/aws-daemon.yaml`
+- `.github/workflows/deploy-collector.yml`
+- `scripts/smoke_aws_collector.sh`
+
+The Terraform module expects existing VPC, subnet, and ECS cluster values. It creates only Collector-specific resources: ECR, ECS service/task definition, CloudWatch logs, IAM roles, Secrets Manager references, security group wiring, and optional EFS state storage.
+
+See [aws-deployment.md](aws-deployment.md) for the full ECS, Secrets Manager, token rotation, and CI/CD workflow.
+
 ## systemd
 
 See:

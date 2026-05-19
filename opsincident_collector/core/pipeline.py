@@ -137,6 +137,8 @@ def _build_exporter(
         return IncidentOpsAPIExporter(
             client=client,
             project_id=project_id,
+            collector_name=settings.collector.name,
+            collector_environment=settings.collector.environment,
             source_name=source_name,
             source_type=source_type,
             batch_size=settings.sync.batch_size,

@@ -203,6 +203,29 @@ opsincident-collector validate-rag-pipeline \
 
 By default it does not upload, search, or investigate. Add `--sync`, `--search`, or `--investigate` explicitly for those Core operations.
 
+## AWS Deployment
+
+Collector can run as its own ECS Fargate service, separate from IncidentOps Core. The deployment artifacts in this repo provide:
+
+- `infra/terraform`: ECR, ECS service/task definition, CloudWatch logs, IAM roles, Secrets Manager references, security group wiring, and optional EFS state storage.
+- `examples/aws-daemon.yaml`: daemon config for AWS with redaction, allow paths, retry/backoff, health, metrics, and API sync enabled.
+- `.github/workflows/deploy-collector.yml`: GitHub OIDC CI/CD for lint, tests, compileall, Docker build, ECR push, ECS deploy, and optional health/RAG smoke checks.
+- `scripts/smoke_aws_collector.sh`: health/Core/RAG validation smoke script.
+
+Secrets belong in AWS Secrets Manager, not YAML:
+
+```bash
+INCIDENTOPS_API_URL
+INCIDENTOPS_TOKEN
+PROJECT_ID
+SOURCE_NAME
+SOURCE_TYPE
+COLLECTOR_ENVIRONMENT
+COLLECTOR_CONFIG
+```
+
+For the flagship demo, the AWS config uses a safe fixture path bundled in the image. For customer deployments, run Collector near the customer's private data and mount only the specific allowed source paths read-only. Collector still does not diagnose, call LLMs, create embeddings, or run retrieval locally; Core remains the RAG and investigation brain.
+
 ## Security model
 
 - path access is constrained by allowlist and deny patterns
@@ -242,3 +265,4 @@ docker run --rm \
 See [docs/security-model.md](docs/security-model.md) and [docs/config-reference.md](docs/config-reference.md).
 See [docs/langgraph-agent.md](docs/langgraph-agent.md) for Phase 4 graph details.
 See [docs/daemon.md](docs/daemon.md), [docs/operations.md](docs/operations.md), and [docs/validate-rag-pipeline.md](docs/validate-rag-pipeline.md) for Phase 5 deployment details.
+See [docs/aws-deployment.md](docs/aws-deployment.md) for ECS Fargate, ECR, Secrets Manager, and GitHub Actions deployment.
