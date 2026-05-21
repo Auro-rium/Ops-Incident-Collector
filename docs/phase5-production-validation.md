@@ -1,25 +1,29 @@
 # Phase 5 Production Validation
 
-Phase 5 validates the operational Collector path:
+This phase validates production rollout quality for collector + Core sync operations.
 
-- deterministic local inspection
-- secret redaction
-- NormalizedDocument creation
-- local export readiness
-- Core capability detection
-- optional Core sync
-- optional Core search/investigation smoke tests
-- daemon health and metrics
-- failed-upload queue visibility
+## Exit criteria
 
-The canonical output remains `NormalizedDocument`. Citation and chunking hints remain advisory metadata. Core owns canonical chunking, embeddings, indexing, retrieval, reranking, investigation, citations, workflow runs, and eval scoring.
+- Deterministic collector runs are stable across replay.
+- Redaction controls pass security review.
+- Core sync success meets SLO targets.
+- Approval-gated actions are auditable.
+- Operational runbooks validated in on-call simulation.
 
-Recommended local verification:
+## Gate model
 
-```bash
-.venv/bin/python -m ruff check .
-.venv/bin/python -m pytest -q
-.venv/bin/python -m compileall opsincident_collector
-opsincident-collector daemon run --config examples/local-daemon.yaml --max-cycles 1
-opsincident-collector validate-rag-pipeline --path tests/fixtures/basic_project --format json
+```mermaid
+flowchart LR
+    P1[Policy & Security Gate] --> P2[Determinism Gate]
+    P2 --> P3[Scale/Performance Gate]
+    P3 --> P4[Core Sync Reliability Gate]
+    P4 --> P5[Operations Readiness Gate]
 ```
+
+## Evidence package
+
+- Run summaries for baseline + replay cohorts.
+- Redaction report with sampled verification.
+- Sync reliability report (latency, retries, failures).
+- Approval audit report.
+- Incident drill retrospective.

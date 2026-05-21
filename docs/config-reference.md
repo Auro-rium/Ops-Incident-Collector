@@ -1,26 +1,77 @@
-# Config Reference
+# Configuration Reference
 
-Use `examples/collector.yaml` as the reference format. Keep paths explicit and narrow; avoid pointing at your home directory or repository root unless you intend to inspect all supported files beneath it.
+This document defines the collector configuration model, precedence, and recommended patterns.
 
-Important fields:
+## Precedence
 
-- `api.token_env`: environment variable used for Core auth, default `INCIDENTOPS_TOKEN`.
-- `api.auth_required`: when true, API sync fails if no token is available.
-- `sync.retry_count`: maximum retry attempts for queued upload failures.
-- `sync.retry_backoff_seconds`: base exponential backoff for retry failures.
-- `security.allow_paths`: the only paths the collector may read.
-- `security.deny_patterns`: dangerous and binary files skipped before read/export.
+1. CLI flags
+2. Environment variables
+3. Config file values
+4. Built-in defaults
 
-Phase 2 commands use the same allowlist, denylist, redaction, and max-size settings:
+## Core sections
 
-- `coverage`
-- `rag-report`
-- `eval-seed`
-- `validate-core-contract`
+### `project`
+- `id`: stable project identifier used in exports/sync.
+- `roots`: explicit filesystem roots allowed for discovery.
+- `workspace_name`: optional logical grouping label.
 
-Environment overrides:
+### `discovery`
+- `include_globs`: allow patterns for candidate paths.
+- `exclude_globs`: deny patterns evaluated before reads.
+- `follow_symlinks`: disabled by default for predictable traversal.
+- `max_depth`: traversal depth guardrail.
 
-- `INCIDENTOPS_API_URL`
-- `INCIDENTOPS_PROJECT_ID`
-- `INCIDENTOPS_EDGE_STATE`
-- `INCIDENTOPS_TOKEN` or the configured `api.token_env`
+### `filters`
+- `max_file_size_bytes`: hard size cutoff.
+- `allowed_extensions`: extension allowlist.
+- `deny_extensions`: extension denylist.
+- `binary_detection`: skip binary-like payloads.
+
+### `redaction`
+- `enabled`: must remain true in production profiles.
+- `detectors`: token/key/pattern detector set.
+- `replacement`: redaction placeholder template.
+- `emit_redaction_summary`: include counts and categories only.
+
+### `export`
+- `local_output_path`: local artifact destination.
+- `format`: jsonl/json bundle mode.
+- `batch_size`: emission batching.
+
+### `core_sync`
+- `enabled`: allow outbound Core sync.
+- `base_url`: Core API base endpoint.
+- `auth_mode`: token/profile auth mode.
+- `timeout_seconds`: request timeout.
+- `retry`: bounded retry policy.
+
+## Minimal example
+
+```yaml
+project:
+  id: incident-prod-checkout
+  roots: ["/workspace/repo"]
+
+discovery:
+  include_globs: ["**/*.md", "**/*.yml", "**/*.json", "**/*.py"]
+  exclude_globs: ["**/.git/**", "**/node_modules/**", "**/.venv/**"]
+
+filters:
+  max_file_size_bytes: 2097152
+
+redaction:
+  enabled: true
+  emit_redaction_summary: true
+
+export:
+  format: jsonl
+  local_output_path: ./artifacts/normalized.jsonl
+```
+
+## Validation checklist
+
+- Root paths are explicit and minimal.
+- Excludes contain credential stores and generated folders.
+- File size caps are set for predictable runtime.
+- Redaction is enabled for all non-test profiles.
