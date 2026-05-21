@@ -1,72 +1,50 @@
-# Operations
+# Operations Runbook
 
-Phase 5 adds deployment and operational controls for running the Collector on real servers.
+## Daily checks
 
-## Retry Queue
+1. Verify collector service health/readiness.
+2. Confirm recent run success rate and latency bands.
+3. Review redaction summary trends.
+4. Review sync failures and retry exhaustion.
 
-Failed API document uploads are stored in SQLite after redaction. Operators can inspect and retry the queue without exposing `payload_json` by default.
+## Incident triage flow
 
-```bash
-opsincident-collector queue status --config collector.yaml
-opsincident-collector queue retry --config collector.yaml
-opsincident-collector queue clear --config collector.yaml --failed-before 30 --yes
+```mermaid
+flowchart LR
+    A[Alert: failed/degraded run] --> B[Check run summary]
+    B --> C{Failure class}
+    C -->|Policy| D[Fix config/patterns]
+    C -->|Read/Parse| E[Inspect file class/limits]
+    C -->|Sync| F[Check Core connectivity/auth]
+    D --> G[Re-run deterministic profile]
+    E --> G
+    F --> G
 ```
 
-`queue retry` reuses the existing Core API exporter and retry/backoff rules. It requires a Core URL, project id, and token when auth is enabled.
+## Key metrics
 
-## AWS Operations
+- Files scanned / included / denied.
+- Redactions by detector/category.
+- Run duration and per-stage timing.
+- Export/sync success rate.
+- Approval turnaround for gated actions.
 
-For ECS Fargate deployments, use `examples/aws-daemon.yaml` and the Terraform module in `infra/terraform`.
+## Change management
 
-Required Secrets Manager-backed environment variables:
+- Stage config changes in local-only mode.
+- Compare run summaries before production rollout.
+- Promote with explicit approval + rollback plan.
 
-- `INCIDENTOPS_API_URL`
-- `INCIDENTOPS_TOKEN`
-- `PROJECT_ID`
-- `SOURCE_NAME`
-- `SOURCE_TYPE`
-- `COLLECTOR_ENVIRONMENT`
-- `COLLECTOR_CONFIG` when overriding the default config path
 
-Health and metrics should stay internal or behind a protected route:
+## Merge conflict runbook
+
+When documentation branches diverge:
+
+1. Resolve conflicts in this order: `docs/architecture.md` -> domain docs in `docs/` -> `README.md`.
+2. Preserve collector/Core responsibility boundaries exactly as defined in architecture/core integration docs.
+3. Ensure no conflict resolution introduces policy bypass language (allowlist/denylist, redaction-before-boundary).
+4. After resolution, run tests and a quick grep for conflict markers.
 
 ```bash
-curl http://collector.internal:8686/health
-curl http://collector.internal:8687/metrics
+rg -n "^<<<<<<<|^=======|^>>>>>>>" README.md docs/*.md
 ```
-
-Run the AWS smoke script from an environment that can reach Collector and Core:
-
-```bash
-COLLECTOR_HEALTH_URL=http://collector.internal:8686/health \
-CORE_API_URL=https://core.internal \
-PROJECT_ID=proj_123 \
-scripts/smoke_aws_collector.sh
-```
-
-Rotate the Collector token by updating the `INCIDENTOPS_TOKEN` secret and forcing a new ECS deployment. The token is read at process start and is never logged.
-
-## Structured Logs
-
-Daemon logs are JSON lines. Expected events include:
-
-- `daemon_start`
-- `health_server_started`
-- `metrics_server_started`
-- `sync_cycle_start`
-- `sync_cycle_complete`
-- `sync_cycle_failed`
-- `core_unavailable`
-- `daemon_stop`
-
-Logs must not include raw tokens, raw secrets, file content, or queued upload payloads.
-
-## Security Notes
-
-- Mount source folders read-only.
-- Run as a non-root user where possible.
-- Put API tokens in environment variables, not YAML.
-- Keep path allowlists narrow.
-- Keep deny patterns active.
-- Redaction happens before local export and API upload.
-- The Collector does not embed, retrieve, diagnose, or generate incident answers locally.

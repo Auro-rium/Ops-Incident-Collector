@@ -1,10 +1,31 @@
 # Security Model
 
-- Only allowlisted paths may be inspected.
-- Default deny patterns block secrets, binaries, and build artifacts.
-- Inspect mode never uploads data.
-- Secret detection reports counts only and never logs raw values.
-- Secret redaction runs before JSONL, SQLite, API upload, and redaction preview output.
-- API tokens are read from environment variables and are reported only as present or missing.
-- Failed upload queue payloads contain already-redacted `NormalizedDocument` data.
-- API watch mode requires `--yes` before the first upload attempt unless it is a dry run.
+## Objectives
+
+- Prevent secret leakage in logs, previews, exports, and sync traffic.
+- Keep filesystem access constrained to configured policy.
+- Preserve auditable, deterministic behavior during collection.
+
+## Trust boundaries
+
+```mermaid
+flowchart LR
+    FS[(Filesystem)] --> Collector[Collector Runtime]
+    Collector --> Boundary[Redacted Boundary Artifacts]
+    Boundary --> External[(Core / Local Consumers)]
+```
+
+## Controls
+
+- Allowlist-first discovery roots.
+- Deny-pattern and extension filtering before reads.
+- Secret redaction before any external boundary.
+- Sanitized telemetry only (no raw content/tokens).
+- Safe audit trail for deny decisions.
+
+## Threats considered
+
+- Credential exposure through accidental export.
+- Traversal into unmanaged directories.
+- Oversized/binary payload instability.
+- Leakage through debug or error logging.

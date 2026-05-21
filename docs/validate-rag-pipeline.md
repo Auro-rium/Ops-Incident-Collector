@@ -1,41 +1,30 @@
-# Validate RAG Pipeline
+# Validate RAG Pipeline Readiness
 
-`validate-rag-pipeline` is an operational proof command. It validates the Collector side of the data path and optionally checks Core endpoints. It does not generate embeddings, run retrieval locally, call an LLM, or diagnose incidents.
+Collector does not run canonical RAG; this guide validates whether collector outputs are ready for Core ingestion.
 
-## Local Proof
+## Readiness dimensions
 
-```bash
-opsincident-collector validate-rag-pipeline \
-  --path tests/fixtures/basic_project \
-  --format json
+- Coverage: expected repositories/paths are included.
+- Policy fidelity: deny/allow outcomes match policy intent.
+- Redaction quality: sensitive values removed with acceptable precision/recall.
+- Metadata usefulness: extracted metadata supports Core retrieval context.
+- Determinism: repeated runs produce stable outputs for unchanged inputs.
+
+## Validation graph
+
+```mermaid
+flowchart TD
+    A[Run baseline collection] --> B[Capture normalized output stats]
+    B --> C[Run repeat collection]
+    C --> D[Diff deterministic fields]
+    D --> E{Stable?}
+    E -- No --> F[Identify nondeterministic source]
+    E -- Yes --> G[Approve readiness report]
 ```
 
-This checks path policy, inspection, redaction/normalization dry-run, source coverage, and RAG readiness.
+## Suggested checks
 
-## Core Compatibility
-
-```bash
-opsincident-collector validate-rag-pipeline \
-  --path tests/fixtures/basic_project \
-  --project-id proj_123 \
-  --api-url http://127.0.0.1:8001 \
-  --format json
-```
-
-This additionally checks Core `/health`, `/v1/capabilities` when available, and batch document ingestion compatibility.
-
-## Explicit Core Smoke Tests
-
-```bash
-opsincident-collector validate-rag-pipeline \
-  --path tests/fixtures/basic_project \
-  --project-id proj_123 \
-  --api-url http://127.0.0.1:8001 \
-  --query "What evidence is available for investigation?" \
-  --sync \
-  --search \
-  --investigate \
-  --format json
-```
-
-Default behavior does not upload, search, or investigate. `--sync`, `--search`, and `--investigate` are explicit. If Core is unavailable or lacks a compatible ingestion endpoint, the command reports that honestly instead of pretending success.
+- Compare file inclusion sets across runs.
+- Compare redaction counts/categories across runs.
+- Verify no raw secrets in exported payload samples.
+- Verify advisory metadata schema compatibility.

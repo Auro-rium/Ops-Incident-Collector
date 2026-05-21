@@ -1,21 +1,24 @@
 # Local-only Mode
 
-Local-only mode supports safe inspection and export without IncidentOps Core:
+Local-only mode runs collection and export without external Core sync.
 
-- path allowlist and denylist enforcement
-- empty, oversized, unsupported, and binary file skipping
-- secret redaction before export
-- `NormalizedDocument` creation
-- JSONL export with protocol envelope
-- SQLite export and checkpoint state
-- citation and chunking hints stored inside `metadata`
-- source coverage and RAG readiness diagnostics
-- deterministic eval seed JSONL generation
+## Use cases
 
-Use local-only mode when Core is unavailable or when validating what would be uploaded before running API sync.
+- Offline incident triage preparation.
+- Security-restricted environments with no egress.
+- Deterministic artifact generation for review/approval.
 
-```bash
-opsincident-collector coverage --path ./service --format json
-opsincident-collector rag-report --path ./service --format json
-opsincident-collector eval-seed --path ./service --output eval_seed.jsonl
+## Behavior
+
+```mermaid
+flowchart LR
+    A[Discovery + Policy] --> B[Normalize + Redact]
+    B --> C[Local Export Only]
+    C -. no network .-> D[(Core Sync Disabled)]
 ```
+
+## Operational notes
+
+- Keep redaction enabled even in offline mode.
+- Use local checksums/run IDs for reproducibility.
+- Promote artifacts to Core only after approval.
