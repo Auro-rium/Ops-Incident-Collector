@@ -34,6 +34,7 @@ class DaemonRuntimeState:
     permanent_error: bool = False
     last_successful_sync: str | None = None
     last_failed_sync: str | None = None
+    last_sync_status: str | None = None
     last_error: str | None = None
     last_summary: dict[str, Any] | None = None
     core_reachable: bool | None = None
@@ -103,6 +104,7 @@ class DaemonService:
         except Exception as exc:
             self.state.permanent_error = True
             self.state.last_error = _safe_error(exc)
+            self.state.last_sync_status = "failed"
             self.log.error("sync_cycle_failed", error=self.state.last_error)
             raise
         finally:
@@ -156,8 +158,10 @@ class DaemonService:
             "daemon_started_at": self.state.daemon_started_at,
             "last_successful_sync": self.state.last_successful_sync,
             "last_failed_sync": self.state.last_failed_sync,
+            "last_sync_status": self.state.last_sync_status,
             "last_error": self.state.last_error,
             "pending_failed_uploads": pending_failed_uploads,
+            "queue_depth": pending_failed_uploads,
             "core_reachable": self.state.core_reachable,
             "state_db_writable": self.state.state_db_writable,
             "cycles_completed": self.state.cycles_completed,
@@ -233,6 +237,7 @@ class DaemonService:
                 self._apply_summary(summary)
             self.state.last_successful_sync = datetime.now(timezone.utc).isoformat()
             self.state.last_summary = {"summaries": summaries}
+            self.state.last_sync_status = "success"
             self.log.info(
                 "sync_cycle_complete",
                 cycle=self.state.cycles_completed + 1,
@@ -242,6 +247,7 @@ class DaemonService:
         except Exception as exc:
             self.state.last_failed_sync = datetime.now(timezone.utc).isoformat()
             self.state.last_error = _safe_error(exc)
+            self.state.last_sync_status = "failed"
             self.log.error(
                 "sync_cycle_failed",
                 cycle=self.state.cycles_completed + 1,
@@ -331,4 +337,3 @@ def _safe_error(exc: Exception) -> str:
     except TypeError:
         value = repr(value)
     return value
-

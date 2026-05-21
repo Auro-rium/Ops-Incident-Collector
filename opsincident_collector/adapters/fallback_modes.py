@@ -7,6 +7,7 @@ from dataclasses import dataclass
 class EndpointMap:
     health: str = "/health"
     capabilities: str = "/v1/capabilities"
+    register_collector: str = "/v1/projects/{project_id}/collectors/register"
     register_source: str = "/v1/projects/{project_id}/sources"
     batch_upload: str = "/v1/sources/{source_id}/documents/batch"
     create_sync: str = "/v1/sources/{source_id}/syncs/start"

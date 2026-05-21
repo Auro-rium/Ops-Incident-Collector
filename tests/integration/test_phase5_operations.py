@@ -263,6 +263,7 @@ def test_phase5_examples_and_dockerfile_are_parseable() -> None:
         Path("examples/local-daemon.yaml"),
         Path("examples/daemon.yaml"),
         Path("examples/production.yaml"),
+        Path("examples/aws-daemon.yaml"),
         Path("examples/docker-compose.collector.yml"),
     ]:
         assert yaml.safe_load(path.read_text(encoding="utf-8"))
@@ -286,10 +287,14 @@ def _mock_core_ingest() -> None:
                     "investigate": True,
                 },
                 "endpoints": {
+                    "register_collector": "/v1/projects/{project_id}/collectors/register",
                     "batch_upload": "/v1/sources/{source_id}/documents/batch",
                 },
             },
         )
+    )
+    respx.post("http://core.test/v1/projects/proj_123/collectors/register").mock(
+        return_value=Response(200, json={"collector_id": "collector_123"})
     )
     respx.post("http://core.test/v1/projects/proj_123/sources").mock(
         return_value=Response(200, json={"source_id": "src_123"})
@@ -301,5 +306,5 @@ def _mock_core_ingest() -> None:
         return_value=Response(200, json={"ok": True})
     )
     respx.post("http://core.test/v1/sources/src_123/syncs/sync_core/finish").mock(
-        return_value=Response(200, json={"status": "completed"})
+        return_value=Response(200, json={"status": "success"})
     )

@@ -20,6 +20,7 @@ collector:
   id: "local-dev-collector"
   name: "local-dev-machine"
   mode: "local"
+  environment: "local"
 
 state:
   sqlite_path: ".opsincident-collector/state.sqlite"
@@ -109,7 +110,7 @@ sources:
 
 
 def find_config_path() -> Path | None:
-    env_path = os.getenv("INCIDENTOPS_EDGE_CONFIG")
+    env_path = os.getenv("INCIDENTOPS_EDGE_CONFIG") or os.getenv("COLLECTOR_CONFIG")
     candidates = [Path(env_path)] if env_path else []
     candidates.append(Path("collector.yaml"))
     for candidate in candidates:
@@ -153,10 +154,22 @@ def load_settings_optional(config_path: Path | None) -> AppSettings:
 def _apply_env_overrides(settings: AppSettings) -> None:
     if os.getenv("INCIDENTOPS_API_URL"):
         settings.api.base_url = os.getenv("INCIDENTOPS_API_URL")
-    if os.getenv("INCIDENTOPS_PROJECT_ID"):
-        settings.project.id = os.getenv("INCIDENTOPS_PROJECT_ID")
+    project_id = os.getenv("INCIDENTOPS_PROJECT_ID") or os.getenv("PROJECT_ID")
+    if project_id:
+        settings.project.id = project_id
     if os.getenv("INCIDENTOPS_EDGE_STATE"):
         settings.state.sqlite_path = Path(os.getenv("INCIDENTOPS_EDGE_STATE", ""))
+    source_name = os.getenv("INCIDENTOPS_SOURCE_NAME") or os.getenv("SOURCE_NAME")
+    if source_name:
+        settings.daemon.source_name = source_name
+    source_type = os.getenv("INCIDENTOPS_SOURCE_TYPE") or os.getenv("SOURCE_TYPE")
+    if source_type:
+        settings.daemon.source_type = source_type
+    collector_environment = os.getenv("INCIDENTOPS_COLLECTOR_ENVIRONMENT") or os.getenv(
+        "COLLECTOR_ENVIRONMENT"
+    )
+    if collector_environment:
+        settings.collector.environment = collector_environment
 
 
 def _merge_default_denies(settings: AppSettings) -> None:

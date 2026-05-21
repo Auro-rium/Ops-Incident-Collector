@@ -49,6 +49,22 @@ class CoreClient:
         response.raise_for_status()
         return CoreCapabilities.model_validate(response.json())
 
+    def register_collector(
+        self,
+        project_id: str,
+        payload: dict[str, Any],
+        capabilities: CoreCapabilities | None = None,
+    ) -> dict[str, Any]:
+        endpoint = resolve_endpoint(capabilities.endpoints if capabilities else None, "register_collector")
+        collector_payload = {
+            "name": payload["name"],
+            "environment": payload.get("environment") or "local",
+            "version": payload.get("version") or collector_version(),
+        }
+        response = self.client.post(endpoint.format(project_id=project_id), json=collector_payload)
+        response.raise_for_status()
+        return response.json()
+
     def register_source(self, project_id: str, payload: dict[str, Any], capabilities: CoreCapabilities | None = None) -> SourceRegistrationResult:
         endpoint = resolve_endpoint(capabilities.endpoints if capabilities else None, "register_source")
         source_payload = {
@@ -92,7 +108,11 @@ class CoreClient:
         return response.json()
 
     @staticmethod
-    def versioned_batch_payload(documents: list[dict[str, Any]], sync_id: str | None = None) -> dict[str, Any]:
+    def versioned_batch_payload(
+        documents: list[dict[str, Any]],
+        sync_id: str | None = None,
+        collector_id: str | None = None,
+    ) -> dict[str, Any]:
         payload = {
             "collector_version": collector_version(),
             "schema_version": SCHEMA_VERSION,
@@ -101,6 +121,8 @@ class CoreClient:
         }
         if sync_id:
             payload["sync_id"] = sync_id
+        if collector_id:
+            payload["collector_id"] = collector_id
         return payload
 
     def batch_upload_documents(
@@ -109,11 +131,16 @@ class CoreClient:
         source_id: str,
         documents: list[dict[str, Any]],
         sync_id: str | None = None,
+        collector_id: str | None = None,
         capabilities: CoreCapabilities | None = None,
     ) -> dict[str, Any]:
         capability_endpoints = capabilities.endpoints if capabilities else None
         batch_endpoint = resolve_endpoint(capability_endpoints, "batch_upload")
-        payload = self.versioned_batch_payload(documents, sync_id=sync_id)
+        payload = self.versioned_batch_payload(
+            documents,
+            sync_id=sync_id,
+            collector_id=collector_id,
+        )
         response = self.client.post(
             batch_endpoint.format(project_id=project_id, source_id=source_id),
             json=payload,

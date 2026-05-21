@@ -1,83 +1,36 @@
-# MCP Server
+# MCP Server Surface
 
-OpsIncident Collector exposes a real MCP integration layer over the deterministic Collector
-pipeline and the IncidentOps Core API adapter. It is not a local diagnosis engine: Core remains
-responsible for retrieval, reranking, investigation, answer generation, citations, workflow runs,
-and eval scoring.
+This document describes the existing MCP surface for deterministic collector operations.
 
-## Run
+## Principles
 
-```bash
-opsincident-collector mcp serve --config collector.yaml
+- MCP tools orchestrate existing collector capabilities only.
+- No tool may bypass path policy or redaction guarantees.
+- Approval gates are required for high-impact export/sync actions.
+
+## Tool categories
+
+1. **Discovery/preview**: inspect candidate scope and policy outcomes.
+2. **Collection runs**: execute deterministic collection with configured profile.
+3. **Export/sync**: emit local artifacts or push sanitized batches to Core.
+4. **Operational status**: inspect run summary, counters, and failures.
+
+## Approval flow graph
+
+```mermaid
+flowchart TD
+    T[Tool Request] --> R{Risky Action?}
+    R -- No --> X[Execute]
+    R -- Yes --> A[Create Approval Record]
+    A --> U{Approved?}
+    U -- Yes --> X
+    U -- No --> N[Reject + Audit]
 ```
 
-Phase 3 supports stdio transport for local AI clients. The MCP optional dependency is packaged as
-`opsincident-collector[mcp]`.
+## Persisted records
 
-```bash
-opsincident-collector mcp serve --config collector.yaml --dump-schema
-```
+- `graph_runs`: high-level run state and timestamps.
+- `graph_events`: step-level lifecycle records.
+- `graph_approvals`: approval decisions and actor metadata.
 
-## Tools
-
-- `inspect_folder`: calls the real local inspection pipeline and returns inspection plus coverage.
-- `validate_source_config`: loads and validates Collector config without exposing tokens.
-- `preview_redaction`: allowlisted sensitive read with redacted preview only.
-- `sync_source`: runs the deterministic sync pipeline; non-dry-run export requires approval.
-- `get_source_coverage`: returns local coverage or Core source registry data when available.
-- `get_rag_readiness`: returns the Phase 2 RAG readiness report.
-- `search_evidence`: calls Core `/v1/search`.
-- `investigate_incident`: calls Core `/v1/investigate`; no local diagnosis fallback.
-- `create_workflow_run`: calls Core `/v1/runs`; requires DATA_EXPORT approval.
-- `get_run_status`: calls Core run status.
-- `get_run_events`: calls Core run events.
-- `export_report`: exports Core run data or local readiness data; writing output requires approval.
-- `generate_eval_seed`: deterministically generates eval seed cases; writing output requires approval.
-- `validate_core_contract`: validates Core health/capabilities; sample upload requires approval.
-
-## Resources
-
-- `incidentops://local/config`
-- `incidentops://local/last-inspection`
-- `incidentops://local/last-sync`
-- `incidentops://local/rag-readiness`
-- `incidentops://local/failed-uploads`
-- `incidentops://project/{project_id}/sources`
-- `incidentops://project/{project_id}/coverage`
-- `incidentops://project/{project_id}/core-capabilities`
-
-Resources redact tokens and do not expose failed upload payload content.
-
-## XML Prompts
-
-Prompt XML files live under `opsincident_collector/prompts/` and are loaded from disk:
-
-- `source_coverage_review`
-- `sync_decision`
-- `rag_readiness_report`
-- `incident_setup_planner`
-- `post_sync_quality_gate`
-- `core_investigation_bridge`
-- `missing_data_advisor`
-
-These prompts are assets for MCP clients. The Collector does not call an LLM and does not infer root
-cause locally.
-
-## Permission Model
-
-- `READ_ONLY` is allowed by default.
-- `LOCAL_SENSITIVE_READ` requires an allowlisted path and cannot read denylisted files.
-- `DATA_EXPORT` requires explicit approval unless the operation is dry-run.
-- `EXTERNAL_WRITE` is disabled.
-
-MCP tool calls write safe audit events for sensitive reads and export/write operations. Audit payloads
-include tool name, permission decision, path/project/run identifiers where relevant, and never raw
-secrets or raw document payloads.
-
-## Example Flow
-
-1. `inspect_folder` on the service/log folder.
-2. `get_rag_readiness` to identify missing source categories.
-3. `sync_source` with `dry_run=true`.
-4. `sync_source` with approval if the dry-run is acceptable.
-5. `investigate_incident` to call Core once evidence is synced.
+Records must remain sanitized and free of raw secrets/content.

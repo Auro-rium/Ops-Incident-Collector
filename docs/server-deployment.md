@@ -1,53 +1,37 @@
 # Server Deployment
 
-The Collector can run as a CLI, MCP server, LangGraph orchestrator, or daemon. For production edge deployments, use daemon mode with explicit source allowlists and read-only data mounts.
+## Deployment topology
 
-## Docker
+```mermaid
+flowchart TB
+    subgraph Runtime[Collector Service Runtime]
+      API[HTTP/MCP Entry]
+      Exec[Collection Executor]
+      Queue[Run Queue]
+      Store[Local Artifact Store]
+    end
 
-```bash
-docker build -t opsincident-collector:base .
-docker build --build-arg INSTALL_TARGET=".[mcp,agent]" -t opsincident-collector:agent .
+    API --> Queue --> Exec --> Store
+    Exec --> Core[(IncidentOps Core)]
 ```
 
-Run one daemon cycle:
+## Runtime requirements
 
-```bash
-docker run --rm \
-  -e INCIDENTOPS_API_URL=http://host.docker.internal:8001 \
-  -e INCIDENTOPS_TOKEN=$INCIDENTOPS_TOKEN \
-  -e INCIDENTOPS_PROJECT_ID=proj_123 \
-  -v "$PWD/examples/daemon.yaml:/etc/opsincident-collector/collector.yaml:ro" \
-  -v "$PWD/tests/fixtures/basic_project:/data/basic_project:ro" \
-  -v "$PWD/.opsincident-collector:/var/lib/opsincident-collector" \
-  opsincident-collector:agent \
-  daemon run --config /etc/opsincident-collector/collector.yaml --max-cycles 1
-```
+- Python runtime pinned by project constraints.
+- Read-only access to configured repository roots.
+- Write access only to explicit artifact/output directories.
+- Network egress limited to approved Core endpoints.
 
-The image creates `/etc/opsincident-collector`, `/var/lib/opsincident-collector`, and `/var/log/opsincident-collector`, then runs as the `opsincident` user.
+## Hardening checklist
 
-## Docker Compose
+- Run with least privilege service account.
+- Mount secrets via secure env/secret manager; never print values.
+- Set resource limits (CPU/memory/open files).
+- Enable structured sanitized logs and rotation.
+- Apply request timeout and retry limits for Core sync.
 
-See `examples/docker-compose.collector.yml`. It mounts config and state, mounts source data read-only, exposes health and metrics ports, and points to an external Core URL.
+## Health model
 
-## systemd
-
-See:
-
-- `examples/systemd/opsincident-collector.service`
-- `examples/systemd/env.example`
-
-Typical setup:
-
-```bash
-sudo useradd --system --home /var/lib/opsincident-collector --shell /usr/sbin/nologin opsincident
-sudo mkdir -p /etc/opsincident-collector /var/lib/opsincident-collector /var/log/opsincident-collector
-sudo chown -R opsincident:opsincident /var/lib/opsincident-collector /var/log/opsincident-collector
-sudo cp examples/production.yaml /etc/opsincident-collector/collector.yaml
-sudo cp examples/systemd/env.example /etc/opsincident-collector/env
-sudo cp examples/systemd/opsincident-collector.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable --now opsincident-collector
-journalctl -u opsincident-collector -f
-```
-
-Core remains the investigation brain. The server deployment only operationalizes source access, redaction, normalization, sync, health, metrics, and queue retry.
+- Liveness: process/event loop active.
+- Readiness: config loaded, roots accessible, redaction initialized.
+- Degraded: Core unavailable but local export path healthy.

@@ -313,6 +313,9 @@ def test_agent_cli_onboard_source_dry_run_json_parseable(tmp_path: Path) -> None
 
 def _mock_core_ingest() -> None:
     respx.get("http://core.test/v1/capabilities").mock(return_value=Response(404))
+    respx.post("http://core.test/v1/projects/proj_123/collectors/register").mock(
+        return_value=Response(200, json={"collector_id": "collector_123"})
+    )
     respx.post("http://core.test/v1/projects/proj_123/sources").mock(
         return_value=Response(200, json={"source_id": "src_123"})
     )
@@ -323,5 +326,5 @@ def _mock_core_ingest() -> None:
         return_value=Response(200, json={"ok": True})
     )
     respx.post("http://core.test/v1/sources/src_123/syncs/sync_core/finish").mock(
-        return_value=Response(200, json={"status": "completed"})
+        return_value=Response(200, json={"status": "success"})
     )
