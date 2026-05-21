@@ -1,244 +1,299 @@
-# OpsIncident-Collector is a self-hosted collector, MCP server, and local orchestration runtime that discovers, redacts, normalizes, and syncs backend engineering data into IncidentOps Core for incident investigation.
+# OpsIncident Collector
 
-Bring your logs, code, runbooks, deploy history, incidents, and API docs. OpsIncident-Collector turns them into investigation-ready evidence.
+**OpsIncident Collector** is the production-grade edge runtime for IncidentOps RAG pipelines.
 
-## Status
+It runs near private engineering data, safely discovers files, enforces path policy, redacts secrets, normalizes evidence into `NormalizedDocument`, and exports or syncs that evidence into IncidentOps Core. It also exposes MCP tools and LangGraph workflows for controlled agentic source onboarding, sync approval, readiness checks, and Core investigation bridging.
 
-The repository now includes a hardened deterministic v1 foundation:
+> Collector prepares safe evidence. Core performs canonical RAG and incident investigation.
 
-- local inspect and validation
-- secret redaction and normalization
-- JSONL and SQLite export
+No local root-cause diagnosis. No embeddings. No vector database. No LLM calls inside the ingestion pipeline. Apparently restraint is still legal.
+
+---
+
+## Why this exists
+
+Most RAG systems start at the wrong layer: upload files, embed chunks, then panic about secrets, stale docs, missing logs, and garbage citations.
+
+OpsIncident Collector solves the layer before RAG:
+
+```text
+private engineering data
+  -> path policy
+  -> file safety filters
+  -> secret redaction
+  -> metadata extraction
+  -> NormalizedDocument
+  -> local export / Core sync
+  -> IncidentOps Core indexing + investigation
+```
+
+It is built for backend/SRE incident workflows over logs, code, runbooks, incident reports, deploy history, API docs, patches, diffs, and config files.
+
+---
+
+## Architecture boundary
+
+The Collector deliberately does **not** become a second backend.
+
+| Layer | Owns |
+|---|---|
+| OpsIncident Collector | discovery, filtering, redaction, metadata, `NormalizedDocument`, local export, Core sync, MCP tools, LangGraph orchestration |
+| IncidentOps Core | canonical chunking, embeddings, indexing, retrieval, reranking, investigation, answers, citations, workflow runs, eval scoring |
+
+`NormalizedDocument` is the canonical Collector output. Citation hints, chunking hints, and readiness reports are advisory metadata for Core, not a replacement for Core logic.
+
+---
+
+## Main capabilities
+
+### Deterministic collector pipeline
+
+- explicit allowlist roots
+- denylist before file reads
+- binary/oversized/empty file skipping
+- secret redaction before export or sync
+- stable `NormalizedDocument` contract
+- JSONL, SQLite, console, and Core API exporters
 - SQLite checkpoints for incremental sync
-- IncidentOps Core API adapter with capability/fallback behavior
-- explicit collector/schema/Core API protocol versioning at export boundaries
-- token-env based Core auth without printing token values
-- failed upload queue with retry/backoff metadata
-- Core-compatible RAG metadata, citation hints, and chunking hints
-- source coverage, RAG readiness, eval seed, and Core contract validation commands
-- permissioned MCP tool layer and FastMCP server wiring
-- deterministic local agent workflow
-- daemon mode with health, metrics, structured logs, and retry queue visibility
-- polling watch mode
+- failed upload queue with retry/backoff
 
-## CLI
+### Core-compatible RAG contract
+
+- `collector_version`, `schema_version`, and `core_api_version`
+- checksum mapped to Core-compatible `content_hash`
+- enriched metadata for service, environment, endpoints, deploy hashes, timestamps, trace/request IDs, headings, language, incident fields, API paths, and config summaries
+- citation hints and chunking hints as metadata only
+- `coverage`, `rag-report`, `eval-seed`, and `validate-core-contract` commands
+
+### MCP production layer
+
+The MCP server exposes real capabilities backed by the deterministic pipeline and Core adapter: inspect folders, validate configs, preview redaction safely, sync sources with permission checks, check source coverage/readiness, call Core search/investigate/run endpoints, and load XML prompt assets from disk.
+
+### LangGraph orchestration runtime
+
+Collector includes durable CLI-first workflows for source onboarding, RAG readiness, sync quality, and investigation bridging to Core. LangGraph coordinates inspection, readiness checks, sync planning, approval gates, and Core calls. It does not diagnose incidents locally.
+
+### Real-server daemon mode
+
+- periodic sync loop
+- graceful shutdown
+- health endpoint
+- metrics endpoint
+- structured operational events
+- retry queue visibility
+- Docker, Docker Compose, and systemd examples
+- unattended upload only when explicitly enabled
+
+---
+
+## Install
 
 ```bash
-opsincident-collector init
-opsincident-collector doctor
-opsincident-collector validate --config collector.yaml
-opsincident-collector inspect --path ./some-folder
-opsincident-collector sync --path ./some-folder --export jsonl --output out.jsonl
-opsincident-collector sync --path ./some-folder --export api --project-id proj_123 --yes
-opsincident-collector watch --path ./some-folder --export jsonl --output out.jsonl
-opsincident-collector coverage --path ./some-folder --format json
-opsincident-collector rag-report --path ./some-folder --format json
-opsincident-collector eval-seed --path ./some-folder --output eval_seed.jsonl
-opsincident-collector validate-core-contract --api-url http://127.0.0.1:8001 --project-id proj_123
-opsincident-collector mcp serve --config collector.yaml
-opsincident-collector agent rag-readiness --path ./some-folder --format json
-opsincident-collector agent onboard-source --path ./some-folder --export-target api --project-id proj_123
-opsincident-collector agent sync-quality --path ./some-folder --project-id proj_123
-opsincident-collector agent investigate --path ./some-folder --project-id proj_123 --query "Why did orders slow after deploy?"
-opsincident-collector daemon run --config examples/local-daemon.yaml --max-cycles 1
-opsincident-collector queue status --config collector.yaml
-opsincident-collector validate-rag-pipeline --path ./some-folder --format json
+python -m venv .venv
+source .venv/bin/activate
+pip install -e '.[mcp,agent]'
 ```
 
-## Local-only mode
-
-The current implementation is useful without IncidentOps Core:
-
-- inspect allowlisted paths
-- classify likely source types
-- detect unsupported, oversized, denied, empty, and binary files
-- detect likely secrets without printing secret values
-- redact secrets before JSONL and SQLite export
-- skip unchanged files through SQLite checkpoints
-
-`NormalizedDocument` remains the canonical collector document. JSONL exports wrap it in a small protocol envelope:
-
-- `collector_version`
-- `schema_version: incidentops.normalized_document.v1`
-- `core_api_version: v1`
-- `document`
-
-The collector enriches `document.metadata` with advisory fields for Core:
-
-- `citation_hints`: source path and line-range hints for evidence citation.
-- `chunking_hints`: optional section/window/function hints for Core's indexer.
-- retrieval metadata such as service, environment, endpoints, commits, timestamps, headings, language, and incident fields.
-
-These are hints only. Core still owns canonical chunking, embeddings, indexing, retrieval, reranking, investigation, answers, citations, workflow runs, and eval scoring.
-
-## Core-sync mode
-
-- probes `GET /v1/capabilities` when available
-- registers sources and uploads normalized documents
-- sends `collector_version`, `schema_version`, and `core_api_version` in batch upload payloads
-- maps Collector `checksum` to Core `content_hash` at API upload time
-- uses `Authorization: Bearer <token>` from `INCIDENTOPS_TOKEN` or `api.token_env`
-- fails API sync clearly when auth is required but no token is present
-- queues transient failed document uploads in SQLite and retries due items on later syncs
-- falls back to default endpoint contracts when capabilities are absent
-- fails clearly if Core does not expose a batch ingestion path
-
-Set tokens with environment variables instead of YAML:
+With `uv`:
 
 ```bash
-export INCIDENTOPS_TOKEN=...
-opsincident-collector sync --path ./service --export api --project-id proj_123 --yes
+uv pip install --python .venv/bin/python -e '.[mcp,agent]'
 ```
 
-## MCP and agent mode
-
-- MCP tools call the real Collector pipeline or IncidentOps Core API adapter; they are not decorative wrappers
-- XML prompt assets are loaded from `opsincident_collector/prompts/` and exposed to clients without local LLM calls
-- permission policy blocks non-allowlisted sensitive reads, denylisted files, and unapproved data export
-- the LangGraph agent runtime orchestrates source onboarding, readiness, sync quality, and Core investigation bridge workflows
-- watch mode refuses unconfirmed API sync before entering the polling loop; use `--yes` or `--dry-run`
-
-Phase 3 MCP tools:
-
-- `inspect_folder`, `validate_source_config`, `preview_redaction`, `sync_source`
-- `get_source_coverage`, `get_rag_readiness`, `generate_eval_seed`, `validate_core_contract`
-- `search_evidence`, `investigate_incident`, `create_workflow_run`, `get_run_status`, `get_run_events`, `export_report`
-
-MCP resources expose redacted local config, last sync/inspection, local RAG readiness, failed-upload queue summaries, project sources, project coverage, and Core capabilities. Failed upload resources do not expose stored payload JSON.
+Check the CLI:
 
 ```bash
-opsincident-collector mcp serve --config collector.yaml
-opsincident-collector mcp serve --config collector.yaml --dump-schema
+opsincident-collector --help
 ```
 
-Typical MCP client flow:
+---
 
-1. `inspect_folder`
-2. `get_rag_readiness`
-3. `sync_source` with `dry_run=true`
-4. `sync_source` with explicit approval
-5. `investigate_incident`
-
-Core remains the investigation brain; Collector MCP tools do not invent root cause.
-
-## LangGraph Agent Runtime
-
-Phase 4 adds LangGraph orchestration for Collector operations only:
-
-- `source_onboarding`: inspect, redaction summary, coverage, readiness, sync planning, approval, sync, post-sync quality.
-- `rag_readiness`: offline readiness and eval seed preview.
-- `sync_quality`: local sync history and failed upload queue review.
-- `investigation_bridge`: readiness checks plus Core `/v1/investigate` call when Core is available.
-
-The graph runtime persists runs, node events, and approval requests in local SQLite. API sync/data
-upload pauses for approval unless `--yes` or `--dry-run` is used. Graph state stores safe summaries
-only and does not persist raw secrets.
+## Quick start: local-only RAG evidence export
 
 ```bash
-opsincident-collector agent rag-readiness --path tests/fixtures/basic_project --format json
-opsincident-collector agent onboard-source --path tests/fixtures/basic_project --export-target console --dry-run --format json
-opsincident-collector agent investigate --path tests/fixtures/basic_project --project-id proj_123 --query "Why did latency increase?" --format json
-```
+opsincident-collector inspect --path tests/fixtures/basic_project
 
-Install agent dependencies with:
-
-```bash
-pip install "opsincident-collector[agent]"
-docker build --build-arg INSTALL_TARGET=".[mcp,agent]" -t opsincident-collector:agent .
-```
-
-LangGraph does not call an LLM here, generate embeddings, use a vector database, or diagnose root
-cause locally. Core remains responsible for RAG and investigation.
-
-## RAG readiness and eval seeds
-
-```bash
-opsincident-collector coverage --path ./service --format json
-opsincident-collector rag-report --path ./service --format json
-opsincident-collector eval-seed --path ./service --output eval_seed.jsonl
-```
-
-`coverage` reports missing recommended source categories. `rag-report` gives a diagnostic score based on logs, code, deploy history, incidents, runbooks, API docs, metadata, and hints. `eval-seed` writes deterministic JSONL cases from local evidence without using an LLM.
-
-Validate Core compatibility without uploading data:
-
-```bash
-opsincident-collector validate-core-contract --api-url http://127.0.0.1:8001 --project-id proj_123
-```
-
-Use `--with-sample` only when you explicitly want to upload one tiny redacted contract-validation document.
-
-## Daemon and Operations
-
-Phase 5 adds a real-server daemon for edge deployments:
-
-- periodic sync through the same deterministic pipeline used by `sync`
-- `/health` JSON endpoint with version, sync, Core reachability, state DB, and retry queue status
-- `/metrics` Prometheus text endpoint with sync counters, retry queue depth, uptime, and Core reachability
-- JSON structured daemon events such as `daemon_start`, `sync_cycle_complete`, and `core_unavailable`
-- queue commands for failed upload visibility and retry
-
-```bash
-opsincident-collector daemon run --config examples/local-daemon.yaml --max-cycles 1
-opsincident-collector daemon health --host 127.0.0.1 --port 8686
-opsincident-collector queue status --config examples/local-daemon.yaml --format json
-opsincident-collector queue retry --config examples/production.yaml --format json
-```
-
-API upload in daemon mode is refused unless the config explicitly permits unattended upload with `daemon.allow_unattended_upload: true` or disables upload confirmation. Tokens still come from `INCIDENTOPS_TOKEN` or `api.token_env`; raw tokens do not belong in YAML.
-
-`validate-rag-pipeline` proves the Collector-to-Core path without pretending Core success:
-
-```bash
-opsincident-collector validate-rag-pipeline --path tests/fixtures/basic_project --format json
-opsincident-collector validate-rag-pipeline \
+opsincident-collector rag-report \
   --path tests/fixtures/basic_project \
-  --project-id proj_123 \
-  --api-url http://127.0.0.1:8001 \
-  --query "What evidence is available for investigation?" \
-  --search \
-  --investigate \
+  --format json
+
+opsincident-collector sync \
+  --path tests/fixtures/basic_project \
+  --export jsonl \
+  --output /tmp/opsincident-docs.jsonl \
+  --dry-run
+
+opsincident-collector eval-seed \
+  --path tests/fixtures/basic_project \
+  --output /tmp/opsincident-eval-seed.jsonl \
   --format json
 ```
 
-By default it does not upload, search, or investigate. Add `--sync`, `--search`, or `--investigate` explicitly for those Core operations.
+---
 
-## Security model
+## Sync to IncidentOps Core
 
-- path access is constrained by allowlist and deny patterns
-- dangerous files are skipped by default
-- inspect does not upload data
-- logs never print raw secret values
+Set a token through the environment. Do not put raw tokens in YAML unless you enjoy future regret.
+
+```bash
+export INCIDENTOPS_TOKEN='...'
+```
+
+Validate Core compatibility:
+
+```bash
+opsincident-collector validate-core-contract \
+  --api-url http://127.0.0.1:8001 \
+  --project-id <PROJECT_ID>
+```
+
+Sync documents:
+
+```bash
+opsincident-collector sync \
+  --path /data/service \
+  --api-url http://127.0.0.1:8001 \
+  --project-id <PROJECT_ID> \
+  --export api \
+  --yes
+```
+
+Core remains responsible for chunking, embeddings, retrieval, and investigation.
+
+---
+
+## MCP server
+
+```bash
+opsincident-collector mcp serve --config examples/mcp.json
+opsincident-collector mcp serve --dump-schema
+```
+
+The MCP layer exposes tools/resources/prompts for AI clients, but every sensitive action is permissioned. `sync_source` and output-writing operations require data-export approval. `investigate_incident` calls Core; it does not produce a local root cause.
+
+---
+
+## LangGraph workflows
+
+```bash
+opsincident-collector agent rag-readiness \
+  --path tests/fixtures/basic_project \
+  --format json
+
+opsincident-collector agent onboard-source \
+  --path tests/fixtures/basic_project \
+  --export-target jsonl \
+  --dry-run \
+  --format json
+
+opsincident-collector agent investigate \
+  --path tests/fixtures/basic_project \
+  --project-id <PROJECT_ID> \
+  --query "What evidence is available for investigation?" \
+  --format json
+```
+
+The investigation bridge checks local readiness and calls Core `/v1/investigate` when Core is available. If Core is unavailable, it returns readiness and missing-data guidance only.
+
+---
+
+## Daemon mode
+
+```bash
+opsincident-collector daemon run \
+  --config examples/local-daemon.yaml \
+  --max-cycles 1
+
+curl http://127.0.0.1:8686/health
+curl http://127.0.0.1:8687/metrics
+```
+
+Validate the local RAG pipeline:
+
+```bash
+opsincident-collector validate-rag-pipeline \
+  --path tests/fixtures/basic_project \
+  --format json
+```
+
+---
 
 ## Docker
 
-Base image:
-
 ```bash
 docker build -t opsincident-collector:base .
+
+docker build \
+  --build-arg INSTALL_TARGET='.[mcp,agent]' \
+  -t opsincident-collector:agent .
 ```
 
-MCP-capable image:
+Run local daemon example:
 
 ```bash
-docker build --build-arg INSTALL_TARGET=".[mcp]" -t opsincident-collector:mcp .
-```
-
-Agent/daemon image:
-
-```bash
-docker build --build-arg INSTALL_TARGET=".[mcp,agent]" -t opsincident-collector:agent .
 docker run --rm \
-  -e INCIDENTOPS_API_URL=http://host.docker.internal:8001 \
-  -e INCIDENTOPS_TOKEN=$INCIDENTOPS_TOKEN \
-  -e INCIDENTOPS_PROJECT_ID=proj_123 \
-  -v "$PWD/examples/daemon.yaml:/etc/opsincident-collector/collector.yaml:ro" \
+  -v "$PWD/examples/local-daemon.yaml:/etc/opsincident-collector/collector.yaml:ro" \
   -v "$PWD/tests/fixtures/basic_project:/data/basic_project:ro" \
   -v "$PWD/.opsincident-collector:/var/lib/opsincident-collector" \
   opsincident-collector:agent \
   daemon run --config /etc/opsincident-collector/collector.yaml --max-cycles 1
 ```
 
-See [docs/security-model.md](docs/security-model.md) and [docs/config-reference.md](docs/config-reference.md).
-See [docs/langgraph-agent.md](docs/langgraph-agent.md) for Phase 4 graph details.
-See [docs/daemon.md](docs/daemon.md), [docs/operations.md](docs/operations.md), and [docs/validate-rag-pipeline.md](docs/validate-rag-pipeline.md) for Phase 5 deployment details.
+---
+
+## Verification
+
+```bash
+.venv/bin/python -m ruff check .
+.venv/bin/python -m pytest -q
+.venv/bin/python -m compileall opsincident_collector
+```
+
+Recent Phase 5 baseline:
+
+```text
+ruff: passed
+pytest: 72 passed
+compileall: passed
+Docker base build: passed
+Docker [mcp,agent] build: passed
+```
+
+---
+
+## Documentation
+
+Start here:
+
+- [docs/README.md](docs/README.md) - documentation index
+- [docs/collector-philosophy.md](docs/collector-philosophy.md) - design philosophy and boundaries
+- [docs/core-contract.md](docs/core-contract.md) - Collector/Core data contract
+- [docs/production-usage.md](docs/production-usage.md) - server and operator usage guide
+
+Detailed docs:
+
+- [docs/architecture.md](docs/architecture.md)
+- [docs/config-reference.md](docs/config-reference.md)
+- [docs/security-model.md](docs/security-model.md)
+- [docs/core-integration.md](docs/core-integration.md)
+- [docs/mcp-server.md](docs/mcp-server.md)
+- [docs/langgraph-agent.md](docs/langgraph-agent.md)
+- [docs/daemon.md](docs/daemon.md)
+- [docs/operations.md](docs/operations.md)
+- [docs/server-deployment.md](docs/server-deployment.md)
+- [docs/validate-rag-pipeline.md](docs/validate-rag-pipeline.md)
+
+---
+
+## Design laws
+
+1. Never trust raw data.
+2. Never leak secrets.
+3. Never diagnose locally.
+4. Never bypass Core for investigation.
+5. Never pretend weak evidence is strong.
+6. Never let agents roam arbitrary paths.
+7. Always normalize.
+8. Always version.
+9. Always audit.
+10. Always fail honestly.
