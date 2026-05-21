@@ -34,3 +34,17 @@ flowchart LR
 - Stage config changes in local-only mode.
 - Compare run summaries before production rollout.
 - Promote with explicit approval + rollback plan.
+
+
+## Merge conflict runbook
+
+When documentation branches diverge:
+
+1. Resolve conflicts in this order: `docs/architecture.md` -> domain docs in `docs/` -> `README.md`.
+2. Preserve collector/Core responsibility boundaries exactly as defined in architecture/core integration docs.
+3. Ensure no conflict resolution introduces policy bypass language (allowlist/denylist, redaction-before-boundary).
+4. After resolution, run tests and a quick grep for conflict markers.
+
+```bash
+rg -n "^<<<<<<<|^=======|^>>>>>>>" README.md docs/*.md
+```

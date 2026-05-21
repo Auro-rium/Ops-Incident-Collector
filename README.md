@@ -58,6 +58,21 @@ python -m opsincident_collector --help
 
 ---
 
+
+## Documentation merge notes
+
+If you are merging documentation branches, apply this order to avoid conflicts:
+
+1. Keep `docs/architecture.md` as the canonical system model.
+2. Keep `README.md` as a navigation and quick-start layer only.
+3. Resolve overlapping wording in favor of the dedicated `docs/*` page.
+4. Re-run doc checks and render Mermaid previews before merge.
+
+Conflict hot-spots from prior branches were usually `README.md` and:
+`docs/mcp-server.md`, `docs/langgraph-agent.md`, and `docs/server-deployment.md`.
+
+---
+
 ## Determinism and safety guarantees
 
 - Explicit collection roots only (no free-roaming traversal).
