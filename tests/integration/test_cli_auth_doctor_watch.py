@@ -125,6 +125,9 @@ def test_watch_api_with_yes_allowed(tmp_path: Path, monkeypatch) -> None:
     project_path = Path(__file__).resolve().parents[1] / "fixtures" / "basic_project"
     config = _config(tmp_path, project_path, api=True)
     respx.get("http://core.test/v1/capabilities").mock(return_value=Response(404))
+    respx.post("http://core.test/v1/projects/proj_123/collectors/register").mock(
+        return_value=Response(200, json={"collector_id": "collector_123"})
+    )
     respx.post("http://core.test/v1/projects/proj_123/sources").mock(
         return_value=Response(200, json={"source_id": "src_123"})
     )
@@ -135,7 +138,7 @@ def test_watch_api_with_yes_allowed(tmp_path: Path, monkeypatch) -> None:
         return_value=Response(200, json={"ok": True})
     )
     respx.post("http://core.test/v1/sources/src_123/syncs/11111111-1111-1111-1111-111111111111/finish").mock(
-        return_value=Response(200, json={"status": "completed"})
+        return_value=Response(200, json={"status": "success"})
     )
 
     result = runner.invoke(

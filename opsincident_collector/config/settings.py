@@ -86,6 +86,7 @@ class CollectorSettings(BaseModel):
     id: str = "local-dev-collector"
     name: str = "local-dev-machine"
     mode: str = "local"
+    environment: str = "local"
 
 
 class StateSettings(BaseModel):

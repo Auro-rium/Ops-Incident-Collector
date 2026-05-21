@@ -1,0 +1,85 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+import yaml
+
+from opsincident_collector.config.loader import find_config_path, load_settings_optional
+
+
+def test_aws_env_aliases_are_supported(tmp_path: Path, monkeypatch) -> None:
+    config = tmp_path / "collector.yaml"
+    config.write_text(
+        f"""
+state:
+  sqlite_path: "{tmp_path / 'state.sqlite'}"
+security:
+  allow_paths:
+    - "{tmp_path}"
+daemon:
+  source_name: "from-config"
+  source_type: "filesystem"
+sources:
+  - name: "fixture"
+    type: "filesystem"
+    path: "{tmp_path}"
+""",
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("COLLECTOR_CONFIG", str(config))
+    monkeypatch.setenv("INCIDENTOPS_API_URL", "https://core.internal")
+    monkeypatch.setenv("PROJECT_ID", "proj_aws")
+    monkeypatch.setenv("SOURCE_NAME", "aws-source")
+    monkeypatch.setenv("SOURCE_TYPE", "logs_folder")
+    monkeypatch.setenv("COLLECTOR_ENVIRONMENT", "aws-prod")
+
+    assert find_config_path() == config
+    settings = load_settings_optional(None)
+
+    assert settings.api.base_url == "https://core.internal"
+    assert settings.project.id == "proj_aws"
+    assert settings.daemon.source_name == "aws-source"
+    assert settings.daemon.source_type == "logs_folder"
+    assert settings.collector.environment == "aws-prod"
+
+
+def test_aws_deployment_artifacts_exist_and_are_safe() -> None:
+    required_paths = [
+        Path("infra/terraform/main.tf"),
+        Path("infra/terraform/variables.tf"),
+        Path("infra/terraform/outputs.tf"),
+        Path("examples/aws-daemon.yaml"),
+        Path(".github/workflows/deploy-collector.yml"),
+        Path("scripts/smoke_aws_collector.sh"),
+        Path("docs/aws-deployment.md"),
+        Path(".env.production.example"),
+    ]
+    for path in required_paths:
+        assert path.exists(), path
+
+    aws_config = yaml.safe_load(Path("examples/aws-daemon.yaml").read_text(encoding="utf-8"))
+    assert aws_config["api"]["token_env"] == "INCIDENTOPS_TOKEN"
+    assert aws_config["daemon"]["export_target"] == "api"
+    assert aws_config["security"]["redact_secrets"] is True
+    assert "/app/tests/fixtures/basic_project" in aws_config["security"]["allow_paths"]
+
+    workflow = Path(".github/workflows/deploy-collector.yml").read_text(encoding="utf-8")
+    assert "id-token: write" in workflow
+    assert "aws-actions/configure-aws-credentials@v4" in workflow
+    assert "AWS_ACCESS_KEY_ID" not in workflow
+    assert "AWS_SECRET_ACCESS_KEY" not in workflow
+
+    terraform = Path("infra/terraform/main.tf").read_text(encoding="utf-8")
+    assert "aws_ecr_repository" in terraform
+    assert "aws_ecs_service" in terraform
+    assert "incidentops-collector" in terraform
+    assert "INCIDENTOPS_TOKEN" in terraform
+    assert "PROJECT_ID" in terraform
+
+
+def test_dockerfile_exposes_daemon_ports_and_non_root_user() -> None:
+    dockerfile = Path("Dockerfile").read_text(encoding="utf-8")
+
+    assert "USER opsincident" in dockerfile
+    assert "HEALTHCHECK" in dockerfile
+    assert "EXPOSE 8686 8687" in dockerfile

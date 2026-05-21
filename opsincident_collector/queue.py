@@ -63,6 +63,8 @@ def retry_queue(
                 exporter = IncidentOpsAPIExporter(
                     client=client,
                     project_id=resolved_project_id,
+                    collector_name=settings.collector.name,
+                    collector_environment=settings.collector.environment,
                     source_name=current_source,
                     source_type=source_type,
                     batch_size=settings.sync.batch_size,
@@ -104,4 +106,3 @@ def _source_type_for(settings: AppSettings, source_name: str) -> str:
         if source.name == source_name:
             return source.type
     return "filesystem"
-
