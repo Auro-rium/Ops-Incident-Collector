@@ -35,6 +35,7 @@ opsincident-collector coverage --path ./some-folder --format json
 opsincident-collector rag-report --path ./some-folder --format json
 opsincident-collector eval-seed --path ./some-folder --output eval_seed.jsonl
 opsincident-collector validate-core-contract --api-url http://127.0.0.1:8001 --project-id proj_123
+opsincident-collector benchmark --repo-url https://github.com/nsidnev/fastapi-realworld-example-app.git --core-url http://127.0.0.1:8001 --project-id proj_123 --output benchmark.json
 opsincident-collector mcp serve --config collector.yaml
 opsincident-collector agent rag-readiness --path ./some-folder --format json
 opsincident-collector agent onboard-source --path ./some-folder --export-target api --project-id proj_123
@@ -167,6 +168,22 @@ opsincident-collector validate-core-contract --api-url http://127.0.0.1:8001 --p
 ```
 
 Use `--with-sample` only when you explicitly want to upload one tiny redacted contract-validation document.
+
+## Real repo ingestion benchmark
+
+`benchmark` is the repeatable proof that Collector and Core can process real backend repos without planting fake incidents:
+
+```bash
+opsincident-collector benchmark \
+  --repo-url https://github.com/tiangolo/full-stack-fastapi-template.git \
+  --core-url http://127.0.0.1:8001 \
+  --project-id proj_123 \
+  --output benchmarks/reports/full-stack-fastapi-template.json
+```
+
+The benchmark clones or copies a repo, inspects it, syncs it to Core, syncs the same content again, modifies one copied file, syncs again, runs `/v1/search`, and writes a JSON report. The report includes files seen, skip reasons, unsupported extensions, documents normalized/synced, redaction count, Core created/updated/skipped counters, chunks created, coverage warnings, duplicate chunks after resync, changed-file update status, and sample search results.
+
+Recommended first repos are listed in `benchmarks/repos.example.yaml`. See `docs/real-repo-benchmark.md` for the report schema and expected pass/fail signals. Phase 1 proof reports live in `benchmarks/reports/phase1-summary.md`.
 
 ## Daemon and Operations
 

@@ -1,0 +1,1925 @@
+{
+  "benchmark_finished_at": "2026-05-23T04:35:13.406185+00:00",
+  "benchmark_started_at": "2026-05-23T04:34:47.187072+00:00",
+  "branch": "master",
+  "changed_file": "README.md",
+  "changed_file_path": "README.md",
+  "changed_file_update_detected": true,
+  "checks": {
+    "changed_file_chunks_created": 23,
+    "changed_file_update": "pass",
+    "duplicate_chunks_after_update": 0,
+    "resync_duplicate_chunks": 0,
+    "same_content_resync_skipped_unchanged": 77,
+    "search_pass": true
+  },
+  "chunks_created": 275,
+  "commit_sha": "33fa827e7eb5578d2519186bd30786f838ce5714",
+  "documents_synced": 77,
+  "duplicate_chunks_after_update": 0,
+  "duration_ms": 26219,
+  "files_seen": 259,
+  "files_skipped": 182,
+  "generated_at": "2026-05-23T04:35:13.406185+00:00",
+  "inspection": {
+    "binary_files": 3,
+    "denied_files": 18,
+    "empty_files": 11,
+    "likely_source_types": {
+      "code": 37,
+      "config": 31,
+      "deploy_history": 3,
+      "unknown_text": 6
+    },
+    "oversized_files": 0,
+    "path": "/home/lenovo/Documents/OpsIncident-Collector/benchmarks/worktrees/full-stack-fastapi-template",
+    "possible_secrets_detected": 119,
+    "skipped_files": [
+      {
+        "path": ".copier/.copier-answers.yml.jinja",
+        "reason": "unsupported_extension",
+        "size_bytes": 31
+      },
+      {
+        "path": ".env",
+        "reason": "denied",
+        "size_bytes": 1214
+      },
+      {
+        "path": ".git/HEAD",
+        "reason": "denied",
+        "size_bytes": 23
+      },
+      {
+        "path": ".git/config",
+        "reason": "denied",
+        "size_bytes": 294
+      },
+      {
+        "path": ".git/description",
+        "reason": "denied",
+        "size_bytes": 73
+      },
+      {
+        "path": ".git/hooks/applypatch-msg.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 478
+      },
+      {
+        "path": ".git/hooks/commit-msg.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 896
+      },
+      {
+        "path": ".git/hooks/fsmonitor-watchman.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 4726
+      },
+      {
+        "path": ".git/hooks/post-update.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 189
+      },
+      {
+        "path": ".git/hooks/pre-applypatch.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 424
+      },
+      {
+        "path": ".git/hooks/pre-commit.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 1643
+      },
+      {
+        "path": ".git/hooks/pre-merge-commit.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 416
+      },
+      {
+        "path": ".git/hooks/pre-push.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 1374
+      },
+      {
+        "path": ".git/hooks/pre-rebase.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 4898
+      },
+      {
+        "path": ".git/hooks/pre-receive.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 544
+      },
+      {
+        "path": ".git/hooks/prepare-commit-msg.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 1492
+      },
+      {
+        "path": ".git/hooks/push-to-checkout.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 2783
+      },
+      {
+        "path": ".git/hooks/sendemail-validate.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 2308
+      },
+      {
+        "path": ".git/hooks/update.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 3650
+      },
+      {
+        "path": ".git/index",
+        "reason": "denied",
+        "size_bytes": 24232
+      },
+      {
+        "path": ".git/info/exclude",
+        "reason": "unsupported_extension",
+        "size_bytes": 240
+      },
+      {
+        "path": ".git/logs/HEAD",
+        "reason": "unsupported_extension",
+        "size_bytes": 206
+      },
+      {
+        "path": ".git/logs/refs/heads/master",
+        "reason": "unsupported_extension",
+        "size_bytes": 206
+      },
+      {
+        "path": ".git/logs/refs/remotes/origin/HEAD",
+        "reason": "unsupported_extension",
+        "size_bytes": 206
+      },
+      {
+        "path": ".git/objects/pack/pack-1ff6bc68a71ac1aa074dd5895572fb2bd71f0315.idx",
+        "reason": "binary",
+        "size_bytes": 8548
+      },
+      {
+        "path": ".git/objects/pack/pack-1ff6bc68a71ac1aa074dd5895572fb2bd71f0315.pack",
+        "reason": "binary",
+        "size_bytes": 810435
+      },
+      {
+        "path": ".git/objects/pack/pack-1ff6bc68a71ac1aa074dd5895572fb2bd71f0315.rev",
+        "reason": "binary",
+        "size_bytes": 1120
+      },
+      {
+        "path": ".git/packed-refs",
+        "reason": "denied",
+        "size_bytes": 114
+      },
+      {
+        "path": ".git/refs/heads/master",
+        "reason": "unsupported_extension",
+        "size_bytes": 41
+      },
+      {
+        "path": ".git/refs/remotes/origin/HEAD",
+        "reason": "unsupported_extension",
+        "size_bytes": 32
+      },
+      {
+        "path": ".git/shallow",
+        "reason": "denied",
+        "size_bytes": 41
+      },
+      {
+        "path": ".gitattributes",
+        "reason": "unsupported_extension",
+        "size_bytes": 29
+      },
+      {
+        "path": ".gitignore",
+        "reason": "unsupported_extension",
+        "size_bytes": 118
+      },
+      {
+        "path": "LICENSE",
+        "reason": "unsupported_extension",
+        "size_bytes": 1076
+      },
+      {
+        "path": "backend/.dockerignore",
+        "reason": "unsupported_extension",
+        "size_bytes": 76
+      },
+      {
+        "path": "backend/.gitignore",
+        "reason": "unsupported_extension",
+        "size_bytes": 74
+      },
+      {
+        "path": "backend/Dockerfile",
+        "reason": "unsupported_extension",
+        "size_bytes": 1471
+      },
+      {
+        "path": "backend/app/__init__.py",
+        "reason": "empty",
+        "size_bytes": 0
+      },
+      {
+        "path": "backend/app/alembic/README",
+        "reason": "unsupported_extension",
+        "size_bytes": 39
+      },
+      {
+        "path": "backend/app/alembic/script.py.mako",
+        "reason": "unsupported_extension",
+        "size_bytes": 523
+      },
+      {
+        "path": "backend/app/alembic/versions/.keep",
+        "reason": "empty",
+        "size_bytes": 0
+      },
+      {
+        "path": "backend/app/api/__init__.py",
+        "reason": "empty",
+        "size_bytes": 0
+      },
+      {
+        "path": "backend/app/api/routes/__init__.py",
+        "reason": "empty",
+        "size_bytes": 0
+      },
+      {
+        "path": "backend/app/core/__init__.py",
+        "reason": "empty",
+        "size_bytes": 0
+      },
+      {
+        "path": "backend/app/email-templates/build/new_account.html",
+        "reason": "denied",
+        "size_bytes": 5665
+      },
+      {
+        "path": "backend/app/email-templates/build/reset_password.html",
+        "reason": "denied",
+        "size_bytes": 6392
+      },
+      {
+        "path": "backend/app/email-templates/build/test_email.html",
+        "reason": "denied",
+        "size_bytes": 3860
+      },
+      {
+        "path": "backend/app/email-templates/src/new_account.mjml",
+        "reason": "unsupported_extension",
+        "size_bytes": 1337
+      },
+      {
+        "path": "backend/app/email-templates/src/reset_password.mjml",
+        "reason": "unsupported_extension",
+        "size_bytes": 1919
+      },
+      {
+        "path": "backend/app/email-templates/src/test_email.mjml",
+        "reason": "unsupported_extension",
+        "size_bytes": 623
+      },
+      {
+        "path": "backend/scripts/format.sh",
+        "reason": "unsupported_extension",
+        "size_bytes": 74
+      },
+      {
+        "path": "backend/scripts/lint.sh",
+        "reason": "unsupported_extension",
+        "size_bytes": 97
+      },
+      {
+        "path": "backend/scripts/prestart.sh",
+        "reason": "unsupported_extension",
+        "size_bytes": 183
+      },
+      {
+        "path": "backend/scripts/test.sh",
+        "reason": "unsupported_extension",
+        "size_bytes": 120
+      },
+      {
+        "path": "backend/scripts/tests-start.sh",
+        "reason": "unsupported_extension",
+        "size_bytes": 93
+      },
+      {
+        "path": "backend/tests/__init__.py",
+        "reason": "empty",
+        "size_bytes": 0
+      },
+      {
+        "path": "backend/tests/api/__init__.py",
+        "reason": "empty",
+        "size_bytes": 0
+      },
+      {
+        "path": "backend/tests/api/routes/__init__.py",
+        "reason": "empty",
+        "size_bytes": 0
+      },
+      {
+        "path": "backend/tests/crud/__init__.py",
+        "reason": "empty",
+        "size_bytes": 0
+      },
+      {
+        "path": "backend/tests/scripts/__init__.py",
+        "reason": "empty",
+        "size_bytes": 0
+      },
+      {
+        "path": "backend/tests/utils/__init__.py",
+        "reason": "empty",
+        "size_bytes": 0
+      },
+      {
+        "path": "bun.lock",
+        "reason": "unsupported_extension",
+        "size_bytes": 118777
+      },
+      {
+        "path": "frontend/.dockerignore",
+        "reason": "unsupported_extension",
+        "size_bytes": 18
+      },
+      {
+        "path": "frontend/.env",
+        "reason": "denied",
+        "size_bytes": 74
+      },
+      {
+        "path": "frontend/.gitignore",
+        "reason": "unsupported_extension",
+        "size_bytes": 354
+      },
+      {
+        "path": "frontend/Dockerfile",
+        "reason": "unsupported_extension",
+        "size_bytes": 626
+      },
+      {
+        "path": "frontend/Dockerfile.playwright",
+        "reason": "unsupported_extension",
+        "size_bytes": 391
+      },
+      {
+        "path": "frontend/index.html",
+        "reason": "unsupported_extension",
+        "size_bytes": 454
+      },
+      {
+        "path": "frontend/nginx-backend-not-found.conf",
+        "reason": "unsupported_extension",
+        "size_bytes": 105
+      },
+      {
+        "path": "frontend/nginx.conf",
+        "reason": "unsupported_extension",
+        "size_bytes": 188
+      },
+      {
+        "path": "frontend/openapi-ts.config.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 813
+      },
+      {
+        "path": "frontend/playwright.config.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 2480
+      },
+      {
+        "path": "frontend/public/assets/images/fastapi-icon-light.svg",
+        "reason": "unsupported_extension",
+        "size_bytes": 2608
+      },
+      {
+        "path": "frontend/public/assets/images/fastapi-icon.svg",
+        "reason": "unsupported_extension",
+        "size_bytes": 2609
+      },
+      {
+        "path": "frontend/public/assets/images/fastapi-logo-light.svg",
+        "reason": "unsupported_extension",
+        "size_bytes": 7162
+      },
+      {
+        "path": "frontend/public/assets/images/fastapi-logo.svg",
+        "reason": "unsupported_extension",
+        "size_bytes": 7238
+      },
+      {
+        "path": "frontend/public/assets/images/favicon.png",
+        "reason": "denied",
+        "size_bytes": 5043
+      },
+      {
+        "path": "frontend/src/client/core/ApiError.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 611
+      },
+      {
+        "path": "frontend/src/client/core/ApiRequestOptions.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 617
+      },
+      {
+        "path": "frontend/src/client/core/ApiResult.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 166
+      },
+      {
+        "path": "frontend/src/client/core/CancelablePromise.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 3258
+      },
+      {
+        "path": "frontend/src/client/core/OpenAPI.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 1477
+      },
+      {
+        "path": "frontend/src/client/core/request.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 9598
+      },
+      {
+        "path": "frontend/src/client/index.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 290
+      },
+      {
+        "path": "frontend/src/client/schemas.gen.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 12475
+      },
+      {
+        "path": "frontend/src/client/sdk.gen.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 14443
+      },
+      {
+        "path": "frontend/src/client/types.gen.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 4765
+      },
+      {
+        "path": "frontend/src/components/Admin/AddUser.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 7314
+      },
+      {
+        "path": "frontend/src/components/Admin/DeleteUser.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 2690
+      },
+      {
+        "path": "frontend/src/components/Admin/EditUser.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 7435
+      },
+      {
+        "path": "frontend/src/components/Admin/UserActionsMenu.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1115
+      },
+      {
+        "path": "frontend/src/components/Admin/columns.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 2003
+      },
+      {
+        "path": "frontend/src/components/Common/Appearance.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 3291
+      },
+      {
+        "path": "frontend/src/components/Common/AuthLayout.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 839
+      },
+      {
+        "path": "frontend/src/components/Common/DataTable.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 6287
+      },
+      {
+        "path": "frontend/src/components/Common/ErrorComponent.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 845
+      },
+      {
+        "path": "frontend/src/components/Common/Footer.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1240
+      },
+      {
+        "path": "frontend/src/components/Common/Logo.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1474
+      },
+      {
+        "path": "frontend/src/components/Common/NotFound.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 894
+      },
+      {
+        "path": "frontend/src/components/Items/AddItem.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 4097
+      },
+      {
+        "path": "frontend/src/components/Items/DeleteItem.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 2619
+      },
+      {
+        "path": "frontend/src/components/Items/EditItem.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 4210
+      },
+      {
+        "path": "frontend/src/components/Items/ItemActionsMenu.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 991
+      },
+      {
+        "path": "frontend/src/components/Items/columns.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1939
+      },
+      {
+        "path": "frontend/src/components/Pending/PendingItems.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1125
+      },
+      {
+        "path": "frontend/src/components/Pending/PendingUsers.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1391
+      },
+      {
+        "path": "frontend/src/components/Sidebar/AppSidebar.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1187
+      },
+      {
+        "path": "frontend/src/components/Sidebar/Main.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1415
+      },
+      {
+        "path": "frontend/src/components/Sidebar/User.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 2922
+      },
+      {
+        "path": "frontend/src/components/UserSettings/ChangePassword.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 4304
+      },
+      {
+        "path": "frontend/src/components/UserSettings/DeleteAccount.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 458
+      },
+      {
+        "path": "frontend/src/components/UserSettings/DeleteConfirmation.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 2366
+      },
+      {
+        "path": "frontend/src/components/UserSettings/UserInformation.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 4765
+      },
+      {
+        "path": "frontend/src/components/theme-provider.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 2600
+      },
+      {
+        "path": "frontend/src/components/ui/alert.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1614
+      },
+      {
+        "path": "frontend/src/components/ui/avatar.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1083
+      },
+      {
+        "path": "frontend/src/components/ui/badge.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1633
+      },
+      {
+        "path": "frontend/src/components/ui/button-group.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 2209
+      },
+      {
+        "path": "frontend/src/components/ui/button.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 2142
+      },
+      {
+        "path": "frontend/src/components/ui/card.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1987
+      },
+      {
+        "path": "frontend/src/components/ui/checkbox.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1205
+      },
+      {
+        "path": "frontend/src/components/ui/dialog.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 3968
+      },
+      {
+        "path": "frontend/src/components/ui/dropdown-menu.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 8284
+      },
+      {
+        "path": "frontend/src/components/ui/form.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 3745
+      },
+      {
+        "path": "frontend/src/components/ui/input.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 962
+      },
+      {
+        "path": "frontend/src/components/ui/label.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 611
+      },
+      {
+        "path": "frontend/src/components/ui/loading-button.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 2410
+      },
+      {
+        "path": "frontend/src/components/ui/pagination.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 2712
+      },
+      {
+        "path": "frontend/src/components/ui/password-input.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1994
+      },
+      {
+        "path": "frontend/src/components/ui/select.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 6281
+      },
+      {
+        "path": "frontend/src/components/ui/separator.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 685
+      },
+      {
+        "path": "frontend/src/components/ui/sheet.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 4090
+      },
+      {
+        "path": "frontend/src/components/ui/sidebar.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 22059
+      },
+      {
+        "path": "frontend/src/components/ui/skeleton.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 276
+      },
+      {
+        "path": "frontend/src/components/ui/sonner.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1034
+      },
+      {
+        "path": "frontend/src/components/ui/table.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 2511
+      },
+      {
+        "path": "frontend/src/components/ui/tabs.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1955
+      },
+      {
+        "path": "frontend/src/components/ui/tooltip.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1878
+      },
+      {
+        "path": "frontend/src/hooks/useAuth.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 1708
+      },
+      {
+        "path": "frontend/src/hooks/useCopyToClipboard.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 794
+      },
+      {
+        "path": "frontend/src/hooks/useCustomToast.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 385
+      },
+      {
+        "path": "frontend/src/hooks/useMobile.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 565
+      },
+      {
+        "path": "frontend/src/index.css",
+        "reason": "unsupported_extension",
+        "size_bytes": 4187
+      },
+      {
+        "path": "frontend/src/lib/utils.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 166
+      },
+      {
+        "path": "frontend/src/main.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1473
+      },
+      {
+        "path": "frontend/src/routeTree.gen.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 7038
+      },
+      {
+        "path": "frontend/src/routes/__root.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 651
+      },
+      {
+        "path": "frontend/src/routes/_layout/admin.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1879
+      },
+      {
+        "path": "frontend/src/routes/_layout/index.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 652
+      },
+      {
+        "path": "frontend/src/routes/_layout/items.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1895
+      },
+      {
+        "path": "frontend/src/routes/_layout/settings.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1735
+      },
+      {
+        "path": "frontend/src/routes/_layout.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 1041
+      },
+      {
+        "path": "frontend/src/routes/login.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 3950
+      },
+      {
+        "path": "frontend/src/routes/recover-password.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 3288
+      },
+      {
+        "path": "frontend/src/routes/reset-password.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 4576
+      },
+      {
+        "path": "frontend/src/routes/signup.tsx",
+        "reason": "unsupported_extension",
+        "size_bytes": 5223
+      },
+      {
+        "path": "frontend/src/utils.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 706
+      },
+      {
+        "path": "frontend/src/vite-env.d.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 155
+      },
+      {
+        "path": "frontend/tests/admin.spec.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 7198
+      },
+      {
+        "path": "frontend/tests/auth.setup.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 520
+      },
+      {
+        "path": "frontend/tests/config.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 569
+      },
+      {
+        "path": "frontend/tests/items.spec.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 4676
+      },
+      {
+        "path": "frontend/tests/login.spec.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 3479
+      },
+      {
+        "path": "frontend/tests/reset-password.spec.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 3986
+      },
+      {
+        "path": "frontend/tests/sign-up.spec.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 4551
+      },
+      {
+        "path": "frontend/tests/user-settings.spec.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 8628
+      },
+      {
+        "path": "frontend/tests/utils/mailcatcher.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 1230
+      },
+      {
+        "path": "frontend/tests/utils/privateApi.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 471
+      },
+      {
+        "path": "frontend/tests/utils/random.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 584
+      },
+      {
+        "path": "frontend/tests/utils/user.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 1108
+      },
+      {
+        "path": "frontend/vite.config.ts",
+        "reason": "unsupported_extension",
+        "size_bytes": 496
+      },
+      {
+        "path": "img/dashboard-dark.png",
+        "reason": "denied",
+        "size_bytes": 122439
+      },
+      {
+        "path": "img/dashboard-items.png",
+        "reason": "denied",
+        "size_bytes": 67602
+      },
+      {
+        "path": "img/dashboard.png",
+        "reason": "denied",
+        "size_bytes": 121001
+      },
+      {
+        "path": "img/docs.png",
+        "reason": "denied",
+        "size_bytes": 98515
+      },
+      {
+        "path": "img/github-social-preview.png",
+        "reason": "denied",
+        "size_bytes": 44746
+      },
+      {
+        "path": "img/github-social-preview.svg",
+        "reason": "unsupported_extension",
+        "size_bytes": 4187
+      },
+      {
+        "path": "img/login.png",
+        "reason": "denied",
+        "size_bytes": 51928
+      },
+      {
+        "path": "scripts/generate-client.sh",
+        "reason": "unsupported_extension",
+        "size_bytes": 244
+      },
+      {
+        "path": "scripts/test-local.sh",
+        "reason": "unsupported_extension",
+        "size_bytes": 405
+      },
+      {
+        "path": "scripts/test.sh",
+        "reason": "unsupported_extension",
+        "size_bytes": 314
+      },
+      {
+        "path": "uv.lock",
+        "reason": "unsupported_extension",
+        "size_bytes": 534035
+      }
+    ],
+    "supported_extensions": {
+      ".ini": 1,
+      ".json": 9,
+      ".md": 7,
+      ".py": 37,
+      ".toml": 2,
+      ".yaml": 1,
+      ".yml": 20
+    },
+    "supported_files": 77,
+    "total_files": 259,
+    "unsupported_extensions": {
+      ".conf": 2,
+      ".css": 1,
+      ".html": 1,
+      ".jinja": 1,
+      ".lock": 2,
+      ".mako": 1,
+      ".mjml": 3,
+      ".playwright": 1,
+      ".sample": 14,
+      ".sh": 8,
+      ".svg": 5,
+      ".ts": 33,
+      ".tsx": 62,
+      "<none>": 16
+    },
+    "unsupported_files": 150,
+    "warnings": [
+      "binary file skipped: .git/objects/pack/pack-1ff6bc68a71ac1aa074dd5895572fb2bd71f0315.idx",
+      "binary file skipped: .git/objects/pack/pack-1ff6bc68a71ac1aa074dd5895572fb2bd71f0315.pack",
+      "binary file skipped: .git/objects/pack/pack-1ff6bc68a71ac1aa074dd5895572fb2bd71f0315.rev",
+      "18 denied file(s) skipped by policy",
+      "150 unsupported file(s) skipped"
+    ]
+  },
+  "latest_core_sync_status": "success",
+  "normalized_documents": 77,
+  "parser_errors": 0,
+  "redaction_count": 119,
+  "repeat_sync_skipped_unchanged": 77,
+  "repo": {
+    "benchmark_path": "/home/lenovo/Documents/OpsIncident-Collector/benchmarks/worktrees/full-stack-fastapi-template",
+    "branch": "master",
+    "commit_sha": "33fa827e7eb5578d2519186bd30786f838ce5714",
+    "input_path": null,
+    "name": "phase1-final2-full-stack-fastapi-template",
+    "url": "https://github.com/tiangolo/full-stack-fastapi-template.git"
+  },
+  "repo_url": "https://github.com/tiangolo/full-stack-fastapi-template.git",
+  "schema_version": "incidentops.real_repo_benchmark.v1",
+  "search": {
+    "duration_ms": 1444,
+    "ok": true,
+    "pass": true,
+    "query": "Where is the FastAPI application configured?",
+    "result": {
+      "debug": null,
+      "latency_ms": 23,
+      "query": "Where is the FastAPI application configured?",
+      "results": [
+        {
+          "chunk_id": "042fd171-6902-43b3-8286-851b2c5d0119",
+          "citation": {
+            "chunk_id": "042fd171-6902-43b3-8286-851b2c5d0119",
+            "label": "[1]",
+            "lines": "121-150",
+            "path": "backend/README.md"
+          },
+          "deploy_hash": null,
+          "document_path": "backend/README.md",
+          "endpoint": null,
+          "rank": 1,
+          "score": 0.3704,
+          "service_name": "backend",
+          "source_type": "logs",
+          "text_preview": "\nWhen the tests are run, a file `htmlcov/index.html` is generated, you can open it in your browser to see the coverage of the tests.\n\n## Migrations\n\nAs during local development your app directory is mounted as a volume inside the container, you can also run the migrations with `alembic` commands ins"
+        },
+        {
+          "chunk_id": "04733374-dd74-478a-a2f3-3ff08359de0d",
+          "citation": {
+            "chunk_id": "04733374-dd74-478a-a2f3-3ff08359de0d",
+            "label": "[2]",
+            "lines": "31-60",
+            "path": "backend/README.md"
+          },
+          "deploy_hash": null,
+          "document_path": "backend/README.md",
+          "endpoint": null,
+          "rank": 2,
+          "score": 0.3561,
+          "service_name": "backend",
+          "source_type": "logs",
+          "text_preview": "\n## VS Code\n\nThere are already configurations in place to run the backend through the VS Code debugger, so that you can use breakpoints, pause and explore variables, etc.\n\nThe setup is also already configured so you can run the tests through the VS Code Python tests tab.\n\n## Docker Compose Override\n"
+        },
+        {
+          "chunk_id": "1bb0f54c-2ae5-47ba-982b-edd93386f612",
+          "citation": {
+            "chunk_id": "1bb0f54c-2ae5-47ba-982b-edd93386f612",
+            "label": "[3]",
+            "lines": "231-234",
+            "path": "README.md"
+          },
+          "deploy_hash": null,
+          "document_path": "README.md",
+          "endpoint": null,
+          "rank": 3,
+          "score": 0.45,
+          "service_name": "readme",
+          "source_type": "runbook",
+          "text_preview": "## License\n\nThe Full Stack FastAPI Template is licensed under the terms of the MIT license."
+        },
+        {
+          "chunk_id": "d8f26516-e37b-457a-9ec9-526c5e769cf2",
+          "citation": {
+            "chunk_id": "d8f26516-e37b-457a-9ec9-526c5e769cf2",
+            "label": "[4]",
+            "lines": "136-191",
+            "path": "deployment.md"
+          },
+          "deploy_hash": null,
+          "document_path": "deployment.md",
+          "endpoint": null,
+          "rank": 4,
+          "score": 0.3728,
+          "service_name": "with",
+          "source_type": "runbook",
+          "text_preview": "### Required Environment Variables\n\nSet the `ENVIRONMENT`, by default `local` (for development), but when deploying to a server you would put something like `staging` or `production`:\n\n```bash\nexport ENVIRONMENT=production\n```\n\nSet the `DOMAIN`, by default `localhost` (for development), but when dep"
+        },
+        {
+          "chunk_id": "0f5c5bb1-e69c-43b0-af8e-cf1c07843b30",
+          "citation": {
+            "chunk_id": "0f5c5bb1-e69c-43b0-af8e-cf1c07843b30",
+            "label": "[5]",
+            "lines": "92-105",
+            "path": "deployment.md"
+          },
+          "deploy_hash": null,
+          "document_path": "deployment.md",
+          "endpoint": null,
+          "rank": 5,
+          "score": 0.3211,
+          "service_name": "with",
+          "source_type": "runbook",
+          "text_preview": "### Start the Traefik Docker Compose\n\nGo to the directory where you copied the Traefik Docker Compose file in your remote server:\n\n```bash\ncd /root/code/traefik-public/\n```\n\nNow with the environment variables set and the `compose.traefik.yml` in place, you can start the Traefik Docker Compose runnin"
+        }
+      ],
+      "total": 5
+    },
+    "search_result_count": 5,
+    "top_evidence_paths": [
+      "backend/README.md",
+      "backend/README.md",
+      "README.md",
+      "deployment.md",
+      "deployment.md"
+    ]
+  },
+  "search_pass": true,
+  "search_queries": [
+    {
+      "duration_ms": 1444,
+      "ok": true,
+      "pass": true,
+      "query": "Where is the FastAPI application configured?",
+      "result": {
+        "debug": null,
+        "latency_ms": 23,
+        "query": "Where is the FastAPI application configured?",
+        "results": [
+          {
+            "chunk_id": "042fd171-6902-43b3-8286-851b2c5d0119",
+            "citation": {
+              "chunk_id": "042fd171-6902-43b3-8286-851b2c5d0119",
+              "label": "[1]",
+              "lines": "121-150",
+              "path": "backend/README.md"
+            },
+            "deploy_hash": null,
+            "document_path": "backend/README.md",
+            "endpoint": null,
+            "rank": 1,
+            "score": 0.3704,
+            "service_name": "backend",
+            "source_type": "logs",
+            "text_preview": "\nWhen the tests are run, a file `htmlcov/index.html` is generated, you can open it in your browser to see the coverage of the tests.\n\n## Migrations\n\nAs during local development your app directory is mounted as a volume inside the container, you can also run the migrations with `alembic` commands ins"
+          },
+          {
+            "chunk_id": "04733374-dd74-478a-a2f3-3ff08359de0d",
+            "citation": {
+              "chunk_id": "04733374-dd74-478a-a2f3-3ff08359de0d",
+              "label": "[2]",
+              "lines": "31-60",
+              "path": "backend/README.md"
+            },
+            "deploy_hash": null,
+            "document_path": "backend/README.md",
+            "endpoint": null,
+            "rank": 2,
+            "score": 0.3561,
+            "service_name": "backend",
+            "source_type": "logs",
+            "text_preview": "\n## VS Code\n\nThere are already configurations in place to run the backend through the VS Code debugger, so that you can use breakpoints, pause and explore variables, etc.\n\nThe setup is also already configured so you can run the tests through the VS Code Python tests tab.\n\n## Docker Compose Override\n"
+          },
+          {
+            "chunk_id": "1bb0f54c-2ae5-47ba-982b-edd93386f612",
+            "citation": {
+              "chunk_id": "1bb0f54c-2ae5-47ba-982b-edd93386f612",
+              "label": "[3]",
+              "lines": "231-234",
+              "path": "README.md"
+            },
+            "deploy_hash": null,
+            "document_path": "README.md",
+            "endpoint": null,
+            "rank": 3,
+            "score": 0.45,
+            "service_name": "readme",
+            "source_type": "runbook",
+            "text_preview": "## License\n\nThe Full Stack FastAPI Template is licensed under the terms of the MIT license."
+          },
+          {
+            "chunk_id": "d8f26516-e37b-457a-9ec9-526c5e769cf2",
+            "citation": {
+              "chunk_id": "d8f26516-e37b-457a-9ec9-526c5e769cf2",
+              "label": "[4]",
+              "lines": "136-191",
+              "path": "deployment.md"
+            },
+            "deploy_hash": null,
+            "document_path": "deployment.md",
+            "endpoint": null,
+            "rank": 4,
+            "score": 0.3728,
+            "service_name": "with",
+            "source_type": "runbook",
+            "text_preview": "### Required Environment Variables\n\nSet the `ENVIRONMENT`, by default `local` (for development), but when deploying to a server you would put something like `staging` or `production`:\n\n```bash\nexport ENVIRONMENT=production\n```\n\nSet the `DOMAIN`, by default `localhost` (for development), but when dep"
+          },
+          {
+            "chunk_id": "0f5c5bb1-e69c-43b0-af8e-cf1c07843b30",
+            "citation": {
+              "chunk_id": "0f5c5bb1-e69c-43b0-af8e-cf1c07843b30",
+              "label": "[5]",
+              "lines": "92-105",
+              "path": "deployment.md"
+            },
+            "deploy_hash": null,
+            "document_path": "deployment.md",
+            "endpoint": null,
+            "rank": 5,
+            "score": 0.3211,
+            "service_name": "with",
+            "source_type": "runbook",
+            "text_preview": "### Start the Traefik Docker Compose\n\nGo to the directory where you copied the Traefik Docker Compose file in your remote server:\n\n```bash\ncd /root/code/traefik-public/\n```\n\nNow with the environment variables set and the `compose.traefik.yml` in place, you can start the Traefik Docker Compose runnin"
+          }
+        ],
+        "total": 5
+      },
+      "search_result_count": 5,
+      "top_evidence_paths": [
+        "backend/README.md",
+        "backend/README.md",
+        "README.md",
+        "deployment.md",
+        "deployment.md"
+      ]
+    },
+    {
+      "duration_ms": 1290,
+      "ok": true,
+      "pass": true,
+      "query": "How is the backend database configured?",
+      "result": {
+        "debug": null,
+        "latency_ms": 23,
+        "query": "How is the backend database configured?",
+        "results": [
+          {
+            "chunk_id": "042fd171-6902-43b3-8286-851b2c5d0119",
+            "citation": {
+              "chunk_id": "042fd171-6902-43b3-8286-851b2c5d0119",
+              "label": "[1]",
+              "lines": "121-150",
+              "path": "backend/README.md"
+            },
+            "deploy_hash": null,
+            "document_path": "backend/README.md",
+            "endpoint": null,
+            "rank": 1,
+            "score": 0.617,
+            "service_name": "backend",
+            "source_type": "logs",
+            "text_preview": "\nWhen the tests are run, a file `htmlcov/index.html` is generated, you can open it in your browser to see the coverage of the tests.\n\n## Migrations\n\nAs during local development your app directory is mounted as a volume inside the container, you can also run the migrations with `alembic` commands ins"
+          },
+          {
+            "chunk_id": "04733374-dd74-478a-a2f3-3ff08359de0d",
+            "citation": {
+              "chunk_id": "04733374-dd74-478a-a2f3-3ff08359de0d",
+              "label": "[2]",
+              "lines": "31-60",
+              "path": "backend/README.md"
+            },
+            "deploy_hash": null,
+            "document_path": "backend/README.md",
+            "endpoint": null,
+            "rank": 2,
+            "score": 0.4302,
+            "service_name": "backend",
+            "source_type": "logs",
+            "text_preview": "\n## VS Code\n\nThere are already configurations in place to run the backend through the VS Code debugger, so that you can use breakpoints, pause and explore variables, etc.\n\nThe setup is also already configured so you can run the tests through the VS Code Python tests tab.\n\n## Docker Compose Override\n"
+          },
+          {
+            "chunk_id": "0dd33620-7dfa-456d-9d01-72d783bbf335",
+            "citation": {
+              "chunk_id": "0dd33620-7dfa-456d-9d01-72d783bbf335",
+              "label": "[3]",
+              "lines": "3-36",
+              "path": "development.md"
+            },
+            "deploy_hash": null,
+            "document_path": "development.md",
+            "endpoint": null,
+            "rank": 3,
+            "score": 0.7298,
+            "service_name": "and",
+            "source_type": "runbook",
+            "text_preview": "## Docker Compose\n\n* Start the local stack with Docker Compose:\n\n```bash\ndocker compose watch\n```\n\n* Now you can open your browser and interact with these URLs:\n\nFrontend, built with Docker, with routes handled based on the path: <http://localhost:5173>\n\nBackend, JSON based web API based on OpenAPI:"
+          },
+          {
+            "chunk_id": "720bb391-9021-49a9-b60d-06e78a44e37b",
+            "citation": {
+              "chunk_id": "720bb391-9021-49a9-b60d-06e78a44e37b",
+              "label": "[4]",
+              "lines": "56-71",
+              "path": "frontend/README.md"
+            },
+            "deploy_hash": null,
+            "document_path": "frontend/README.md",
+            "endpoint": null,
+            "rank": 4,
+            "score": 0.4156,
+            "service_name": "frontend",
+            "source_type": "runbook",
+            "text_preview": "### Manually\n\n* Start the Docker Compose stack.\n\n* Download the OpenAPI JSON file from `http://localhost/api/v1/openapi.json` and copy it to a new file `openapi.json` at the root of the `frontend` directory.\n\n* To generate the frontend client, run:\n\n```bash\nbun run generate-client\n```\n\n* Commit the "
+          },
+          {
+            "chunk_id": "1bb0f54c-2ae5-47ba-982b-edd93386f612",
+            "citation": {
+              "chunk_id": "1bb0f54c-2ae5-47ba-982b-edd93386f612",
+              "label": "[5]",
+              "lines": "231-234",
+              "path": "README.md"
+            },
+            "deploy_hash": null,
+            "document_path": "README.md",
+            "endpoint": null,
+            "rank": 5,
+            "score": 0.405,
+            "service_name": "readme",
+            "source_type": "runbook",
+            "text_preview": "## License\n\nThe Full Stack FastAPI Template is licensed under the terms of the MIT license."
+          }
+        ],
+        "total": 5
+      },
+      "search_result_count": 5,
+      "top_evidence_paths": [
+        "backend/README.md",
+        "backend/README.md",
+        "development.md",
+        "frontend/README.md",
+        "README.md"
+      ]
+    },
+    {
+      "duration_ms": 1097,
+      "ok": true,
+      "pass": true,
+      "query": "Where are Docker or deployment settings defined?",
+      "result": {
+        "debug": null,
+        "latency_ms": 23,
+        "query": "Where are Docker or deployment settings defined?",
+        "results": [
+          {
+            "chunk_id": "92aba1fd-ff79-4112-8e8c-72f1276d39d7",
+            "citation": {
+              "chunk_id": "92aba1fd-ff79-4112-8e8c-72f1276d39d7",
+              "label": "[1]",
+              "lines": "217-220",
+              "path": "README.md"
+            },
+            "deploy_hash": null,
+            "document_path": "README.md",
+            "endpoint": null,
+            "rank": 1,
+            "score": 0.45,
+            "service_name": "readme",
+            "source_type": "runbook",
+            "text_preview": "## Deployment\n\nDeployment docs: [deployment.md](./deployment.md)."
+          },
+          {
+            "chunk_id": "f652c7a9-de03-4152-9f52-0c2cf8e3028c",
+            "citation": {
+              "chunk_id": "f652c7a9-de03-4152-9f52-0c2cf8e3028c",
+              "label": "[2]",
+              "lines": "1-38",
+              "path": ".github/workflows/deploy-staging.yml"
+            },
+            "deploy_hash": null,
+            "document_path": ".github/workflows/deploy-staging.yml",
+            "endpoint": null,
+            "rank": 2,
+            "score": 0.3494,
+            "service_name": "workflows",
+            "source_type": "runbook",
+            "text_preview": "name: Deploy to Staging\n\non:\n  push:\n    branches:\n      - master\n\npermissions: {}\n\njobs:\n  deploy:\n    environment: staging\n    # Do not deploy in the main repository, only in user projects\n    if: github.repository_owner != 'fastapi'\n    runs-on:\n      - self-hosted\n      - staging\n    env:\n      "
+          },
+          {
+            "chunk_id": "5b24230c-71b5-4e54-b5aa-5394d8715216",
+            "citation": {
+              "chunk_id": "5b24230c-71b5-4e54-b5aa-5394d8715216",
+              "label": "[3]",
+              "lines": "1-38",
+              "path": ".github/workflows/deploy-production.yml"
+            },
+            "deploy_hash": null,
+            "document_path": ".github/workflows/deploy-production.yml",
+            "endpoint": null,
+            "rank": 3,
+            "score": 0.3494,
+            "service_name": "workflows",
+            "source_type": "runbook",
+            "text_preview": "name: Deploy to Production\n\non:\n  release:\n    types:\n      - published\n\npermissions: {}\n\njobs:\n  deploy:\n    environment: production\n    # Do not deploy in the main repository, only in user projects\n    if: github.repository_owner != 'fastapi'\n    runs-on:\n      - self-hosted\n      - production\n   "
+          },
+          {
+            "chunk_id": "656ce3f8-1d33-435b-8216-742357dc1718",
+            "citation": {
+              "chunk_id": "656ce3f8-1d33-435b-8216-742357dc1718",
+              "label": "[4]",
+              "lines": "291-296",
+              "path": "deployment.md"
+            },
+            "deploy_hash": null,
+            "document_path": "deployment.md",
+            "endpoint": null,
+            "rank": 4,
+            "score": 0.3437,
+            "service_name": "with",
+            "source_type": "runbook",
+            "text_preview": "### Configure GitHub Environments\n\nThe deployment workflows use [GitHub Environments](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments) for `staging` and `production`. This enables environment-specific secrets, deployment protection rules (e.g. r"
+          },
+          {
+            "chunk_id": "1e48f858-caad-41b2-921b-a70e9d3bbfec",
+            "citation": {
+              "chunk_id": "1e48f858-caad-41b2-921b-a70e9d3bbfec",
+              "label": "[5]",
+              "lines": "1-32",
+              "path": ".github/workflows/test-docker-compose.yml"
+            },
+            "deploy_hash": null,
+            "document_path": ".github/workflows/test-docker-compose.yml",
+            "endpoint": null,
+            "rank": 5,
+            "score": 0.2792,
+            "service_name": "workflows",
+            "source_type": "runbook",
+            "text_preview": "name: Test Docker Compose\n\non:\n  push:\n    branches:\n      - master\n  pull_request:\n    types:\n      - opened\n      - synchronize\n\npermissions: {}\n\njobs:\n\n  test-docker-compose:\n    runs-on: ubuntu-latest\n    timeout-minutes: 10\n    steps:\n      - name: Checkout\n        uses: actions/checkout@de0fac"
+          }
+        ],
+        "total": 5
+      },
+      "search_result_count": 5,
+      "top_evidence_paths": [
+        "README.md",
+        ".github/workflows/deploy-staging.yml",
+        ".github/workflows/deploy-production.yml",
+        "deployment.md",
+        ".github/workflows/test-docker-compose.yml"
+      ]
+    }
+  ],
+  "skip_reasons": {
+    "binary": 3,
+    "denied": 18,
+    "empty": 11,
+    "unsupported_extension": 150
+  },
+  "source_type_counts": {
+    "code": 37,
+    "config": 30,
+    "deploy_history": 3,
+    "logs": 3,
+    "unknown_text": 4
+  },
+  "sync_duration_seconds": 8.498,
+  "syncs": [
+    {
+      "collector": {
+        "bytes_processed": 309476,
+        "bytes_uploaded": 309476,
+        "checkpoint_updated": true,
+        "collector_id": "49364f56-e2b4-4bf3-baa9-c20b54e51277",
+        "documents_normalized": 77,
+        "documents_synced": 77,
+        "duration_ms": 7416,
+        "errors": [],
+        "export_target": "api",
+        "failed_uploads": 0,
+        "files_seen": 259,
+        "files_skipped": 182,
+        "files_uploaded": 77,
+        "project_id": "6029691b-152e-4bd0-9848-e484d8754ea8",
+        "redaction_count": 119,
+        "retry_attempted": 0,
+        "retry_succeeded": 0,
+        "skipped_reasons": {
+          "binary": 3,
+          "denied": 18,
+          "empty": 11,
+          "unsupported_extension": 150
+        },
+        "source_id": "a6760dfc-391c-40d7-8295-ef9d2d87f39f",
+        "source_name": "phase1-final2-full-stack-fastapi-template",
+        "source_type_counts": {
+          "code": 37,
+          "config": 30,
+          "deploy_history": 3,
+          "logs": 3,
+          "unknown_text": 4
+        },
+        "sync_id": "sync_1d41f1bb2040",
+        "unsupported_extensions": {
+          ".conf": 2,
+          ".css": 1,
+          ".html": 1,
+          ".jinja": 1,
+          ".lock": 2,
+          ".mako": 1,
+          ".mjml": 3,
+          ".playwright": 1,
+          ".sample": 14,
+          ".sh": 8,
+          ".svg": 5,
+          ".ts": 33,
+          ".tsx": 62,
+          "<none>": 16
+        },
+        "warnings": []
+      },
+      "core": {
+        "chunks_created": 275,
+        "collector_id": "49364f56-e2b4-4bf3-baa9-c20b54e51277",
+        "coverage": {
+          "chunk_type_counts": {
+            "function": 93,
+            "log_window": 43,
+            "markdown_section": 139
+          },
+          "has_api_docs": false,
+          "has_code": true,
+          "has_deploys": true,
+          "has_incidents": false,
+          "has_logs": true,
+          "has_runbooks": false,
+          "source_type_counts": {
+            "code": 74,
+            "config": 60,
+            "deploy": 3,
+            "deploy_history": 3,
+            "logs": 6,
+            "unknown_text": 8
+          },
+          "warnings": [
+            "No previous incidents found. Similar-incident lookup unavailable.",
+            "No runbooks or API docs found. Ownership and remediation guidance may be weak."
+          ]
+        },
+        "diagnostics": {
+          "chunk_type_counts": {
+            "function": 93,
+            "log_window": 43,
+            "markdown_section": 139
+          },
+          "collector_version": "0.1.0",
+          "core_api_version": "v1",
+          "documents_created": 77,
+          "documents_normalized": 77,
+          "documents_synced": 77,
+          "documents_updated": 0,
+          "embedding_backend": "local-hash-v1",
+          "error_count": 0,
+          "failed_uploads": 0,
+          "files_seen": 259,
+          "files_skipped": 182,
+          "last_batch_chunks_created": 275,
+          "last_batch_created": 77,
+          "last_batch_error_count": 0,
+          "last_batch_received": 77,
+          "last_batch_skipped_invalid": 0,
+          "last_batch_skipped_unchanged": 0,
+          "last_batch_updated": 0,
+          "redaction_count": 119,
+          "retry_attempted": 0,
+          "retry_succeeded": 0,
+          "schema_version": "incidentops.normalized_document.v1",
+          "skipped_invalid": 0,
+          "skipped_reasons": {
+            "binary": 3,
+            "denied": 18,
+            "empty": 11,
+            "unsupported_extension": 150
+          },
+          "skipped_unchanged": 0,
+          "source_type_counts": {
+            "code": 37,
+            "config": 30,
+            "deploy_history": 3,
+            "logs": 3,
+            "unknown_text": 4
+          },
+          "total_files_seen": 259,
+          "unsupported_extensions": {
+            ".conf": 2,
+            ".css": 1,
+            ".html": 1,
+            ".jinja": 1,
+            ".lock": 2,
+            ".mako": 1,
+            ".mjml": 3,
+            ".playwright": 1,
+            ".sample": 14,
+            ".sh": 8,
+            ".svg": 5,
+            ".ts": 33,
+            ".tsx": 62,
+            "<none>": 16
+          },
+          "warnings": []
+        },
+        "documents_received": 77,
+        "error_message": null,
+        "files_seen": 259,
+        "files_skipped": 182,
+        "finished_at": "2026-05-23T04:34:54.394300Z",
+        "parser_errors": 0,
+        "project_id": "6029691b-152e-4bd0-9848-e484d8754ea8",
+        "source_id": "a6760dfc-391c-40d7-8295-ef9d2d87f39f",
+        "started_at": "2026-05-23T04:34:49.999472Z",
+        "status": "success",
+        "sync_id": "7de6b62a-d24b-4394-8322-d5234d635cb1"
+      },
+      "duration_ms": 8498,
+      "label": "initial"
+    },
+    {
+      "collector": {
+        "bytes_processed": 309476,
+        "bytes_uploaded": 309476,
+        "checkpoint_updated": true,
+        "collector_id": "49364f56-e2b4-4bf3-baa9-c20b54e51277",
+        "documents_normalized": 77,
+        "documents_synced": 77,
+        "duration_ms": 5775,
+        "errors": [],
+        "export_target": "api",
+        "failed_uploads": 0,
+        "files_seen": 259,
+        "files_skipped": 182,
+        "files_uploaded": 77,
+        "project_id": "6029691b-152e-4bd0-9848-e484d8754ea8",
+        "redaction_count": 119,
+        "retry_attempted": 0,
+        "retry_succeeded": 0,
+        "skipped_reasons": {
+          "binary": 3,
+          "denied": 18,
+          "empty": 11,
+          "unsupported_extension": 150
+        },
+        "source_id": "a6760dfc-391c-40d7-8295-ef9d2d87f39f",
+        "source_name": "phase1-final2-full-stack-fastapi-template",
+        "source_type_counts": {
+          "code": 37,
+          "config": 30,
+          "deploy_history": 3,
+          "logs": 3,
+          "unknown_text": 4
+        },
+        "sync_id": "sync_23746754438e",
+        "unsupported_extensions": {
+          ".conf": 2,
+          ".css": 1,
+          ".html": 1,
+          ".jinja": 1,
+          ".lock": 2,
+          ".mako": 1,
+          ".mjml": 3,
+          ".playwright": 1,
+          ".sample": 14,
+          ".sh": 8,
+          ".svg": 5,
+          ".ts": 33,
+          ".tsx": 62,
+          "<none>": 16
+        },
+        "warnings": []
+      },
+      "core": {
+        "chunks_created": 0,
+        "collector_id": "49364f56-e2b4-4bf3-baa9-c20b54e51277",
+        "coverage": {
+          "chunk_type_counts": {},
+          "has_api_docs": false,
+          "has_code": true,
+          "has_deploys": false,
+          "has_incidents": false,
+          "has_logs": true,
+          "has_runbooks": false,
+          "source_type_counts": {
+            "code": 37,
+            "config": 30,
+            "deploy_history": 3,
+            "logs": 3,
+            "unknown_text": 4
+          },
+          "warnings": [
+            "No deploy history found. Deploy-regression investigations may be weak.",
+            "No previous incidents found. Similar-incident lookup unavailable.",
+            "No runbooks or API docs found. Ownership and remediation guidance may be weak."
+          ]
+        },
+        "diagnostics": {
+          "chunk_type_counts": {},
+          "collector_version": "0.1.0",
+          "core_api_version": "v1",
+          "documents_created": 0,
+          "documents_normalized": 77,
+          "documents_synced": 77,
+          "documents_updated": 0,
+          "embedding_backend": "local-hash-v1",
+          "error_count": 0,
+          "failed_uploads": 0,
+          "files_seen": 259,
+          "files_skipped": 182,
+          "last_batch_chunks_created": 0,
+          "last_batch_created": 0,
+          "last_batch_error_count": 0,
+          "last_batch_received": 77,
+          "last_batch_skipped_invalid": 0,
+          "last_batch_skipped_unchanged": 77,
+          "last_batch_updated": 0,
+          "redaction_count": 119,
+          "retry_attempted": 0,
+          "retry_succeeded": 0,
+          "schema_version": "incidentops.normalized_document.v1",
+          "skipped_invalid": 0,
+          "skipped_reasons": {
+            "binary": 3,
+            "denied": 18,
+            "empty": 11,
+            "unsupported_extension": 150
+          },
+          "skipped_unchanged": 77,
+          "source_type_counts": {
+            "code": 37,
+            "config": 30,
+            "deploy_history": 3,
+            "logs": 3,
+            "unknown_text": 4
+          },
+          "total_files_seen": 259,
+          "unsupported_extensions": {
+            ".conf": 2,
+            ".css": 1,
+            ".html": 1,
+            ".jinja": 1,
+            ".lock": 2,
+            ".mako": 1,
+            ".mjml": 3,
+            ".playwright": 1,
+            ".sample": 14,
+            ".sh": 8,
+            ".svg": 5,
+            ".ts": 33,
+            ".tsx": 62,
+            "<none>": 16
+          },
+          "warnings": []
+        },
+        "documents_received": 77,
+        "error_message": null,
+        "files_seen": 259,
+        "files_skipped": 182,
+        "finished_at": "2026-05-23T04:35:01.343949Z",
+        "parser_errors": 0,
+        "project_id": "6029691b-152e-4bd0-9848-e484d8754ea8",
+        "source_id": "a6760dfc-391c-40d7-8295-ef9d2d87f39f",
+        "started_at": "2026-05-23T04:34:58.654319Z",
+        "status": "success",
+        "sync_id": "eb2038a5-0d85-4c70-ad6f-d19818ad8233"
+      },
+      "duration_ms": 6885,
+      "label": "same_content_resync"
+    },
+    {
+      "collector": {
+        "bytes_processed": 309543,
+        "bytes_uploaded": 309543,
+        "checkpoint_updated": true,
+        "collector_id": "49364f56-e2b4-4bf3-baa9-c20b54e51277",
+        "documents_normalized": 77,
+        "documents_synced": 77,
+        "duration_ms": 5523,
+        "errors": [],
+        "export_target": "api",
+        "failed_uploads": 0,
+        "files_seen": 259,
+        "files_skipped": 182,
+        "files_uploaded": 77,
+        "project_id": "6029691b-152e-4bd0-9848-e484d8754ea8",
+        "redaction_count": 119,
+        "retry_attempted": 0,
+        "retry_succeeded": 0,
+        "skipped_reasons": {
+          "binary": 3,
+          "denied": 18,
+          "empty": 11,
+          "unsupported_extension": 150
+        },
+        "source_id": "a6760dfc-391c-40d7-8295-ef9d2d87f39f",
+        "source_name": "phase1-final2-full-stack-fastapi-template",
+        "source_type_counts": {
+          "code": 37,
+          "config": 30,
+          "deploy_history": 3,
+          "logs": 3,
+          "unknown_text": 4
+        },
+        "sync_id": "sync_24637d9b4691",
+        "unsupported_extensions": {
+          ".conf": 2,
+          ".css": 1,
+          ".html": 1,
+          ".jinja": 1,
+          ".lock": 2,
+          ".mako": 1,
+          ".mjml": 3,
+          ".playwright": 1,
+          ".sample": 14,
+          ".sh": 8,
+          ".svg": 5,
+          ".ts": 33,
+          ".tsx": 62,
+          "<none>": 16
+        },
+        "warnings": []
+      },
+      "core": {
+        "chunks_created": 23,
+        "collector_id": "49364f56-e2b4-4bf3-baa9-c20b54e51277",
+        "coverage": {
+          "chunk_type_counts": {
+            "markdown_section": 23
+          },
+          "has_api_docs": false,
+          "has_code": true,
+          "has_deploys": false,
+          "has_incidents": false,
+          "has_logs": true,
+          "has_runbooks": false,
+          "source_type_counts": {
+            "code": 37,
+            "config": 30,
+            "deploy_history": 3,
+            "logs": 3,
+            "unknown_text": 5
+          },
+          "warnings": [
+            "No deploy history found. Deploy-regression investigations may be weak.",
+            "No previous incidents found. Similar-incident lookup unavailable.",
+            "No runbooks or API docs found. Ownership and remediation guidance may be weak."
+          ]
+        },
+        "diagnostics": {
+          "chunk_type_counts": {
+            "markdown_section": 23
+          },
+          "collector_version": "0.1.0",
+          "core_api_version": "v1",
+          "documents_created": 0,
+          "documents_normalized": 77,
+          "documents_synced": 77,
+          "documents_updated": 1,
+          "embedding_backend": "local-hash-v1",
+          "error_count": 0,
+          "failed_uploads": 0,
+          "files_seen": 259,
+          "files_skipped": 182,
+          "last_batch_chunks_created": 23,
+          "last_batch_created": 0,
+          "last_batch_error_count": 0,
+          "last_batch_received": 77,
+          "last_batch_skipped_invalid": 0,
+          "last_batch_skipped_unchanged": 76,
+          "last_batch_updated": 1,
+          "redaction_count": 119,
+          "retry_attempted": 0,
+          "retry_succeeded": 0,
+          "schema_version": "incidentops.normalized_document.v1",
+          "skipped_invalid": 0,
+          "skipped_reasons": {
+            "binary": 3,
+            "denied": 18,
+            "empty": 11,
+            "unsupported_extension": 150
+          },
+          "skipped_unchanged": 76,
+          "source_type_counts": {
+            "code": 37,
+            "config": 30,
+            "deploy_history": 3,
+            "logs": 3,
+            "unknown_text": 4
+          },
+          "total_files_seen": 259,
+          "unsupported_extensions": {
+            ".conf": 2,
+            ".css": 1,
+            ".html": 1,
+            ".jinja": 1,
+            ".lock": 2,
+            ".mako": 1,
+            ".mjml": 3,
+            ".playwright": 1,
+            ".sample": 14,
+            ".sh": 8,
+            ".svg": 5,
+            ".ts": 33,
+            ".tsx": 62,
+            "<none>": 16
+          },
+          "warnings": []
+        },
+        "documents_received": 77,
+        "error_message": null,
+        "files_seen": 259,
+        "files_skipped": 182,
+        "finished_at": "2026-05-23T04:35:08.021206Z",
+        "parser_errors": 0,
+        "project_id": "6029691b-152e-4bd0-9848-e484d8754ea8",
+        "source_id": "a6760dfc-391c-40d7-8295-ef9d2d87f39f",
+        "started_at": "2026-05-23T04:35:05.280449Z",
+        "status": "success",
+        "sync_id": "ede5f8d9-8546-4e5a-8bfd-df85975941ac"
+      },
+      "duration_ms": 6711,
+      "label": "changed_file_resync"
+    }
+  ],
+  "unsupported_extensions": {
+    ".conf": 2,
+    ".css": 1,
+    ".html": 1,
+    ".jinja": 1,
+    ".lock": 2,
+    ".mako": 1,
+    ".mjml": 3,
+    ".playwright": 1,
+    ".sample": 14,
+    ".sh": 8,
+    ".svg": 5,
+    ".ts": 33,
+    ".tsx": 62,
+    "<none>": 16
+  }
+}

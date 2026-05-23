@@ -3,6 +3,7 @@ from __future__ import annotations
 import typer
 
 from opsincident_collector.cli.commands.agent import agent_app
+from opsincident_collector.cli.commands.benchmark import benchmark
 from opsincident_collector.cli.commands.coverage import coverage
 from opsincident_collector.cli.commands.daemon import daemon_app
 from opsincident_collector.cli.commands.doctor import doctor
@@ -24,6 +25,7 @@ app.command()(init)
 app.command()(doctor)
 app.command()(inspect)
 app.command()(sync)
+app.command()(benchmark)
 app.command()(watch)
 app.command()(validate)
 app.command()(coverage)

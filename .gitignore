@@ -10,3 +10,8 @@ build/
 *.sqlite
 *.db
 out.jsonl
+benchmarks/worktrees/
+benchmarks/tmp/
+benchmarks/reports/*.raw.json
+*.token
+.env.benchmark

@@ -1,0 +1,28 @@
+repos:
+  - name: full-stack-fastapi-template
+    repo_url: https://github.com/tiangolo/full-stack-fastapi-template.git
+    default_branch: master
+    source_name: phase1-full-stack-fastapi-template
+    source_type: git_local
+    changed_file_target: README.md
+    search_queries:
+      - Where is the FastAPI application configured?
+      - How is the backend database configured?
+      - Where are Docker or deployment settings defined?
+  - name: starlette
+    repo_url: https://github.com/encode/starlette.git
+    default_branch: main
+    source_name: phase1-starlette
+    source_type: git_local
+    changed_file_target: README.md
+    search_queries:
+      - Where is routing implemented?
+      - Where are middleware classes defined?
+      - How are WebSocket routes handled?
+
+defaults:
+  max_depth: 8
+  max_file_size_mb: 10
+  batch_size: 50
+  output_dir: benchmarks/reports
+  workdir: benchmarks/worktrees

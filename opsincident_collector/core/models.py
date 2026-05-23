@@ -59,6 +59,11 @@ class SyncSummary(BaseModel):
     failed_uploads: int = 0
     retry_attempted: int = 0
     retry_succeeded: int = 0
+    documents_normalized: int = 0
+    source_type_counts: dict[str, int] = Field(default_factory=dict)
+    skipped_reasons: dict[str, int] = Field(default_factory=dict)
+    unsupported_extensions: dict[str, int] = Field(default_factory=dict)
+    redaction_count: int = 0
 
 
 class SourceItem(BaseModel):
