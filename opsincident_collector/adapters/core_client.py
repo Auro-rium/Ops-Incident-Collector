@@ -174,6 +174,11 @@ class CoreClient:
         response.raise_for_status()
         return response.json()
 
+    def get_latest_sync(self, source_id: str) -> dict[str, Any]:
+        response = self.client.get(f"/v1/sources/{source_id}/syncs/latest")
+        response.raise_for_status()
+        return response.json()
+
     def list_sources(self, project_id: str) -> dict[str, Any]:
         response = self.client.get(f"/v1/projects/{project_id}/sources")
         response.raise_for_status()

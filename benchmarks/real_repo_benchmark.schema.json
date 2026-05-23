@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://incidentops.local/schemas/real_repo_benchmark.schema.json",
+  "title": "IncidentOps Real Repo Benchmark Report",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "generated_at",
+    "benchmark_started_at",
+    "benchmark_finished_at",
+    "repo",
+    "repo_url",
+    "commit_sha",
+    "branch",
+    "files_seen",
+    "files_skipped",
+    "skip_reasons",
+    "unsupported_extensions",
+    "normalized_documents",
+    "documents_synced",
+    "source_type_counts",
+    "redaction_count",
+    "chunks_created",
+    "sync_duration_seconds",
+    "latest_core_sync_status",
+    "parser_errors",
+    "search_queries",
+    "repeat_sync_skipped_unchanged",
+    "changed_file_path",
+    "changed_file_update_detected",
+    "duplicate_chunks_after_update",
+    "inspection",
+    "syncs",
+    "checks"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "incidentops.real_repo_benchmark.v1"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "benchmark_started_at": {"type": "string", "format": "date-time"},
+    "benchmark_finished_at": {"type": "string", "format": "date-time"},
+    "repo_url": {"type": ["string", "null"]},
+    "commit_sha": {"type": ["string", "null"]},
+    "branch": {"type": ["string", "null"]},
+    "files_seen": {"type": "integer", "minimum": 0},
+    "files_skipped": {"type": "integer", "minimum": 0},
+    "skip_reasons": {"type": "object", "additionalProperties": {"type": "integer"}},
+    "unsupported_extensions": {"type": "object", "additionalProperties": {"type": "integer"}},
+    "normalized_documents": {"type": "integer", "minimum": 0},
+    "documents_synced": {"type": "integer", "minimum": 0},
+    "source_type_counts": {"type": "object", "additionalProperties": {"type": "integer"}},
+    "redaction_count": {"type": "integer", "minimum": 0},
+    "chunks_created": {"type": "integer", "minimum": 0},
+    "sync_duration_seconds": {"type": "number", "minimum": 0},
+    "latest_core_sync_status": {"type": ["string", "null"]},
+    "parser_errors": {"type": "integer", "minimum": 0},
+    "repo": {
+      "type": "object",
+      "required": ["name", "benchmark_path"],
+      "properties": {
+        "url": {"type": ["string", "null"]},
+        "input_path": {"type": ["string", "null"]},
+        "benchmark_path": {"type": "string"},
+        "name": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "inspection": {
+      "type": "object",
+      "required": ["total_files", "supported_files", "unsupported_files", "skipped_files"],
+      "additionalProperties": true
+    },
+    "syncs": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["label", "duration_ms", "collector"],
+        "properties": {
+          "label": {
+            "enum": ["initial", "same_content_resync", "changed_file_resync"]
+          },
+          "duration_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "collector": {
+            "type": "object",
+            "required": ["files_seen", "files_skipped", "documents_normalized", "documents_synced"],
+            "additionalProperties": true
+          },
+          "core": {
+            "type": ["object", "null"],
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "changed_file": {
+      "type": ["string", "null"]
+    },
+    "changed_file_path": {"type": ["string", "null"]},
+    "changed_file_update_detected": {"type": "boolean"},
+    "duplicate_chunks_after_update": {"type": ["integer", "null"], "minimum": 0},
+    "repeat_sync_skipped_unchanged": {"type": "integer", "minimum": 0},
+    "checks": {
+      "type": "object",
+      "required": [
+        "same_content_resync_skipped_unchanged",
+        "resync_duplicate_chunks",
+        "changed_file_update",
+        "duplicate_chunks_after_update",
+        "search_pass"
+      ],
+      "properties": {
+        "same_content_resync_skipped_unchanged": {"type": "integer", "minimum": 0},
+        "resync_duplicate_chunks": {"type": "integer", "minimum": 0},
+        "changed_file_update": {"enum": ["pass", "fail"]},
+        "changed_file_chunks_created": {"type": "integer", "minimum": 0},
+        "duplicate_chunks_after_update": {"type": ["integer", "null"], "minimum": 0},
+        "search_pass": {"type": "boolean"}
+      },
+      "additionalProperties": true
+    },
+    "search_queries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["query", "duration_ms", "ok", "search_result_count", "top_evidence_paths", "pass"],
+        "properties": {
+          "query": {"type": "string"},
+          "duration_ms": {"type": "integer", "minimum": 0},
+          "ok": {"type": "boolean"},
+          "search_result_count": {"type": "integer", "minimum": 0},
+          "top_evidence_paths": {"type": "array", "items": {"type": "string"}},
+          "pass": {"type": "boolean"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "search": {
+      "type": "object",
+      "required": ["query", "duration_ms", "ok"],
+      "properties": {
+        "query": {"type": "string"},
+        "duration_ms": {"type": "integer", "minimum": 0},
+        "ok": {"type": "boolean"},
+        "result": {"type": "object"},
+        "error": {"type": "string"}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

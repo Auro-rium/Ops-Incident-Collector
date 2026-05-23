@@ -1,0 +1,1252 @@
+{
+  "benchmark_finished_at": "2026-05-23T04:36:34.387706+00:00",
+  "benchmark_started_at": "2026-05-23T04:35:45.361617+00:00",
+  "branch": "main",
+  "changed_file": "README.md",
+  "changed_file_path": "README.md",
+  "changed_file_update_detected": true,
+  "checks": {
+    "changed_file_chunks_created": 0,
+    "changed_file_update": "pass",
+    "duplicate_chunks_after_update": 0,
+    "resync_duplicate_chunks": 0,
+    "same_content_resync_skipped_unchanged": 101,
+    "search_pass": true
+  },
+  "chunks_created": 900,
+  "commit_sha": "48f8e331b23ca692f4713ac1f370bff1b5cd034c",
+  "documents_synced": 103,
+  "duplicate_chunks_after_update": 0,
+  "duration_ms": 49026,
+  "files_seen": 157,
+  "files_skipped": 54,
+  "generated_at": "2026-05-23T04:36:34.387706+00:00",
+  "inspection": {
+    "binary_files": 3,
+    "denied_files": 9,
+    "empty_files": 3,
+    "likely_source_types": {
+      "code": 65,
+      "config": 8,
+      "runbook": 24,
+      "unknown_text": 6
+    },
+    "oversized_files": 0,
+    "path": "/home/lenovo/Documents/OpsIncident-Collector/benchmarks/worktrees/starlette",
+    "possible_secrets_detected": 20,
+    "skipped_files": [
+      {
+        "path": ".git/HEAD",
+        "reason": "denied",
+        "size_bytes": 21
+      },
+      {
+        "path": ".git/config",
+        "reason": "denied",
+        "size_bytes": 266
+      },
+      {
+        "path": ".git/description",
+        "reason": "denied",
+        "size_bytes": 73
+      },
+      {
+        "path": ".git/hooks/applypatch-msg.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 478
+      },
+      {
+        "path": ".git/hooks/commit-msg.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 896
+      },
+      {
+        "path": ".git/hooks/fsmonitor-watchman.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 4726
+      },
+      {
+        "path": ".git/hooks/post-update.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 189
+      },
+      {
+        "path": ".git/hooks/pre-applypatch.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 424
+      },
+      {
+        "path": ".git/hooks/pre-commit.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 1643
+      },
+      {
+        "path": ".git/hooks/pre-merge-commit.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 416
+      },
+      {
+        "path": ".git/hooks/pre-push.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 1374
+      },
+      {
+        "path": ".git/hooks/pre-rebase.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 4898
+      },
+      {
+        "path": ".git/hooks/pre-receive.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 544
+      },
+      {
+        "path": ".git/hooks/prepare-commit-msg.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 1492
+      },
+      {
+        "path": ".git/hooks/push-to-checkout.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 2783
+      },
+      {
+        "path": ".git/hooks/sendemail-validate.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 2308
+      },
+      {
+        "path": ".git/hooks/update.sample",
+        "reason": "unsupported_extension",
+        "size_bytes": 3650
+      },
+      {
+        "path": ".git/index",
+        "reason": "denied",
+        "size_bytes": 11850
+      },
+      {
+        "path": ".git/info/exclude",
+        "reason": "unsupported_extension",
+        "size_bytes": 240
+      },
+      {
+        "path": ".git/logs/HEAD",
+        "reason": "unsupported_extension",
+        "size_bytes": 186
+      },
+      {
+        "path": ".git/logs/refs/heads/main",
+        "reason": "unsupported_extension",
+        "size_bytes": 186
+      },
+      {
+        "path": ".git/logs/refs/remotes/origin/HEAD",
+        "reason": "unsupported_extension",
+        "size_bytes": 186
+      },
+      {
+        "path": ".git/objects/pack/pack-d2d69ed5693059e45c4e75f110de7ab70c18b7a9.idx",
+        "reason": "binary",
+        "size_bytes": 5048
+      },
+      {
+        "path": ".git/objects/pack/pack-d2d69ed5693059e45c4e75f110de7ab70c18b7a9.pack",
+        "reason": "binary",
+        "size_bytes": 2692451
+      },
+      {
+        "path": ".git/objects/pack/pack-d2d69ed5693059e45c4e75f110de7ab70c18b7a9.rev",
+        "reason": "binary",
+        "size_bytes": 620
+      },
+      {
+        "path": ".git/packed-refs",
+        "reason": "denied",
+        "size_bytes": 112
+      },
+      {
+        "path": ".git/refs/heads/main",
+        "reason": "unsupported_extension",
+        "size_bytes": 41
+      },
+      {
+        "path": ".git/refs/remotes/origin/HEAD",
+        "reason": "unsupported_extension",
+        "size_bytes": 30
+      },
+      {
+        "path": ".git/refs/tags/1.0.1",
+        "reason": "unsupported_extension",
+        "size_bytes": 41
+      },
+      {
+        "path": ".git/shallow",
+        "reason": "denied",
+        "size_bytes": 41
+      },
+      {
+        "path": ".gitignore",
+        "reason": "unsupported_extension",
+        "size_bytes": 135
+      },
+      {
+        "path": "CITATION.cff",
+        "reason": "unsupported_extension",
+        "size_bytes": 627
+      },
+      {
+        "path": "docs/CNAME",
+        "reason": "unsupported_extension",
+        "size_bytes": 17
+      },
+      {
+        "path": "docs/css/custom.css",
+        "reason": "unsupported_extension",
+        "size_bytes": 839
+      },
+      {
+        "path": "docs/img/gh-actions-fail-check.png",
+        "reason": "denied",
+        "size_bytes": 971165
+      },
+      {
+        "path": "docs/img/gh-actions-fail-test.png",
+        "reason": "denied",
+        "size_bytes": 1336330
+      },
+      {
+        "path": "docs/img/gh-actions-fail.png",
+        "reason": "denied",
+        "size_bytes": 346190
+      },
+      {
+        "path": "docs/img/starlette.svg",
+        "reason": "unsupported_extension",
+        "size_bytes": 16866
+      },
+      {
+        "path": "docs/img/starlette_dark.svg",
+        "reason": "unsupported_extension",
+        "size_bytes": 16901
+      },
+      {
+        "path": "docs/js/custom.js",
+        "reason": "unsupported_extension",
+        "size_bytes": 1078
+      },
+      {
+        "path": "docs/overrides/main.html",
+        "reason": "unsupported_extension",
+        "size_bytes": 839
+      },
+      {
+        "path": "docs/overrides/partials/toc-item.html",
+        "reason": "unsupported_extension",
+        "size_bytes": 655
+      },
+      {
+        "path": "scripts/build",
+        "reason": "unsupported_extension",
+        "size_bytes": 87
+      },
+      {
+        "path": "scripts/check",
+        "reason": "unsupported_extension",
+        "size_bytes": 190
+      },
+      {
+        "path": "scripts/coverage",
+        "reason": "unsupported_extension",
+        "size_bytes": 92
+      },
+      {
+        "path": "scripts/docs",
+        "reason": "unsupported_extension",
+        "size_bytes": 44
+      },
+      {
+        "path": "scripts/install",
+        "reason": "unsupported_extension",
+        "size_bytes": 39
+      },
+      {
+        "path": "scripts/lint",
+        "reason": "unsupported_extension",
+        "size_bytes": 132
+      },
+      {
+        "path": "scripts/sync-version",
+        "reason": "unsupported_extension",
+        "size_bytes": 402
+      },
+      {
+        "path": "scripts/test",
+        "reason": "unsupported_extension",
+        "size_bytes": 164
+      },
+      {
+        "path": "starlette/py.typed",
+        "reason": "empty",
+        "size_bytes": 0
+      },
+      {
+        "path": "tests/__init__.py",
+        "reason": "empty",
+        "size_bytes": 0
+      },
+      {
+        "path": "tests/middleware/__init__.py",
+        "reason": "empty",
+        "size_bytes": 0
+      },
+      {
+        "path": "uv.lock",
+        "reason": "unsupported_extension",
+        "size_bytes": 236159
+      }
+    ],
+    "supported_extensions": {
+      ".md": 29,
+      ".py": 65,
+      ".toml": 1,
+      ".txt": 1,
+      ".yml": 7
+    },
+    "supported_files": 103,
+    "total_files": 157,
+    "unsupported_extensions": {
+      ".1": 1,
+      ".cff": 1,
+      ".css": 1,
+      ".html": 2,
+      ".js": 1,
+      ".lock": 1,
+      ".sample": 14,
+      ".svg": 2,
+      "<none>": 16
+    },
+    "unsupported_files": 39,
+    "warnings": [
+      "binary file skipped: .git/objects/pack/pack-d2d69ed5693059e45c4e75f110de7ab70c18b7a9.idx",
+      "binary file skipped: .git/objects/pack/pack-d2d69ed5693059e45c4e75f110de7ab70c18b7a9.pack",
+      "binary file skipped: .git/objects/pack/pack-d2d69ed5693059e45c4e75f110de7ab70c18b7a9.rev",
+      "9 denied file(s) skipped by policy",
+      "39 unsupported file(s) skipped"
+    ]
+  },
+  "latest_core_sync_status": "partial_success",
+  "normalized_documents": 103,
+  "parser_errors": 2,
+  "redaction_count": 20,
+  "repeat_sync_skipped_unchanged": 101,
+  "repo": {
+    "benchmark_path": "/home/lenovo/Documents/OpsIncident-Collector/benchmarks/worktrees/starlette",
+    "branch": "main",
+    "commit_sha": "48f8e331b23ca692f4713ac1f370bff1b5cd034c",
+    "input_path": null,
+    "name": "phase1-final2-starlette",
+    "url": "https://github.com/encode/starlette.git"
+  },
+  "repo_url": "https://github.com/encode/starlette.git",
+  "schema_version": "incidentops.real_repo_benchmark.v1",
+  "search": {
+    "duration_ms": 961,
+    "ok": true,
+    "pass": true,
+    "query": "Where is routing implemented?",
+    "result": {
+      "debug": null,
+      "latency_ms": 30,
+      "query": "Where is routing implemented?",
+      "results": [
+        {
+          "chunk_id": "8b41aa66-d4ce-4223-accf-84170dc4a1ac",
+          "citation": {
+            "chunk_id": "8b41aa66-d4ce-4223-accf-84170dc4a1ac",
+            "label": "[1]",
+            "lines": "31-60",
+            "path": "docs/middleware.md"
+          },
+          "deploy_hash": null,
+          "document_path": "docs/middleware.md",
+          "endpoint": null,
+          "rank": 1,
+          "score": 0.452,
+          "service_name": "docs",
+          "source_type": "logs",
+          "text_preview": "Every Starlette application automatically includes two pieces of middleware by default:\n\n* `ServerErrorMiddleware` - Ensures that application exceptions may return a custom 500 page, or display an application traceback in DEBUG mode. This is *always* the outermost middleware layer.\n* `ExceptionMiddl"
+        },
+        {
+          "chunk_id": "d475fd99-d842-4692-8ec0-05efef5867b3",
+          "citation": {
+            "chunk_id": "d475fd99-d842-4692-8ec0-05efef5867b3",
+            "label": "[2]",
+            "lines": "814-816",
+            "path": "tests/test_routing.py"
+          },
+          "deploy_hash": null,
+          "document_path": "tests/test_routing.py",
+          "endpoint": null,
+          "rank": 2,
+          "score": 0.4431,
+          "service_name": "tests",
+          "source_type": "code",
+          "text_preview": "def assert_middleware_header_route(request: Request) -> Response:\n    assert request.scope[\"add_headers_middleware\"] is True\n    return Response()"
+        },
+        {
+          "chunk_id": "1ed576d8-1acf-47c1-9ee1-80d59bfcb905",
+          "citation": {
+            "chunk_id": "1ed576d8-1acf-47c1-9ee1-80d59bfcb905",
+            "label": "[3]",
+            "lines": "68-71",
+            "path": "docs/applications.md"
+          },
+          "deploy_hash": null,
+          "document_path": "docs/applications.md",
+          "endpoint": null,
+          "rank": 3,
+          "score": 0.45,
+          "service_name": "docs",
+          "source_type": "runbook",
+          "text_preview": "### Accessing the app instance\n\nWhere a `request` is available (i.e. endpoints and middleware), the app is available on `request.app`."
+        },
+        {
+          "chunk_id": "6cb9dbe8-5074-4eaf-a058-e9a2057fcaba",
+          "citation": {
+            "chunk_id": "6cb9dbe8-5074-4eaf-a058-e9a2057fcaba",
+            "label": "[4]",
+            "lines": "1-12",
+            "path": ".github/ISSUE_TEMPLATE/config.yml"
+          },
+          "deploy_hash": null,
+          "document_path": ".github/ISSUE_TEMPLATE/config.yml",
+          "endpoint": null,
+          "rank": 4,
+          "score": 0.4334,
+          "service_name": "ISSUE_TEMPLATE",
+          "source_type": "runbook",
+          "text_preview": "# Ref: https://help.github.com/en/github/building-a-strong-community/configuring-issue-templates-for-your-repository#configuring-the-template-chooser\nblank_issues_enabled: false\ncontact_links:\n  - name: Discussions\n    url: https://github.com/Kludex/starlette/discussions\n    about: >\n      The \"Disc"
+        },
+        {
+          "chunk_id": "f3af5497-8c7f-4ba3-8f12-fcd1e971a62d",
+          "citation": {
+            "chunk_id": "f3af5497-8c7f-4ba3-8f12-fcd1e971a62d",
+            "label": "[5]",
+            "lines": "200-210",
+            "path": "docs/routing.md"
+          },
+          "deploy_hash": null,
+          "document_path": "docs/routing.md",
+          "endpoint": null,
+          "rank": 5,
+          "score": 0.2846,
+          "service_name": "docs",
+          "source_type": "runbook",
+          "text_preview": "# We can use the following to return URLs...\nurl = request.url_for(\"static\", path=\"/css/base.css\")\n```\n\nFor cases where there is no `request` instance, you can make reverse lookups\nagainst the application, although these will only return the URL path.\n\n```python\nurl = app.url_path_for(\"user_detail\","
+        }
+      ],
+      "total": 5
+    },
+    "search_result_count": 5,
+    "top_evidence_paths": [
+      "docs/middleware.md",
+      "tests/test_routing.py",
+      "docs/applications.md",
+      ".github/ISSUE_TEMPLATE/config.yml",
+      "docs/routing.md"
+    ]
+  },
+  "search_pass": true,
+  "search_queries": [
+    {
+      "duration_ms": 961,
+      "ok": true,
+      "pass": true,
+      "query": "Where is routing implemented?",
+      "result": {
+        "debug": null,
+        "latency_ms": 30,
+        "query": "Where is routing implemented?",
+        "results": [
+          {
+            "chunk_id": "8b41aa66-d4ce-4223-accf-84170dc4a1ac",
+            "citation": {
+              "chunk_id": "8b41aa66-d4ce-4223-accf-84170dc4a1ac",
+              "label": "[1]",
+              "lines": "31-60",
+              "path": "docs/middleware.md"
+            },
+            "deploy_hash": null,
+            "document_path": "docs/middleware.md",
+            "endpoint": null,
+            "rank": 1,
+            "score": 0.452,
+            "service_name": "docs",
+            "source_type": "logs",
+            "text_preview": "Every Starlette application automatically includes two pieces of middleware by default:\n\n* `ServerErrorMiddleware` - Ensures that application exceptions may return a custom 500 page, or display an application traceback in DEBUG mode. This is *always* the outermost middleware layer.\n* `ExceptionMiddl"
+          },
+          {
+            "chunk_id": "d475fd99-d842-4692-8ec0-05efef5867b3",
+            "citation": {
+              "chunk_id": "d475fd99-d842-4692-8ec0-05efef5867b3",
+              "label": "[2]",
+              "lines": "814-816",
+              "path": "tests/test_routing.py"
+            },
+            "deploy_hash": null,
+            "document_path": "tests/test_routing.py",
+            "endpoint": null,
+            "rank": 2,
+            "score": 0.4431,
+            "service_name": "tests",
+            "source_type": "code",
+            "text_preview": "def assert_middleware_header_route(request: Request) -> Response:\n    assert request.scope[\"add_headers_middleware\"] is True\n    return Response()"
+          },
+          {
+            "chunk_id": "1ed576d8-1acf-47c1-9ee1-80d59bfcb905",
+            "citation": {
+              "chunk_id": "1ed576d8-1acf-47c1-9ee1-80d59bfcb905",
+              "label": "[3]",
+              "lines": "68-71",
+              "path": "docs/applications.md"
+            },
+            "deploy_hash": null,
+            "document_path": "docs/applications.md",
+            "endpoint": null,
+            "rank": 3,
+            "score": 0.45,
+            "service_name": "docs",
+            "source_type": "runbook",
+            "text_preview": "### Accessing the app instance\n\nWhere a `request` is available (i.e. endpoints and middleware), the app is available on `request.app`."
+          },
+          {
+            "chunk_id": "6cb9dbe8-5074-4eaf-a058-e9a2057fcaba",
+            "citation": {
+              "chunk_id": "6cb9dbe8-5074-4eaf-a058-e9a2057fcaba",
+              "label": "[4]",
+              "lines": "1-12",
+              "path": ".github/ISSUE_TEMPLATE/config.yml"
+            },
+            "deploy_hash": null,
+            "document_path": ".github/ISSUE_TEMPLATE/config.yml",
+            "endpoint": null,
+            "rank": 4,
+            "score": 0.4334,
+            "service_name": "ISSUE_TEMPLATE",
+            "source_type": "runbook",
+            "text_preview": "# Ref: https://help.github.com/en/github/building-a-strong-community/configuring-issue-templates-for-your-repository#configuring-the-template-chooser\nblank_issues_enabled: false\ncontact_links:\n  - name: Discussions\n    url: https://github.com/Kludex/starlette/discussions\n    about: >\n      The \"Disc"
+          },
+          {
+            "chunk_id": "f3af5497-8c7f-4ba3-8f12-fcd1e971a62d",
+            "citation": {
+              "chunk_id": "f3af5497-8c7f-4ba3-8f12-fcd1e971a62d",
+              "label": "[5]",
+              "lines": "200-210",
+              "path": "docs/routing.md"
+            },
+            "deploy_hash": null,
+            "document_path": "docs/routing.md",
+            "endpoint": null,
+            "rank": 5,
+            "score": 0.2846,
+            "service_name": "docs",
+            "source_type": "runbook",
+            "text_preview": "# We can use the following to return URLs...\nurl = request.url_for(\"static\", path=\"/css/base.css\")\n```\n\nFor cases where there is no `request` instance, you can make reverse lookups\nagainst the application, although these will only return the URL path.\n\n```python\nurl = app.url_path_for(\"user_detail\","
+          }
+        ],
+        "total": 5
+      },
+      "search_result_count": 5,
+      "top_evidence_paths": [
+        "docs/middleware.md",
+        "tests/test_routing.py",
+        "docs/applications.md",
+        ".github/ISSUE_TEMPLATE/config.yml",
+        "docs/routing.md"
+      ]
+    },
+    {
+      "duration_ms": 959,
+      "ok": true,
+      "pass": true,
+      "query": "Where are middleware classes defined?",
+      "result": {
+        "debug": null,
+        "latency_ms": 28,
+        "query": "Where are middleware classes defined?",
+        "results": [
+          {
+            "chunk_id": "bb92d468-7bdd-49dd-b34b-beaa56a28515",
+            "citation": {
+              "chunk_id": "bb92d468-7bdd-49dd-b34b-beaa56a28515",
+              "label": "[1]",
+              "lines": "121-148",
+              "path": "docs/exceptions.md"
+            },
+            "deploy_hash": null,
+            "document_path": "docs/exceptions.md",
+            "endpoint": null,
+            "rank": 1,
+            "score": 0.4588,
+            "service_name": "docs",
+            "source_type": "logs",
+            "text_preview": "\nYou should only raise `HTTPException` inside routing or endpoints.\nMiddleware classes should instead just return appropriate responses directly.\n\nYou can use an `HTTPException` on a WebSocket endpoint. In case it's raised before `websocket.accept()`\nthe connection is not upgraded to a WebSocket con"
+          },
+          {
+            "chunk_id": "548f4761-4687-4c73-b608-efa743f48a7e",
+            "citation": {
+              "chunk_id": "548f4761-4687-4c73-b608-efa743f48a7e",
+              "label": "[2]",
+              "lines": "1-30",
+              "path": "docs/middleware.md"
+            },
+            "deploy_hash": null,
+            "document_path": "docs/middleware.md",
+            "endpoint": null,
+            "rank": 2,
+            "score": 0.45,
+            "service_name": "docs",
+            "source_type": "logs",
+            "text_preview": "Starlette includes several middleware classes for adding behavior that is applied across\nyour entire application. These are all implemented as standard ASGI\nmiddleware classes, and can be applied either to Starlette or to any other ASGI application.\n\n## Using middleware\n\nThe Starlette application cl"
+          },
+          {
+            "chunk_id": "4f44a34c-08f1-4653-a890-4ba11cfd44dc",
+            "citation": {
+              "chunk_id": "4f44a34c-08f1-4653-a890-4ba11cfd44dc",
+              "label": "[3]",
+              "lines": "751-780",
+              "path": "docs/middleware.md"
+            },
+            "deploy_hash": null,
+            "document_path": "docs/middleware.md",
+            "endpoint": null,
+            "rank": 3,
+            "score": 0.4288,
+            "service_name": "docs",
+            "source_type": "logs",
+            "text_preview": "* Preserves the top-level `app` instance.\n\n## Applying middleware to groups of routes\n\nMiddleware can also be added to `Mount` instances, which allows you to apply middleware to a group of routes or a sub-application:\n\n```python\nfrom starlette.applications import Starlette\nfrom starlette.middleware "
+          },
+          {
+            "chunk_id": "0f263cd2-9760-4b11-95f5-3b94c2a6b043",
+            "citation": {
+              "chunk_id": "0f263cd2-9760-4b11-95f5-3b94c2a6b043",
+              "label": "[4]",
+              "lines": "55-66",
+              "path": "starlette/convertors.py"
+            },
+            "deploy_hash": null,
+            "document_path": "starlette/convertors.py",
+            "endpoint": null,
+            "rank": 4,
+            "score": 0.4288,
+            "service_name": "starlette",
+            "source_type": "code",
+            "text_preview": "class FloatConvertor(Convertor[float]):\n    regex = r\"[0-9]+(\\.[0-9]+)?\"\n\n    def convert(self, value: str) -> float:\n        return float(value)\n\n    def to_string(self, value: float) -> str:\n        value = float(value)\n        assert value >= 0.0, \"Negative floats are not supported\"\n        asser"
+          },
+          {
+            "chunk_id": "8c3c43cb-b7a2-4b89-8b8a-8a74189e9d2a",
+            "citation": {
+              "chunk_id": "8c3c43cb-b7a2-4b89-8b8a-8a74189e9d2a",
+              "label": "[5]",
+              "lines": "15-17",
+              "path": "tests/middleware/test_middleware.py"
+            },
+            "deploy_hash": null,
+            "document_path": "tests/middleware/test_middleware.py",
+            "endpoint": null,
+            "rank": 5,
+            "score": 0.4192,
+            "service_name": "middleware",
+            "source_type": "code",
+            "text_preview": "def test_middleware_repr() -> None:\n    middleware = Middleware(CustomMiddleware, \"foo\", bar=123)\n    assert repr(middleware) == \"Middleware(CustomMiddleware, 'foo', bar=123)\""
+          }
+        ],
+        "total": 5
+      },
+      "search_result_count": 5,
+      "top_evidence_paths": [
+        "docs/exceptions.md",
+        "docs/middleware.md",
+        "docs/middleware.md",
+        "starlette/convertors.py",
+        "tests/middleware/test_middleware.py"
+      ]
+    },
+    {
+      "duration_ms": 972,
+      "ok": true,
+      "pass": true,
+      "query": "How are WebSocket routes handled?",
+      "result": {
+        "debug": null,
+        "latency_ms": 29,
+        "query": "How are WebSocket routes handled?",
+        "results": [
+          {
+            "chunk_id": "0f263cd2-9760-4b11-95f5-3b94c2a6b043",
+            "citation": {
+              "chunk_id": "0f263cd2-9760-4b11-95f5-3b94c2a6b043",
+              "label": "[1]",
+              "lines": "55-66",
+              "path": "starlette/convertors.py"
+            },
+            "deploy_hash": null,
+            "document_path": "starlette/convertors.py",
+            "endpoint": null,
+            "rank": 1,
+            "score": 0.45,
+            "service_name": "starlette",
+            "source_type": "code",
+            "text_preview": "class FloatConvertor(Convertor[float]):\n    regex = r\"[0-9]+(\\.[0-9]+)?\"\n\n    def convert(self, value: str) -> float:\n        return float(value)\n\n    def to_string(self, value: float) -> str:\n        value = float(value)\n        assert value >= 0.0, \"Negative floats are not supported\"\n        asser"
+          },
+          {
+            "chunk_id": "77d568fe-5875-4dd4-b696-cc783e8f6fb9",
+            "citation": {
+              "chunk_id": "77d568fe-5875-4dd4-b696-cc783e8f6fb9",
+              "label": "[2]",
+              "lines": "510-534",
+              "path": "tests/test_websockets.py"
+            },
+            "deploy_hash": null,
+            "document_path": "tests/test_websockets.py",
+            "endpoint": null,
+            "rank": 2,
+            "score": 0.3636,
+            "service_name": "tests",
+            "source_type": "code",
+            "text_preview": "def test_websocket_scope_interface() -> None:\n    \"\"\"\n    A WebSocket can be instantiated with a scope, and presents a `Mapping`\n    interface.\n    \"\"\"\n\n    async def mock_receive() -> Message:  # type: ignore\n        ...  # pragma: no cover\n\n    async def mock_send(message: Message) -> None: ...  #"
+          },
+          {
+            "chunk_id": "6b40e172-fedb-4f2b-bb9a-97cd600eda08",
+            "citation": {
+              "chunk_id": "6b40e172-fedb-4f2b-bb9a-97cd600eda08",
+              "label": "[3]",
+              "lines": "256-265",
+              "path": "docs/routing.md"
+            },
+            "deploy_hash": null,
+            "document_path": "docs/routing.md",
+            "endpoint": null,
+            "rank": 3,
+            "score": 0.3974,
+            "service_name": "docs",
+            "source_type": "runbook",
+            "text_preview": "## Route priority\n\nIncoming paths are matched against each `Route` in order.\n\nIn cases where more that one route could match an incoming path, you should\ntake care to ensure that more specific routes are listed before general cases.\n\nFor example:\n\n```python"
+          },
+          {
+            "chunk_id": "cb818669-5d52-4b14-b2fd-9696ce1bfafc",
+            "citation": {
+              "chunk_id": "cb818669-5d52-4b14-b2fd-9696ce1bfafc",
+              "label": "[4]",
+              "lines": "116-150",
+              "path": "docs/testclient.md"
+            },
+            "deploy_hash": null,
+            "document_path": "docs/testclient.md",
+            "endpoint": null,
+            "rank": 4,
+            "score": 0.3864,
+            "service_name": "docs",
+            "source_type": "runbook",
+            "text_preview": "### Testing WebSocket sessions\n\nYou can also test websocket sessions with the test client.\n\nThe `httpx` library will be used to build the initial handshake, meaning you\ncan use the same authentication options and other headers between both http and\nwebsocket testing.\n\n```python\nfrom starlette.testcl"
+          },
+          {
+            "chunk_id": "0026739a-baf6-4eb6-ad31-8082810439c4",
+            "citation": {
+              "chunk_id": "0026739a-baf6-4eb6-ad31-8082810439c4",
+              "label": "[5]",
+              "lines": "51-149",
+              "path": "docs/endpoints.md"
+            },
+            "deploy_hash": null,
+            "document_path": "docs/endpoints.md",
+            "endpoint": null,
+            "rank": 5,
+            "score": 0.3784,
+            "service_name": "docs",
+            "source_type": "runbook",
+            "text_preview": "### WebSocketEndpoint\n\nThe `WebSocketEndpoint` class is an ASGI application that presents a wrapper around\nthe functionality of a `WebSocket` instance.\n\nThe ASGI connection scope is accessible on the endpoint instance via `.scope` and\nhas an attribute `encoding` which may optionally be set, in order"
+          }
+        ],
+        "total": 5
+      },
+      "search_result_count": 5,
+      "top_evidence_paths": [
+        "starlette/convertors.py",
+        "tests/test_websockets.py",
+        "docs/routing.md",
+        "docs/testclient.md",
+        "docs/endpoints.md"
+      ]
+    }
+  ],
+  "skip_reasons": {
+    "binary": 3,
+    "denied": 9,
+    "empty": 3,
+    "unsupported_extension": 39
+  },
+  "source_type_counts": {
+    "code": 65,
+    "config": 8,
+    "incident_report": 1,
+    "logs": 8,
+    "runbook": 16,
+    "unknown_text": 5
+  },
+  "sync_duration_seconds": 23.24,
+  "syncs": [
+    {
+      "collector": {
+        "bytes_processed": 834987,
+        "bytes_uploaded": 834987,
+        "checkpoint_updated": true,
+        "collector_id": "b8998152-2f33-483d-8280-6124d3568694",
+        "documents_normalized": 103,
+        "documents_synced": 103,
+        "duration_ms": 22181,
+        "errors": [],
+        "export_target": "api",
+        "failed_uploads": 0,
+        "files_seen": 157,
+        "files_skipped": 54,
+        "files_uploaded": 103,
+        "project_id": "99de9afc-948a-47d4-a147-d9818032e16f",
+        "redaction_count": 20,
+        "retry_attempted": 0,
+        "retry_succeeded": 0,
+        "skipped_reasons": {
+          "binary": 3,
+          "denied": 9,
+          "empty": 3,
+          "unsupported_extension": 39
+        },
+        "source_id": "96e41f7f-76c0-425a-bb0c-77a995a85df4",
+        "source_name": "phase1-final2-starlette",
+        "source_type_counts": {
+          "code": 65,
+          "config": 8,
+          "incident_report": 1,
+          "logs": 8,
+          "runbook": 16,
+          "unknown_text": 5
+        },
+        "sync_id": "sync_bf662f2e5285",
+        "unsupported_extensions": {
+          ".1": 1,
+          ".cff": 1,
+          ".css": 1,
+          ".html": 2,
+          ".js": 1,
+          ".lock": 1,
+          ".sample": 14,
+          ".svg": 2,
+          "<none>": 16
+        },
+        "warnings": []
+      },
+      "core": {
+        "chunks_created": 900,
+        "collector_id": "b8998152-2f33-483d-8280-6124d3568694",
+        "coverage": {
+          "chunk_type_counts": {
+            "function": 713,
+            "incident_section": 3,
+            "log_window": 78,
+            "markdown_section": 106
+          },
+          "has_api_docs": false,
+          "has_code": true,
+          "has_deploys": false,
+          "has_incidents": true,
+          "has_logs": true,
+          "has_runbooks": true,
+          "source_type_counts": {
+            "code": 129,
+            "config": 16,
+            "incident": 1,
+            "incident_report": 1,
+            "logs": 16,
+            "runbook": 31,
+            "unknown_text": 10
+          },
+          "warnings": [
+            "No deploy history found. Deploy-regression investigations may be weak."
+          ]
+        },
+        "diagnostics": {
+          "chunk_type_counts": {
+            "function": 713,
+            "incident_section": 3,
+            "log_window": 78,
+            "markdown_section": 106
+          },
+          "collector_version": "0.1.0",
+          "core_api_version": "v1",
+          "documents_created": 101,
+          "documents_normalized": 103,
+          "documents_synced": 103,
+          "documents_updated": 0,
+          "embedding_backend": "local-hash-v1",
+          "error_count": 2,
+          "failed_uploads": 0,
+          "files_seen": 157,
+          "files_skipped": 54,
+          "last_batch_chunks_created": 65,
+          "last_batch_created": 3,
+          "last_batch_error_count": 0,
+          "last_batch_received": 3,
+          "last_batch_skipped_invalid": 0,
+          "last_batch_skipped_unchanged": 0,
+          "last_batch_updated": 0,
+          "redaction_count": 20,
+          "retry_attempted": 0,
+          "retry_succeeded": 0,
+          "schema_version": "incidentops.normalized_document.v1",
+          "skipped_invalid": 2,
+          "skipped_reasons": {
+            "binary": 3,
+            "denied": 9,
+            "empty": 3,
+            "unsupported_extension": 39
+          },
+          "skipped_unchanged": 0,
+          "source_type_counts": {
+            "code": 65,
+            "config": 8,
+            "incident_report": 1,
+            "logs": 8,
+            "runbook": 16,
+            "unknown_text": 5
+          },
+          "total_files_seen": 157,
+          "unsupported_extensions": {
+            ".1": 1,
+            ".cff": 1,
+            ".css": 1,
+            ".html": 2,
+            ".js": 1,
+            ".lock": 1,
+            ".sample": 14,
+            ".svg": 2,
+            "<none>": 16
+          },
+          "warnings": []
+        },
+        "documents_received": 103,
+        "error_message": null,
+        "files_seen": 157,
+        "files_skipped": 54,
+        "finished_at": "2026-05-23T04:36:07.301270Z",
+        "parser_errors": 2,
+        "project_id": "99de9afc-948a-47d4-a147-d9818032e16f",
+        "source_id": "96e41f7f-76c0-425a-bb0c-77a995a85df4",
+        "started_at": "2026-05-23T04:35:49.485174Z",
+        "status": "partial_success",
+        "sync_id": "20a70435-59c9-410e-b722-32b6264b7370"
+      },
+      "duration_ms": 23240,
+      "label": "initial"
+    },
+    {
+      "collector": {
+        "bytes_processed": 834987,
+        "bytes_uploaded": 834987,
+        "checkpoint_updated": true,
+        "collector_id": "b8998152-2f33-483d-8280-6124d3568694",
+        "documents_normalized": 103,
+        "documents_synced": 103,
+        "duration_ms": 8396,
+        "errors": [],
+        "export_target": "api",
+        "failed_uploads": 0,
+        "files_seen": 157,
+        "files_skipped": 54,
+        "files_uploaded": 103,
+        "project_id": "99de9afc-948a-47d4-a147-d9818032e16f",
+        "redaction_count": 20,
+        "retry_attempted": 0,
+        "retry_succeeded": 0,
+        "skipped_reasons": {
+          "binary": 3,
+          "denied": 9,
+          "empty": 3,
+          "unsupported_extension": 39
+        },
+        "source_id": "96e41f7f-76c0-425a-bb0c-77a995a85df4",
+        "source_name": "phase1-final2-starlette",
+        "source_type_counts": {
+          "code": 65,
+          "config": 8,
+          "incident_report": 1,
+          "logs": 8,
+          "runbook": 16,
+          "unknown_text": 5
+        },
+        "sync_id": "sync_7c469ff34d47",
+        "unsupported_extensions": {
+          ".1": 1,
+          ".cff": 1,
+          ".css": 1,
+          ".html": 2,
+          ".js": 1,
+          ".lock": 1,
+          ".sample": 14,
+          ".svg": 2,
+          "<none>": 16
+        },
+        "warnings": []
+      },
+      "core": {
+        "chunks_created": 0,
+        "collector_id": "b8998152-2f33-483d-8280-6124d3568694",
+        "coverage": {
+          "chunk_type_counts": {},
+          "has_api_docs": false,
+          "has_code": true,
+          "has_deploys": false,
+          "has_incidents": false,
+          "has_logs": true,
+          "has_runbooks": true,
+          "source_type_counts": {
+            "code": 65,
+            "config": 8,
+            "incident_report": 1,
+            "logs": 8,
+            "runbook": 16,
+            "unknown_text": 5
+          },
+          "warnings": [
+            "No deploy history found. Deploy-regression investigations may be weak.",
+            "No previous incidents found. Similar-incident lookup unavailable."
+          ]
+        },
+        "diagnostics": {
+          "chunk_type_counts": {},
+          "collector_version": "0.1.0",
+          "core_api_version": "v1",
+          "documents_created": 0,
+          "documents_normalized": 103,
+          "documents_synced": 103,
+          "documents_updated": 0,
+          "embedding_backend": "local-hash-v1",
+          "error_count": 2,
+          "failed_uploads": 0,
+          "files_seen": 157,
+          "files_skipped": 54,
+          "last_batch_chunks_created": 0,
+          "last_batch_created": 0,
+          "last_batch_error_count": 0,
+          "last_batch_received": 3,
+          "last_batch_skipped_invalid": 0,
+          "last_batch_skipped_unchanged": 3,
+          "last_batch_updated": 0,
+          "redaction_count": 20,
+          "retry_attempted": 0,
+          "retry_succeeded": 0,
+          "schema_version": "incidentops.normalized_document.v1",
+          "skipped_invalid": 2,
+          "skipped_reasons": {
+            "binary": 3,
+            "denied": 9,
+            "empty": 3,
+            "unsupported_extension": 39
+          },
+          "skipped_unchanged": 101,
+          "source_type_counts": {
+            "code": 65,
+            "config": 8,
+            "incident_report": 1,
+            "logs": 8,
+            "runbook": 16,
+            "unknown_text": 5
+          },
+          "total_files_seen": 157,
+          "unsupported_extensions": {
+            ".1": 1,
+            ".cff": 1,
+            ".css": 1,
+            ".html": 2,
+            ".js": 1,
+            ".lock": 1,
+            ".sample": 14,
+            ".svg": 2,
+            "<none>": 16
+          },
+          "warnings": []
+        },
+        "documents_received": 103,
+        "error_message": null,
+        "files_seen": 157,
+        "files_skipped": 54,
+        "finished_at": "2026-05-23T04:36:16.726327Z",
+        "parser_errors": 2,
+        "project_id": "99de9afc-948a-47d4-a147-d9818032e16f",
+        "source_id": "96e41f7f-76c0-425a-bb0c-77a995a85df4",
+        "started_at": "2026-05-23T04:36:11.762175Z",
+        "status": "partial_success",
+        "sync_id": "74cadedb-91bd-4cd4-9234-02a2ad98353f"
+      },
+      "duration_ms": 9437,
+      "label": "same_content_resync"
+    },
+    {
+      "collector": {
+        "bytes_processed": 835054,
+        "bytes_uploaded": 835054,
+        "checkpoint_updated": true,
+        "collector_id": "b8998152-2f33-483d-8280-6124d3568694",
+        "documents_normalized": 103,
+        "documents_synced": 103,
+        "duration_ms": 12152,
+        "errors": [],
+        "export_target": "api",
+        "failed_uploads": 0,
+        "files_seen": 157,
+        "files_skipped": 54,
+        "files_uploaded": 103,
+        "project_id": "99de9afc-948a-47d4-a147-d9818032e16f",
+        "redaction_count": 20,
+        "retry_attempted": 0,
+        "retry_succeeded": 0,
+        "skipped_reasons": {
+          "binary": 3,
+          "denied": 9,
+          "empty": 3,
+          "unsupported_extension": 39
+        },
+        "source_id": "96e41f7f-76c0-425a-bb0c-77a995a85df4",
+        "source_name": "phase1-final2-starlette",
+        "source_type_counts": {
+          "code": 65,
+          "config": 8,
+          "incident_report": 1,
+          "logs": 8,
+          "runbook": 16,
+          "unknown_text": 5
+        },
+        "sync_id": "sync_4326cd5ce95c",
+        "unsupported_extensions": {
+          ".1": 1,
+          ".cff": 1,
+          ".css": 1,
+          ".html": 2,
+          ".js": 1,
+          ".lock": 1,
+          ".sample": 14,
+          ".svg": 2,
+          "<none>": 16
+        },
+        "warnings": []
+      },
+      "core": {
+        "chunks_created": 8,
+        "collector_id": "b8998152-2f33-483d-8280-6124d3568694",
+        "coverage": {
+          "chunk_type_counts": {
+            "markdown_section": 8
+          },
+          "has_api_docs": false,
+          "has_code": true,
+          "has_deploys": false,
+          "has_incidents": false,
+          "has_logs": true,
+          "has_runbooks": true,
+          "source_type_counts": {
+            "code": 65,
+            "config": 8,
+            "incident_report": 1,
+            "logs": 8,
+            "runbook": 16,
+            "unknown_text": 6
+          },
+          "warnings": [
+            "No deploy history found. Deploy-regression investigations may be weak.",
+            "No previous incidents found. Similar-incident lookup unavailable."
+          ]
+        },
+        "diagnostics": {
+          "chunk_type_counts": {
+            "markdown_section": 8
+          },
+          "collector_version": "0.1.0",
+          "core_api_version": "v1",
+          "documents_created": 0,
+          "documents_normalized": 103,
+          "documents_synced": 103,
+          "documents_updated": 1,
+          "embedding_backend": "local-hash-v1",
+          "error_count": 2,
+          "failed_uploads": 0,
+          "files_seen": 157,
+          "files_skipped": 54,
+          "last_batch_chunks_created": 0,
+          "last_batch_created": 0,
+          "last_batch_error_count": 0,
+          "last_batch_received": 3,
+          "last_batch_skipped_invalid": 0,
+          "last_batch_skipped_unchanged": 3,
+          "last_batch_updated": 0,
+          "redaction_count": 20,
+          "retry_attempted": 0,
+          "retry_succeeded": 0,
+          "schema_version": "incidentops.normalized_document.v1",
+          "skipped_invalid": 2,
+          "skipped_reasons": {
+            "binary": 3,
+            "denied": 9,
+            "empty": 3,
+            "unsupported_extension": 39
+          },
+          "skipped_unchanged": 100,
+          "source_type_counts": {
+            "code": 65,
+            "config": 8,
+            "incident_report": 1,
+            "logs": 8,
+            "runbook": 16,
+            "unknown_text": 5
+          },
+          "total_files_seen": 157,
+          "unsupported_extensions": {
+            ".1": 1,
+            ".cff": 1,
+            ".css": 1,
+            ".html": 2,
+            ".js": 1,
+            ".lock": 1,
+            ".sample": 14,
+            ".svg": 2,
+            "<none>": 16
+          },
+          "warnings": []
+        },
+        "documents_received": 103,
+        "error_message": null,
+        "files_seen": 157,
+        "files_skipped": 54,
+        "finished_at": "2026-05-23T04:36:29.893370Z",
+        "parser_errors": 2,
+        "project_id": "99de9afc-948a-47d4-a147-d9818032e16f",
+        "source_id": "96e41f7f-76c0-425a-bb0c-77a995a85df4",
+        "started_at": "2026-05-23T04:36:21.363580Z",
+        "status": "partial_success",
+        "sync_id": "789437fe-a3c3-44c0-a1f9-e007255ba499"
+      },
+      "duration_ms": 13130,
+      "label": "changed_file_resync"
+    }
+  ],
+  "unsupported_extensions": {
+    ".1": 1,
+    ".cff": 1,
+    ".css": 1,
+    ".html": 2,
+    ".js": 1,
+    ".lock": 1,
+    ".sample": 14,
+    ".svg": 2,
+    "<none>": 16
+  }
+}

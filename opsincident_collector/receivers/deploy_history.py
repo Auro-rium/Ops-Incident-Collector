@@ -20,7 +20,7 @@ def _load_structured(text: str) -> Any:
 def _find_value(data: Any, keys: set[str]) -> Any:
     if isinstance(data, dict):
         for key, value in data.items():
-            if key.lower() in keys:
+            if isinstance(key, str) and key.lower() in keys:
                 return value
         for value in data.values():
             found = _find_value(value, keys)

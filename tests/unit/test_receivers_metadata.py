@@ -36,6 +36,16 @@ def test_deploy_receiver_extracts_deploy_fields() -> None:
     assert metadata["commit_sha"] == "abcdef1"
 
 
+def test_deploy_receiver_ignores_non_string_yaml_keys() -> None:
+    metadata = deploy_history.extract_metadata(
+        Path("deploys/config.yaml"),
+        "true:\n  service: ignored\nrelease: abc123\n",
+    )
+
+    assert metadata["source_kind"] == "deploy_history"
+    assert metadata["deploy_hash"] == "abc123"
+
+
 def test_runbook_receiver_extracts_headings_and_kind() -> None:
     metadata = runbooks.extract_metadata(Path("runbooks/restart-service.md"), "# Restart Service\n## Rollback")
 

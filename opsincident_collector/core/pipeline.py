@@ -175,6 +175,14 @@ def run_sync(
     )
     documents = []
     exporter = None
+
+    def skip(reason: str, extension: str | None = None) -> None:
+        summary.files_skipped += 1
+        summary.skipped_reasons[reason] = summary.skipped_reasons.get(reason, 0) + 1
+        if reason == "unsupported_extension":
+            key = extension or "<none>"
+            summary.unsupported_extensions[key] = summary.unsupported_extensions.get(key, 0) + 1
+
     try:
         exporter = (
             None
@@ -192,18 +200,21 @@ def run_sync(
         for item in discover_files(path, max_depth=max_depth):
             summary.files_seen += 1
             if is_denied_path(item.relative_path, settings.security.deny_patterns):
-                summary.files_skipped += 1
+                skip("denied")
                 continue
             if item.size_bytes == 0 or item.size_bytes > settings.sync.max_file_size_mb * 1024 * 1024:
-                summary.files_skipped += 1
+                skip("empty" if item.size_bytes == 0 else "oversized")
                 continue
-            if is_binary_file(item.path) or not is_supported_extension(item.extension):
-                summary.files_skipped += 1
+            if is_binary_file(item.path):
+                skip("binary")
+                continue
+            if not is_supported_extension(item.extension):
+                skip("unsupported_extension", item.extension)
                 continue
 
             decision = should_process_item(store, source_name, item) if not force else None
             if decision and not decision.should_process:
-                summary.files_skipped += 1
+                skip("unchanged")
                 continue
 
             raw_document = _read_raw_document(item)
@@ -214,6 +225,10 @@ def run_sync(
                 redact_secrets=not no_redact and settings.security.redact_secrets,
             )
             documents.append(document)
+            summary.documents_normalized += 1
+            summary.redaction_count += document.redaction.redacted_count
+            source_type = document.content_type or document.source_type or "unknown_text"
+            summary.source_type_counts[source_type] = summary.source_type_counts.get(source_type, 0) + 1
             summary.bytes_processed += document.size_bytes
 
         if dry_run:
