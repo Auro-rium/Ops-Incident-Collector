@@ -43,38 +43,21 @@ sources:
     assert settings.collector.environment == "aws-prod"
 
 
-def test_aws_deployment_artifacts_exist_and_are_safe() -> None:
-    required_paths = [
-        Path("infra/terraform/main.tf"),
-        Path("infra/terraform/variables.tf"),
-        Path("infra/terraform/outputs.tf"),
-        Path("examples/aws-daemon.yaml"),
-        Path(".github/workflows/deploy-collector.yml"),
-        Path("scripts/smoke_aws_collector.sh"),
-        Path("docs/aws-deployment.md"),
-        Path(".env.production.example"),
-    ]
-    for path in required_paths:
-        assert path.exists(), path
-
-    aws_config = yaml.safe_load(Path("examples/aws-daemon.yaml").read_text(encoding="utf-8"))
-    assert aws_config["api"]["token_env"] == "INCIDENTOPS_TOKEN"
-    assert aws_config["daemon"]["export_target"] == "api"
-    assert aws_config["security"]["redact_secrets"] is True
-    assert "/app/tests/fixtures/basic_project" in aws_config["security"]["allow_paths"]
-
+def test_azure_dispatch_workflow_exists_and_is_safe() -> None:
     workflow = Path(".github/workflows/deploy-collector.yml").read_text(encoding="utf-8")
-    assert "id-token: write" in workflow
-    assert "aws-actions/configure-aws-credentials@v4" in workflow
+    workflow_yaml = yaml.safe_load(workflow)
+
+    assert workflow_yaml["name"] == "Validate and Deploy Azure Collector"
+    assert workflow_yaml["permissions"] == {"contents": "read"}
+    assert "CORE_DEPLOY_TOKEN" in workflow
+    assert "deploy-azure.yml" in workflow
+    assert "actions/workflows/${CORE_DEPLOY_WORKFLOW}/dispatches" in workflow
+
+    assert "aws-actions/configure-aws-credentials" not in workflow
+    assert "amazon-ecr-login" not in workflow
+    assert "aws ecs" not in workflow
     assert "AWS_ACCESS_KEY_ID" not in workflow
     assert "AWS_SECRET_ACCESS_KEY" not in workflow
-
-    terraform = Path("infra/terraform/main.tf").read_text(encoding="utf-8")
-    assert "aws_ecr_repository" in terraform
-    assert "aws_ecs_service" in terraform
-    assert "incidentops-collector" in terraform
-    assert "INCIDENTOPS_TOKEN" in terraform
-    assert "PROJECT_ID" in terraform
 
 
 def test_dockerfile_exposes_daemon_ports_and_non_root_user() -> None:
