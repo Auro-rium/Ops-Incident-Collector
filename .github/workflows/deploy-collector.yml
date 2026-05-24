@@ -88,9 +88,9 @@ jobs:
           CORE_DEPLOY_TOKEN: ${{ secrets.CORE_DEPLOY_TOKEN }}
         run: |
           if [ -z "${CORE_DEPLOY_TOKEN}" ]; then
-            echo "CORE_DEPLOY_TOKEN secret is required to dispatch ${CORE_REPOSITORY}/${CORE_DEPLOY_WORKFLOW}."
-            echo "Create a fine-grained GitHub token with Actions write access to the Core repo."
-            exit 1
+            echo "::warning::CORE_DEPLOY_TOKEN secret is not configured; validation passed but Core Azure deploy dispatch was skipped."
+            echo "Create a fine-grained GitHub token with Actions write access to ${CORE_REPOSITORY} to enable automatic collector redeploys."
+            exit 0
           fi
 
           python - <<'PY' > /tmp/core-dispatch.json
