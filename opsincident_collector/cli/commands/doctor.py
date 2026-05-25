@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import importlib.util
 import json
 import os
 import sys
@@ -114,14 +113,6 @@ def doctor(
             rows.append({"check": "retry_queue_depth", "status": "ok", "detail": "0"})
     else:
         rows.append({"check": "state_writable", "status": "warn", "detail": "config required"})
-
-    rows.append(
-        {
-            "check": "mcp_dependency",
-            "status": "ok" if importlib.util.find_spec("mcp") else "warn",
-            "detail": "installed" if importlib.util.find_spec("mcp") else "not installed",
-        }
-    )
 
     if as_json:
         typer.echo(json.dumps(rows, indent=2))

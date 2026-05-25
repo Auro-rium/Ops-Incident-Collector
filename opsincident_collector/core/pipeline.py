@@ -39,6 +39,7 @@ def inspect_source(
     max_file_size_mb: int | None = None,
     include: list[str] | None = None,
     exclude: list[str] | None = None,
+    max_files: int | None = None,
 ) -> SourceInspection:
     ensure_path_allowed(path, settings.security.allow_paths)
     max_size_mb = max_file_size_mb or settings.sync.max_file_size_mb or DEFAULT_MAX_FILE_SIZE_MB
@@ -50,6 +51,8 @@ def inspect_source(
 
     inspection = SourceInspection(path=str(path))
     for item in discover_files(path, max_depth=max_depth, include=include or [], exclude=exclude or []):
+        if max_files is not None and inspection.total_files >= max_files:
+            break
         inspection.total_files += 1
         relative_path = item.relative_path
         if is_denied_path(relative_path, settings.security.deny_patterns):
@@ -161,6 +164,9 @@ def run_sync(
     no_redact: bool = False,
     max_depth: int = 8,
     source_type: str = "filesystem",
+    include: list[str] | None = None,
+    exclude: list[str] | None = None,
+    max_files: int | None = None,
 ) -> SyncSummary:
     ensure_path_allowed(path.resolve(), settings.security.allow_paths)
     start = monotonic()
@@ -197,7 +203,9 @@ def run_sync(
                 store=store,
             )
         )
-        for item in discover_files(path, max_depth=max_depth):
+        for item in discover_files(path, max_depth=max_depth, include=include or [], exclude=exclude or []):
+            if max_files is not None and summary.files_seen >= max_files:
+                break
             summary.files_seen += 1
             if is_denied_path(item.relative_path, settings.security.deny_patterns):
                 skip("denied")

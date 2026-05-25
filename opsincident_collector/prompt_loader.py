@@ -5,7 +5,7 @@ from pathlib import Path
 from xml.etree import ElementTree
 
 
-PROMPT_DIR = Path(__file__).resolve().parents[1] / "prompts"
+PROMPT_DIR = Path(__file__).resolve().parent / "prompts"
 
 
 @dataclass(frozen=True)
@@ -20,11 +20,11 @@ class PromptAsset:
 def load_prompt(name: str, prompt_dir: Path = PROMPT_DIR) -> PromptAsset:
     path = prompt_dir / f"{name}.xml"
     if not path.exists():
-        raise FileNotFoundError(f"MCP prompt XML not found: {name}")
+        raise FileNotFoundError(f"Prompt XML not found: {name}")
     raw_xml = path.read_text(encoding="utf-8")
     root = ElementTree.fromstring(raw_xml)
     if root.tag != "prompt":
-        raise ValueError(f"MCP prompt XML must have <prompt> root: {path}")
+        raise ValueError(f"Prompt XML must have <prompt> root: {path}")
     prompt_name = root.attrib.get("name") or name
     version = root.attrib.get("version") or "1.0"
     description_node = root.find("description")

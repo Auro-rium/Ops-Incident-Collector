@@ -5,7 +5,7 @@
 ```mermaid
 flowchart TB
     subgraph Runtime[Collector Service Runtime]
-      API[HTTP/MCP Entry]
+      API[HTTP Entry]
       Exec[Collection Executor]
       Queue[Run Queue]
       Store[Local Artifact Store]

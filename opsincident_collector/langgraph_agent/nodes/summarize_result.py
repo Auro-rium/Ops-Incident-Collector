@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from opsincident_collector.mcp_server.prompt_loader import load_prompt
+from opsincident_collector.prompt_loader import load_prompt
 
 
 def summarize_source_onboarding_node(state: dict[str, Any]) -> dict[str, Any]:

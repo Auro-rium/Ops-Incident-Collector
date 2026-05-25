@@ -17,7 +17,7 @@ flowchart TD
 
 - Timed interval.
 - Filesystem watch events (within approved roots only).
-- Manual MCP/CLI trigger.
+- Manual CLI trigger.
 
 ## Reliability rules
 

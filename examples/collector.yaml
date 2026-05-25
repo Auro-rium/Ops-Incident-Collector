@@ -59,12 +59,6 @@ security:
     - "*.gz"
     - "*.pdf"
 
-mcp:
-  enabled: true
-  transport: "stdio"
-  readonly_default: true
-  require_approval_for_sync: true
-
 sources:
   - name: "service-code"
     type: "filesystem"

@@ -10,6 +10,8 @@ from opsincident_collector.processors.path_policy import is_denied_path
 
 def test_supported_extension_detection() -> None:
     assert is_supported_extension(".md") is True
+    assert is_supported_extension(".go") is True
+    assert is_supported_extension(".proto") is True
     assert is_supported_extension(".pdf") is False
 
 

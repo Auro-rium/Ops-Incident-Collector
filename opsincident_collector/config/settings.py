@@ -16,6 +16,8 @@ DEFAULT_SUPPORTED_EXTENSIONS = {
     ".yaml",
     ".yml",
     ".py",
+    ".go",
+    ".proto",
     ".patch",
     ".diff",
     ".sql",
@@ -111,16 +113,6 @@ class SecuritySettings(BaseModel):
     deny_patterns: list[str] = Field(default_factory=lambda: list(DEFAULT_DENY_PATTERNS))
 
 
-class MCPSettings(BaseModel):
-    enabled: bool = True
-    transport: str = "stdio"
-    readonly_default: bool = True
-    require_approval_for_sync: bool = True
-    allow_tools: list[str] = Field(default_factory=list)
-    require_approval: list[str] = Field(default_factory=lambda: ["sync_source"])
-    deny_tools: list[str] = Field(default_factory=list)
-
-
 class ExportSettings(BaseModel):
     api_batch_endpoint: str | None = None
     fallback_ingest_endpoint: str | None = None
@@ -158,7 +150,6 @@ class AppSettings(BaseSettings):
     state: StateSettings = Field(default_factory=StateSettings)
     sync: SyncSettings = Field(default_factory=SyncSettings)
     security: SecuritySettings = Field(default_factory=SecuritySettings)
-    mcp: MCPSettings = Field(default_factory=MCPSettings)
     exporters: ExportSettings = Field(default_factory=ExportSettings)
     daemon: DaemonSettings = Field(default_factory=DaemonSettings)
     sources: list[SourceConfig] = Field(default_factory=list)

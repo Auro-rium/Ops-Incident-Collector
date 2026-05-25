@@ -17,6 +17,8 @@ def classify_content(
 
     if extension in {".py", ".js", ".ts", ".go", ".java", ".rs"}:
         return "code"
+    if extension == ".proto":
+        return "api_doc"
     if extension in {".patch", ".diff"}:
         return "patch"
     if extension == ".log" or any(token in semantic_path for token in ("logs/", "/logs")):

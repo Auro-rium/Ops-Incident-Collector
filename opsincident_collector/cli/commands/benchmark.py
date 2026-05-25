@@ -40,6 +40,9 @@ def benchmark(
     max_depth: int = typer.Option(8, "--max-depth", min=0),
     batch_size: int | None = typer.Option(None, "--batch-size"),
     max_file_size_mb: int | None = typer.Option(None, "--max-file-size-mb", min=1),
+    max_files: int | None = typer.Option(None, "--max-files", min=1, help="Maximum discovered files to inspect/sync."),
+    include_path: list[str] | None = typer.Option(None, "--include-path", help="Path/glob pattern to include. Repeatable."),
+    exclude_path: list[str] | None = typer.Option(None, "--exclude-path", help="Path/glob pattern to exclude. Repeatable."),
 ) -> None:
     if bool(repo_url) == bool(path):
         typer.echo("Provide exactly one of --repo-url or --path.")
@@ -81,11 +84,17 @@ def benchmark(
     os.environ[settings.api.token_env] = token
 
     started_at = datetime.now(timezone.utc)
+    include_patterns = include_path or []
+    exclude_patterns = exclude_path or []
+
     inspection = inspect_source(
         repo_path,
         settings,
         max_depth=max_depth,
         max_file_size_mb=max_file_size_mb,
+        include=include_patterns,
+        exclude=exclude_patterns,
+        max_files=max_files,
     )
 
     syncs = []
@@ -97,6 +106,9 @@ def benchmark(
             source_name=resolved_source_name,
             max_depth=max_depth,
             label="initial",
+            include=include_patterns,
+            exclude=exclude_patterns,
+            max_files=max_files,
         )
     )
     syncs.append(
@@ -107,6 +119,9 @@ def benchmark(
             source_name=resolved_source_name,
             max_depth=max_depth,
             label="same_content_resync",
+            include=include_patterns,
+            exclude=exclude_patterns,
+            max_files=max_files,
         )
     )
 
@@ -119,6 +134,9 @@ def benchmark(
             source_name=resolved_source_name,
             max_depth=max_depth,
             label="changed_file_resync",
+            include=include_patterns,
+            exclude=exclude_patterns,
+            max_files=max_files,
         )
     )
 
@@ -158,6 +176,7 @@ def benchmark(
         "latest_core_sync_status": initial_core.get("status"),
         "parser_errors": initial_core.get("parser_errors", initial_diagnostics.get("error_count", 0)),
         "inspection": inspection.model_dump(mode="json"),
+        "scope": {"max_files": max_files, "include": include_patterns, "exclude": exclude_patterns},
         "syncs": syncs,
         "search_queries": searches,
         "changed_file": changed_file,
@@ -213,6 +232,9 @@ def _run_benchmark_sync(
     source_name: str,
     max_depth: int,
     label: str,
+    include: list[str] | None = None,
+    exclude: list[str] | None = None,
+    max_files: int | None = None,
 ) -> dict:
     start = monotonic()
     summary = run_sync(
@@ -227,6 +249,9 @@ def _run_benchmark_sync(
         no_redact=False,
         max_depth=max_depth,
         source_type="git_local",
+        include=include,
+        exclude=exclude,
+        max_files=max_files,
     )
     core_sync = None
     if summary.source_id:

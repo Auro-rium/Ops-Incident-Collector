@@ -1,6 +1,6 @@
 # Production Usage Guide
 
-This guide shows how to run OpsIncident Collector as a local CLI, Core sync client, MCP server, LangGraph workflow runner, and real-server daemon.
+This guide shows how to run OpsIncident Collector as a local CLI, Core sync client, LangGraph workflow runner, and real-server daemon.
 
 The Collector never owns incident diagnosis. It prepares evidence and calls IncidentOps Core when investigation is needed.
 
@@ -87,30 +87,6 @@ opsincident-collector sync \
 
 If Core lacks compatible ingestion, use JSONL export and fix Core. Do not pretend a sync worked. Fake success is worse than failure because now the system is confidently wrong.
 
-## MCP server
-
-Run:
-
-```bash
-opsincident-collector mcp serve --config examples/mcp.json
-```
-
-Inspect schema:
-
-```bash
-opsincident-collector mcp serve --dump-schema
-```
-
-Typical tool sequence:
-
-1. `inspect_folder`
-2. `get_rag_readiness`
-3. `preview_redaction`
-4. `sync_source` with `dry_run=true`
-5. `sync_source` with approval
-6. `investigate_incident`
-
-`investigate_incident` calls Core. It does not diagnose locally.
 
 ## LangGraph workflows
 
@@ -238,7 +214,7 @@ By default, validation does not upload, search, or investigate. Use `--sync`, `-
 .venv/bin/python -m compileall opsincident_collector
 
 docker build -t opsincident-collector:base .
-docker build --build-arg INSTALL_TARGET='.[mcp,agent]' -t opsincident-collector:agent .
+docker build --build-arg INSTALL_TARGET='.[agent]' -t opsincident-collector:agent .
 ```
 
 The point of production usage is not to show off commands. It is to prove the Collector can run near real data without leaking, guessing, or silently lying.

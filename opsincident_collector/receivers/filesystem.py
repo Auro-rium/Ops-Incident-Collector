@@ -8,7 +8,21 @@ from opsincident_collector.core.models import SourceItem
 
 
 def _matches_any(path: str, patterns: list[str]) -> bool:
-    return any(Path(path).match(pattern) for pattern in patterns)
+    normalized = path.strip("/")
+    for pattern in patterns:
+        cleaned = pattern.strip()
+        if not cleaned:
+            continue
+        cleaned = cleaned.strip("/")
+        if cleaned.endswith("/**") and (normalized == cleaned[:-3] or normalized.startswith(f"{cleaned[:-3]}/")):
+            return True
+        if cleaned.endswith("/") and normalized.startswith(cleaned):
+            return True
+        if normalized == cleaned or normalized.startswith(f"{cleaned}/"):
+            return True
+        if Path(normalized).match(cleaned):
+            return True
+    return False
 
 
 def discover_files(

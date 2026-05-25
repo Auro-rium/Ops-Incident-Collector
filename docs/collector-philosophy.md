@@ -50,7 +50,6 @@ Collector owns deterministic evidence preparation:
 - IncidentOps Core sync
 - failed upload queue and retry/backoff
 - source coverage and RAG readiness reporting
-- MCP tools/resources/prompts for controlled access
 - LangGraph orchestration for onboarding, readiness, sync approval, and Core bridging
 - daemon health, metrics, and server operations
 
@@ -76,13 +75,13 @@ Collector must call Core for investigation. If Core is unavailable, Collector ma
 
 The deterministic pipeline is the foundation.
 
-Agents and MCP clients may ask the Collector to inspect, preview redaction, plan sync, or call Core. They do not get unrestricted file access. LangGraph workflows call deterministic Collector functions and Core adapters; they do not replace the pipeline.
+Agents may ask the Collector to inspect, preview redaction, plan sync, or call Core through LangGraph workflows. They do not get unrestricted file access. LangGraph workflows call deterministic Collector functions and Core adapters; they do not replace the pipeline.
 
 Correct:
 
 ```text
 LangGraph node -> deterministic inspect/sync/readiness function
-MCP tool -> permission policy -> Collector pipeline or Core adapter
+CLI/agent command -> path policy -> Collector pipeline or Core adapter
 ```
 
 Wrong:
@@ -123,7 +122,6 @@ Secrets must be redacted before:
 - JSONL export
 - SQLite export
 - Core API upload
-- MCP response
 - failed upload queue payload storage
 - graph checkpoint state
 - audit events containing summaries

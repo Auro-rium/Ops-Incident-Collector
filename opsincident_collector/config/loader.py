@@ -76,12 +76,6 @@ security:
     - "*.mov"
     - "*.pdf"
 
-mcp:
-  enabled: true
-  transport: "stdio"
-  readonly_default: true
-  require_approval_for_sync: true
-
 sources:
   # Replace these sample paths with your actual service, log, runbook, deploy,
   # incident, or API documentation folders. Avoid using your home directory or

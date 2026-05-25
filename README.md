@@ -25,7 +25,6 @@ flowchart LR
     Redact --> Out[(Sanitized Output)]
     Out --> Local[Local Export]
     Out --> Core[Core Sync API]
-    Out --> MCP[MCP Tools]
 ```
 
 ---
@@ -45,7 +44,6 @@ opsincident-collector rag-report --path ./some-folder --format json
 opsincident-collector eval-seed --path ./some-folder --output eval_seed.jsonl
 opsincident-collector validate-core-contract --api-url http://127.0.0.1:8001 --project-id proj_123
 opsincident-collector benchmark --repo-url https://github.com/nsidnev/fastapi-realworld-example-app.git --core-url http://127.0.0.1:8001 --project-id proj_123 --output benchmark.json
-opsincident-collector mcp serve --config collector.yaml
 opsincident-collector agent rag-readiness --path ./some-folder --format json
 opsincident-collector agent onboard-source --path ./some-folder --export-target api --project-id proj_123
 opsincident-collector agent sync-quality --path ./some-folder --project-id proj_123
@@ -64,7 +62,6 @@ opsincident-collector validate-rag-pipeline --path ./some-folder --format json
 - [docs/security-model.md](docs/security-model.md): threat model and controls.
 - [docs/operations.md](docs/operations.md): runbooks and operational checks.
 - [docs/core-integration.md](docs/core-integration.md): Core sync contract and ownership boundary.
-- [docs/mcp-server.md](docs/mcp-server.md): MCP surface and approval flow.
 - [docs/server-deployment.md](docs/server-deployment.md): deployment topology and runtime hardening.
 - [docs/local-only-mode.md](docs/local-only-mode.md): isolated/offline execution profile.
 - [docs/langgraph-agent.md](docs/langgraph-agent.md): local workflow graph behavior.
@@ -85,7 +82,7 @@ If you are merging documentation branches, apply this order to avoid conflicts:
 4. Re-run doc checks and render Mermaid previews before merge.
 
 Conflict hot-spots from prior branches were usually `README.md` and:
-`docs/mcp-server.md`, `docs/langgraph-agent.md`, and `docs/server-deployment.md`.
+`docs/langgraph-agent.md` and `docs/server-deployment.md`.
 
 ---
 
@@ -106,7 +103,6 @@ flowchart TB
     A[CLI Run] --> B{Mode}
     B -->|Local| C[Local Export]
     B -->|Core Sync| D[Sync Adapter]
-    B -->|MCP| E[MCP Tool Calls]
     D --> F[(IncidentOps Core)]
 ```
 
@@ -130,7 +126,7 @@ Install agent dependencies with:
 
 ```bash
 pip install "opsincident-collector[agent]"
-docker build --build-arg INSTALL_TARGET=".[mcp,agent]" -t opsincident-collector:agent .
+docker build --build-arg INSTALL_TARGET=".[agent]" -t opsincident-collector:agent .
 ```
 
 LangGraph does not call an LLM here, generate embeddings, use a vector database, or diagnose root
@@ -232,16 +228,10 @@ Base image:
 docker build -t opsincident-collector:base .
 ```
 
-MCP-capable image:
-
-```bash
-docker build --build-arg INSTALL_TARGET=".[mcp]" -t opsincident-collector:mcp .
-```
-
 Agent/daemon image:
 
 ```bash
-docker build --build-arg INSTALL_TARGET=".[mcp,agent]" -t opsincident-collector:agent .
+docker build --build-arg INSTALL_TARGET=".[agent]" -t opsincident-collector:agent .
 docker run --rm \
   -e INCIDENTOPS_API_URL=http://host.docker.internal:8001 \
   -e INCIDENTOPS_TOKEN=$INCIDENTOPS_TOKEN \

@@ -10,7 +10,6 @@ from opsincident_collector.cli.commands.doctor import doctor
 from opsincident_collector.cli.commands.eval_seed import eval_seed
 from opsincident_collector.cli.commands.init import init
 from opsincident_collector.cli.commands.inspect import inspect
-from opsincident_collector.cli.commands.mcp import mcp_app
 from opsincident_collector.cli.commands.queue import queue_app
 from opsincident_collector.cli.commands.rag_report import rag_report
 from opsincident_collector.cli.commands.sync import sync
@@ -33,7 +32,6 @@ app.command()(rag_report)
 app.command()(eval_seed)
 app.command()(validate_core_contract)
 app.command()(validate_rag_pipeline)
-app.add_typer(mcp_app, name="mcp")
 app.add_typer(agent_app, name="agent")
 app.add_typer(daemon_app, name="daemon")
 app.add_typer(queue_app, name="queue")

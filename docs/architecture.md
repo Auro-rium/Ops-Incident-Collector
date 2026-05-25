@@ -27,7 +27,6 @@ flowchart LR
 
     ND --> LocalExport[Local Export]
     ND --> CoreSync[IncidentOps Core Sync Adapter]
-    ND --> MCP[MCP Surface]
 
     CoreSync --> Core[(IncidentOps Core)]
 
@@ -43,7 +42,7 @@ flowchart LR
 2. **Path policy and filters** remove disallowed paths before file reads.
 3. **Safe reader + metadata extractor** build deterministic document state.
 4. **Redaction** sanitizes sensitive values prior to any outward boundary.
-5. The resulting **`NormalizedDocument`** fans out to local export, Core sync, and MCP-facing responses.
+5. The resulting **`NormalizedDocument`** fans out to local export and Core sync responses.
 
 ---
 
@@ -57,7 +56,6 @@ flowchart TB
       C3[Secret Redaction]
       C4[Metadata Extraction]
       C5[NormalizedDocument Export + Sync Envelope]
-      C6[Existing MCP Surface]
     end
 
     subgraph Core[IncidentOps Core]
@@ -98,7 +96,7 @@ flowchart TD
     H --> I[Redact Secrets]
     I --> J[Build NormalizedDocument]
     J --> K[Emit to Boundary
-(Local export / Core sync / MCP)]
+(Local export / Core sync)]
 
     D1 --> L[Continue]
     E1 --> L
@@ -183,5 +181,4 @@ sequenceDiagram
 - `docs/config-reference.md` for collector configuration controls.
 - `docs/security-model.md` for threat model and controls.
 - `docs/core-integration.md` for Core sync contract and boundaries.
-- `docs/mcp-server.md` for MCP-exposed operations.
 - `docs/langgraph-agent.md` for local graph workflow behavior.

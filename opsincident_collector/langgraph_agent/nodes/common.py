@@ -12,7 +12,7 @@ from opsincident_collector.core.analysis import (
     generate_eval_seed_cases,
 )
 from opsincident_collector.core.pipeline import inspect_source, run_sync
-from opsincident_collector.mcp_server.prompt_loader import load_prompt
+from opsincident_collector.prompt_loader import load_prompt
 from opsincident_collector.processors.path_policy import is_allowed_path
 from opsincident_collector.state.sqlite_store import SQLiteStore
 
