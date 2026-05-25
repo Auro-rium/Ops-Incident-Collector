@@ -15,7 +15,7 @@ def classify_content(
     name = Path(relative_path or path.name).name.lower()
     content = (text or "")[:20000].lower()
 
-    if extension in {".py", ".js", ".ts", ".go", ".java", ".rs"}:
+    if extension in {".py", ".js", ".ts", ".jsx", ".tsx", ".go", ".java", ".rs"}:
         return "code"
     if extension == ".proto":
         return "api_doc"

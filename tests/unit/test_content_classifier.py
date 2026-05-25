@@ -39,3 +39,14 @@ def test_classifier_detects_proto_as_api_doc() -> None:
     )
 
     assert detected == "api_doc"
+
+
+def test_classifier_detects_typescript_as_code() -> None:
+    detected = classify_content(
+        Path("src/history/service.ts"),
+        ".ts",
+        relative_path="src/history/service.ts",
+        text="export async function startWorkflowTask() {}",
+    )
+
+    assert detected == "code"
