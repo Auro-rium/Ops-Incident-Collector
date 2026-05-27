@@ -1,12 +1,13 @@
 # OpsIncident-Collector
 
-OpsIncident-Collector is a **deterministic evidence collection pipeline** for incident workflows.
-It discovers repository files under explicit policy, normalizes them into `NormalizedDocument`,
-redacts secrets, and exports sanitized artifacts to local outputs and IncidentOps Core.
+OpsIncident-Collector is a **deterministic evidence collection pipeline** for IncidentOps.
 
-> Scope boundary: Collector performs collection, policy, redaction, and metadata extraction.
-> IncidentOps Core performs chunking, embeddings/indexing, retrieval, reranking, investigation,
-> answer generation, citations, workflow runs, and eval scoring.
+It discovers repository files under explicit policy, redacts secrets, extracts bounded metadata, normalizes source evidence into `NormalizedDocument`, and syncs sanitized batches to IncidentOps Core.
+
+> Scope boundary: Collector performs collection, policy, redaction, metadata extraction, normalization, local export, and Core sync.
+> IncidentOps Core performs canonical chunking, embeddings/indexing, retrieval, reranking, investigation, answer generation, citations, readiness, workflow runs, eval scoring, and product MCP.
+
+Collector is not an AI investigator. It is the data-plane boundary. Dramatic, yes, but fewer leaks that way.
 
 ---
 
@@ -20,12 +21,14 @@ flowchart LR
     Policy --> Filter[Type/Size/Pattern Filters]
     Filter --> Read[Safe Reader]
     Read --> Meta[Metadata Extraction]
-    Meta --> Norm[Normalize to NormalizedDocument]
-    Norm --> Redact[Secret Redaction]
-    Redact --> Out[(Sanitized Output)]
-    Out --> Local[Local Export]
-    Out --> Core[Core Sync API]
+    Meta --> Redact[Secret Redaction]
+    Redact --> Norm[NormalizedDocument]
+    Norm --> Local[Local Export / Review]
+    Norm --> Core[Core Batch Sync API]
+    Core --> RAG[Core Retrieval / Investigation / MCP]
 ```
+
+MCP is not the ingestion path. Core MCP is the product MCP. Collector MCP/agent workflows, if used, are local/private operator tooling only.
 
 ---
 
@@ -38,51 +41,29 @@ opsincident-collector validate --config collector.yaml
 opsincident-collector inspect --path ./some-folder
 opsincident-collector sync --path ./some-folder --export jsonl --output out.jsonl
 opsincident-collector sync --path ./some-folder --export api --project-id proj_123 --yes
-opsincident-collector watch --path ./some-folder --export jsonl --output out.jsonl
 opsincident-collector coverage --path ./some-folder --format json
 opsincident-collector rag-report --path ./some-folder --format json
-opsincident-collector eval-seed --path ./some-folder --output eval_seed.jsonl
 opsincident-collector validate-core-contract --api-url http://127.0.0.1:8001 --project-id proj_123
-opsincident-collector benchmark --repo-url https://github.com/nsidnev/fastapi-realworld-example-app.git --core-url http://127.0.0.1:8001 --project-id proj_123 --output benchmark.json
-opsincident-collector agent rag-readiness --path ./some-folder --format json
-opsincident-collector agent onboard-source --path ./some-folder --export-target api --project-id proj_123
-opsincident-collector agent sync-quality --path ./some-folder --project-id proj_123
-opsincident-collector agent investigate --path ./some-folder --project-id proj_123 --query "Why did orders slow after deploy?"
+opsincident-collector benchmark --repo-url https://github.com/tiangolo/full-stack-fastapi-template.git --project-id proj_123 --output benchmark.json
 opsincident-collector daemon run --config examples/local-daemon.yaml --max-cycles 1
 opsincident-collector queue status --config collector.yaml
 opsincident-collector validate-rag-pipeline --path ./some-folder --format json
 ```
 
----
-
-## Architecture map
-
-- [docs/architecture.md](docs/architecture.md): full architecture, invariants, and diagrams.
-- [docs/config-reference.md](docs/config-reference.md): config fields, precedence, and examples.
-- [docs/security-model.md](docs/security-model.md): threat model and controls.
-- [docs/operations.md](docs/operations.md): runbooks and operational checks.
-- [docs/core-integration.md](docs/core-integration.md): Core sync contract and ownership boundary.
-- [docs/server-deployment.md](docs/server-deployment.md): deployment topology and runtime hardening.
-- [docs/local-only-mode.md](docs/local-only-mode.md): isolated/offline execution profile.
-- [docs/langgraph-agent.md](docs/langgraph-agent.md): local workflow graph behavior.
-- [docs/daemon.md](docs/daemon.md): daemon lifecycle and watch loop constraints.
-- [docs/validate-rag-pipeline.md](docs/validate-rag-pipeline.md): deterministic validation and readiness checks.
-- [docs/phase5-production-validation.md](docs/phase5-production-validation.md): production validation gates.
-- [docs/real-repo-benchmark.md](docs/real-repo-benchmark.md): real repository ingestion benchmark.
+Use local commands for development, security review, and deterministic CI checks. Product proof should sync into deployed Core.
 
 ---
 
-## Documentation merge notes
+## Current documentation
 
-If you are merging documentation branches, apply this order to avoid conflicts:
-
-1. Keep `docs/architecture.md` as the canonical system model.
-2. Keep `README.md` as a navigation and quick-start layer only.
-3. Resolve overlapping wording in favor of the dedicated `docs/*` page.
-4. Re-run doc checks and render Mermaid previews before merge.
-
-Conflict hot-spots from prior branches were usually `README.md` and:
-`docs/langgraph-agent.md` and `docs/server-deployment.md`.
+- [docs/README.md](docs/README.md): current documentation map and cleanup notes.
+- [docs/collector-philosophy.md](docs/collector-philosophy.md): design philosophy and non-negotiable Collector/Core boundaries.
+- [docs/architecture.md](docs/architecture.md): deterministic pipeline, responsibility split, and security path.
+- [docs/core-contract.md](docs/core-contract.md): stable Collector/Core `NormalizedDocument` contract and upload expectations.
+- [docs/production-usage.md](docs/production-usage.md): operator usage guide for inspection, sync, daemon, Docker, and validation modes.
+- [docs/config-reference.md](docs/config-reference.md): configuration precedence, fields, and safe examples.
+- [docs/security-model.md](docs/security-model.md): threat model, path policy, redaction, and telemetry controls.
+- [docs/real-repo-benchmark.md](docs/real-repo-benchmark.md): repeatable real repository ingestion benchmark.
 
 ---
 
@@ -90,47 +71,47 @@ Conflict hot-spots from prior branches were usually `README.md` and:
 
 - Explicit collection roots only; no free-roaming traversal.
 - Stable path iteration and deterministic transforms.
-- Redaction before preview/export/sync boundaries.
+- Deny rules apply before file reads.
+- Binary, oversized, empty, unsupported, and denied files are skipped with reasons.
+- Redaction happens before preview/export/sync boundaries.
 - No logging of raw file content, token values, or secret values.
-- `NormalizedDocument` remains canonical collector output.
+- `NormalizedDocument` remains the canonical Collector output.
+- Core sync uses versioned batch APIs and safe diagnostics.
 
 ---
 
-## Typical execution modes
+## Responsibility boundary
 
-```mermaid
-flowchart TB
-    A[CLI Run] --> B{Mode}
-    B -->|Local| C[Local Export]
-    B -->|Core Sync| D[Sync Adapter]
-    D --> F[(IncidentOps Core)]
-```
+Collector owns:
 
----
+- discovery
+- path policy
+- filtering
+- secret redaction
+- metadata extraction
+- `NormalizedDocument`
+- local export
+- Core sync
+- failed upload queue and retry/backoff
+- source coverage and readiness diagnostics
+- daemon health/metrics
 
-## Testing
+Core owns:
 
-Preferred:
+- canonical chunking
+- embeddings
+- indexing
+- retrieval
+- reranking
+- investigation
+- answers
+- citations
+- readiness reports
+- workflow runs
+- eval scoring
+- product MCP
 
-```bash
-.venv/bin/python -m pytest -q
-```
-
-Fallback:
-
-```bash
-python -m pytest -q
-```
-
-Install agent dependencies with:
-
-```bash
-pip install "opsincident-collector[agent]"
-docker build --build-arg INSTALL_TARGET=".[agent]" -t opsincident-collector:agent .
-```
-
-LangGraph does not call an LLM here, generate embeddings, use a vector database, or diagnose root
-cause locally. Core remains responsible for RAG and investigation.
+If the Collector cannot reach Core, it may report coverage, readiness, and missing-data guidance. It must not invent incident diagnosis locally. Apparently evidence still matters.
 
 ---
 
@@ -142,9 +123,7 @@ opsincident-collector rag-report --path ./service --format json
 opsincident-collector eval-seed --path ./service --output eval_seed.jsonl
 ```
 
-`coverage` reports missing recommended source categories. `rag-report` gives a diagnostic score
-based on logs, code, deploy history, incidents, runbooks, API docs, metadata, and hints.
-`eval-seed` writes deterministic JSONL cases from local evidence without using an LLM.
+`coverage` reports missing recommended source categories. `rag-report` gives a deterministic diagnostic score based on logs, code, deploy history, incidents, runbooks, API docs, metadata, and hints. `eval-seed` writes deterministic JSONL cases from local evidence without using an LLM.
 
 Validate Core compatibility without uploading data:
 
@@ -152,32 +131,24 @@ Validate Core compatibility without uploading data:
 opsincident-collector validate-core-contract --api-url http://127.0.0.1:8001 --project-id proj_123
 ```
 
-Use `--with-sample` only when you explicitly want to upload one tiny redacted contract-validation
-document.
+Use `--with-sample` only when you explicitly want to upload one tiny redacted contract-validation document.
 
 ---
 
 ## Real repo ingestion benchmark
 
-`benchmark` is the repeatable proof that Collector and Core can process real backend repos without
-planting fake incidents:
+`benchmark` is the repeatable proof that Collector and Core can process real backend repos without planting fake incidents:
 
 ```bash
 opsincident-collector benchmark \
   --repo-url https://github.com/tiangolo/full-stack-fastapi-template.git \
-  --core-url http://127.0.0.1:8001 \
   --project-id proj_123 \
   --output benchmarks/reports/full-stack-fastapi-template.json
 ```
 
-The benchmark clones or copies a repo, inspects it, syncs it to Core, syncs the same content again,
-modifies one copied file, syncs again, runs `/v1/search`, and writes a JSON report. The report
-includes files seen, skip reasons, unsupported extensions, documents normalized/synced, redaction
-count, Core created/updated/skipped counters, chunks created, coverage warnings, duplicate chunks
-after resync, changed-file update status, and sample search results.
+The benchmark clones or copies a repo, inspects it, syncs it to Core, syncs the same content again, modifies one copied file, syncs again, runs `/v1/search`, and writes a JSON report.
 
-Recommended first repos are listed in `benchmarks/repos.example.yaml`. Phase 1 proof reports live in
-`benchmarks/reports/phase1-summary.md`.
+The current serious scale target is Temporal. The first Temporal Azure run proved the cloud loop but exposed Go/proto coverage as the next bottleneck. That is the right kind of annoying: specific and measurable.
 
 ---
 
@@ -197,26 +168,7 @@ opsincident-collector queue status --config examples/local-daemon.yaml --format 
 opsincident-collector queue retry --config examples/production.yaml --format json
 ```
 
-API upload in daemon mode is refused unless the config explicitly permits unattended upload with
-`daemon.allow_unattended_upload: true` or disables upload confirmation. Tokens still come from
-`INCIDENTOPS_TOKEN` or `api.token_env`; raw tokens do not belong in YAML.
-
-`validate-rag-pipeline` proves the Collector-to-Core path without pretending Core success:
-
-```bash
-opsincident-collector validate-rag-pipeline --path tests/fixtures/basic_project --format json
-opsincident-collector validate-rag-pipeline \
-  --path tests/fixtures/basic_project \
-  --project-id proj_123 \
-  --api-url http://127.0.0.1:8001 \
-  --query "What evidence is available for investigation?" \
-  --search \
-  --investigate \
-  --format json
-```
-
-By default it does not upload, search, or investigate. Add `--sync`, `--search`, or `--investigate`
-explicitly for those Core operations.
+API upload in daemon mode is refused unless the config explicitly permits unattended upload with `daemon.allow_unattended_upload: true` or disables upload confirmation. Tokens still come from `INCIDENTOPS_TOKEN` or `api.token_env`; raw tokens do not belong in YAML.
 
 ---
 
@@ -243,6 +195,20 @@ docker run --rm \
   daemon run --config /etc/opsincident-collector/collector.yaml --max-cycles 1
 ```
 
-See [docs/security-model.md](docs/security-model.md), [docs/config-reference.md](docs/config-reference.md),
-[docs/langgraph-agent.md](docs/langgraph-agent.md), [docs/daemon.md](docs/daemon.md),
-[docs/operations.md](docs/operations.md), and [docs/validate-rag-pipeline.md](docs/validate-rag-pipeline.md).
+---
+
+## Testing
+
+Preferred:
+
+```bash
+.venv/bin/python -m pytest -q
+.venv/bin/python -m ruff check .
+.venv/bin/python -m compileall opsincident_collector
+```
+
+Fallback:
+
+```bash
+python -m pytest -q
+```
