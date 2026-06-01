@@ -6,8 +6,10 @@ It discovers repository files under explicit policy, redacts secrets, extracts b
 
 > Scope boundary: Collector performs collection, policy, redaction, metadata extraction, normalization, local export, and Core sync.
 > IncidentOps Core performs canonical chunking, embeddings/indexing, retrieval, reranking, investigation, answer generation, citations, readiness, workflow runs, eval scoring, and product MCP.
+>
+> Collector does **not** currently ship an MCP server surface. MCP belongs to Core in the current product path.
 
-Collector is not an AI investigator. It is the data-plane boundary. Dramatic, yes, but fewer leaks that way.
+Collector is not an AI investigator. It is the data-plane boundary.
 
 ---
 
@@ -28,7 +30,7 @@ flowchart LR
     Core --> RAG[Core Retrieval / Investigation / MCP]
 ```
 
-MCP is not the ingestion path. Core MCP is the product MCP. Collector MCP/agent workflows, if used, are local/private operator tooling only.
+MCP is not the ingestion path. Core MCP is the product MCP.
 
 ---
 
@@ -52,7 +54,16 @@ opsincident-collector validate-rag-pipeline --path ./some-folder --format json
 
 Use local commands for development, security review, and deterministic CI checks. Product proof should sync into deployed Core.
 
----
+## Current deployment/control-plane reality
+
+Collector is Azure-integrated, but it is not its own full deployment control plane.
+
+- The Collector repo workflow is `.github/workflows/deploy-collector.yml`.
+- That workflow runs Ruff, pytest, compileall, and Docker build.
+- After validation it dispatches the Core repo Azure workflow so the live platform is updated through the Core deployment path.
+- The active GitHub remote is `Auro-rium/OpsIncident-Collector`.
+
+This split is deliberate: Collector owns deterministic evidence preparation, while the Azure runtime and shared platform deployment remain centered in Core.
 
 ## Current documentation
 
@@ -111,7 +122,7 @@ Core owns:
 - eval scoring
 - product MCP
 
-If the Collector cannot reach Core, it may report coverage, readiness, and missing-data guidance. It must not invent incident diagnosis locally. Apparently evidence still matters.
+If the Collector cannot reach Core, it may report coverage, readiness, and missing-data guidance. It must not invent incident diagnosis locally.
 
 ---
 
@@ -148,7 +159,7 @@ opsincident-collector benchmark \
 
 The benchmark clones or copies a repo, inspects it, syncs it to Core, syncs the same content again, modifies one copied file, syncs again, runs `/v1/search`, and writes a JSON report.
 
-The current serious scale target is Temporal. The first Temporal Azure run proved the cloud loop but exposed Go/proto coverage as the next bottleneck. That is the right kind of annoying: specific and measurable.
+The current serious scale target is Temporal. The latest verified Temporal-scale run exposed Core-side ingestion/runtime bottlenecks, so benchmark reports should distinguish Collector-side normalization success from Core-side accepted-document success.
 
 ---
 

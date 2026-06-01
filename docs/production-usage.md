@@ -1,8 +1,14 @@
 # Production Usage Guide
 
-This guide shows how to run OpsIncident Collector as a local CLI, Core sync client, LangGraph workflow runner, and real-server daemon.
+This guide shows how to run OpsIncident Collector as a local CLI, Core sync client, LangGraph workflow runner, and daemon.
 
 The Collector never owns incident diagnosis. It prepares evidence and calls IncidentOps Core when investigation is needed.
+
+Current product posture:
+
+- Collector runs near the data source.
+- IncidentOps Core remains the Azure-hosted RAG/investigation backend.
+- Collector does not expose an MCP server surface in the current codebase.
 
 ## Local inspection
 
@@ -85,7 +91,7 @@ opsincident-collector sync \
   --yes
 ```
 
-If Core lacks compatible ingestion, use JSONL export and fix Core. Do not pretend a sync worked. Fake success is worse than failure because now the system is confidently wrong.
+If Core lacks compatible ingestion, use JSONL export and fix Core. Do not pretend a sync worked.
 
 
 ## LangGraph workflows
@@ -205,6 +211,8 @@ By default, validation does not upload, search, or investigate. Use `--sync`, `-
 - [ ] confirm daemon config explicitly allows unattended upload if using API sync
 - [ ] keep redaction enabled
 - [ ] keep path allowlists narrow
+- [ ] keep benchmark clones and temporary worktrees out of git
+- [ ] verify the target Core `/v1/capabilities` response before unattended sync
 
 ## Verification commands
 
@@ -217,4 +225,4 @@ docker build -t opsincident-collector:base .
 docker build --build-arg INSTALL_TARGET='.[agent]' -t opsincident-collector:agent .
 ```
 
-The point of production usage is not to show off commands. It is to prove the Collector can run near real data without leaking, guessing, or silently lying.
+The point of production usage is to prove the Collector can run near real data without leaking, guessing, or silently lying.

@@ -1,6 +1,14 @@
-# AWS Deployment
+# AWS Deployment (Archived)
 
-OpsIncident Collector deploys as a separate ECS Fargate service that syncs `NormalizedDocument` payloads into IncidentOps Core. It does not diagnose incidents, call LLMs, generate embeddings, run retrieval, or replace Core.
+This document is historical reference only. It does **not** describe the active deployment path for the current codebase.
+
+Current reality:
+
+- The active cloud path is Azure-first through the Core repo deployment workflow.
+- The Collector repo validates itself and then dispatches the Core Azure deployment workflow.
+- Collector still syncs `NormalizedDocument` payloads into IncidentOps Core and still does not diagnose incidents, call LLMs, generate embeddings, run retrieval, or replace Core.
+
+Do not treat the AWS guidance below as the default or recommended deployment path unless the project is intentionally reviving an AWS-specific Collector runtime.
 
 ## Target Architecture
 

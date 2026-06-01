@@ -119,20 +119,25 @@ Collector must preserve this behavior by uploading normalized documents, not pre
 
 ## Required Core endpoints
 
-Collector can operate locally without Core. Core-sync mode expects some or all of:
+Collector can operate locally without Core. Core-sync mode currently expects these Core endpoints:
 
 ```text
-GET  /health
-GET  /v1/capabilities
-POST /v1/projects/{project_id}/sources
-POST /v1/projects/{project_id}/sources/{source_id}/documents:batch
-POST /v1/sources/{source_id}/syncs
-PATCH /v1/sources/{source_id}/syncs/{sync_id}
-POST /v1/search
-POST /v1/investigate
-POST /v1/runs
-GET  /v1/runs/{run_id}
-GET  /v1/runs/{run_id}/events
+GET    /health
+GET    /v1/capabilities
+POST   /v1/projects/{project_id}/sources
+GET    /v1/projects/{project_id}/sources
+POST   /v1/projects/{project_id}/collectors/register
+POST   /v1/sources/{source_id}/syncs/start
+POST   /v1/sources/{source_id}/documents/batch
+POST   /v1/sources/{source_id}/syncs/{sync_id}/finish
+GET    /v1/sources/{source_id}/syncs/latest
+POST   /v1/search
+POST   /v1/investigate
+POST   /v1/runs
+GET    /v1/runs/{run_id}
+GET    /v1/runs/{run_id}/events
+GET    /v1/projects/{project_id}/readiness
+GET    /v1/runtime/status
 ```
 
 If Core does not expose a compatible document ingestion endpoint, Collector must fail clearly and suggest local JSONL export.
@@ -165,6 +170,15 @@ opsincident-collector validate-core-contract \
 ```
 
 Use `--with-sample` only when intentionally uploading a tiny redacted contract sample.
+
+## Current contract notes
+
+- Core accepts optional batch protocol metadata:
+  - `collector_version`
+  - `schema_version`
+  - `core_api_version`
+- Core exposes its limit and endpoint templates through `/v1/capabilities`.
+- Core now reports runtime mode through `/v1/runtime/status`, which is useful for detecting cloud-vs-local fallback before starting a real sync.
 
 ## Non-negotiable boundary
 

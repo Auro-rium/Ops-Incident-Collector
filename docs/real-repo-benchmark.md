@@ -27,6 +27,11 @@ The command:
 7. Runs `/v1/search` for a sample query.
 8. Writes a JSON report.
 
+Operational note:
+
+- A successful Collector run is not enough.
+- The benchmark should also inspect Core latest-sync diagnostics so transport failures like `429` batch rejection are visible instead of being mistaken for indexing success.
+
 ## Report Schema
 
 The formal JSON Schema lives at `benchmarks/real_repo_benchmark.schema.json`.
@@ -53,6 +58,8 @@ Each sync record contains:
 
 - `collector`: `SyncSummary`, including files seen, files skipped, documents normalized/synced, redaction count, failed uploads, source type counts, unsupported extensions, and duration.
 - `core`: latest Core sync status when Core exposes `/v1/sources/{source_id}/syncs/latest`, including documents received, chunks created, diagnostics, and coverage.
+
+If `documents_synced` is high on the Collector side but Core latest-sync reports `documents_received=0`, treat that as a failed integration run and inspect transport errors, throttling, or Core-side validation failures.
 
 ## Expected Signals
 
